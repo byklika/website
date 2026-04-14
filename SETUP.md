@@ -2,7 +2,7 @@
 
 ## Project: Klika Website (Astro)
 
-This document defines the initial setup steps for building the Klika website using Astro, Tailwind, and MDX.
+This document defines the initial setup steps for building the Klika website using Astro, Tailwind CSS + DaisyUI, and MDX.
 
 ---
 
@@ -31,17 +31,48 @@ Recommended profile from agency-agents:
 
 ---
 
-## 🎨 Styling (Tailwind)
+## 🎨 Styling (Tailwind CSS + DaisyUI)
 
-- [ ] Install Tailwind CSS
+- [x] Install Tailwind CSS (Astro integration)
   ```bash
   npx astro add tailwind
   ```
-- [ ] Install typography plugin
+- [x] Install DaisyUI + Tailwind plugins we use
   ```bash
-  pnpm add @tailwindcss/typography
+  pnpm add -D daisyui @tailwindcss/typography
   ```
-- [ ] Configure Tailwind in `tailwind.config.mjs`
+- [x] Configure Tailwind in `tailwind.config.mjs`
+  - Add DaisyUI + typography plugins
+  - Enable DaisyUI themes (start with `light` + `dark`)
+
+  Example `tailwind.config.mjs`:
+
+  ```js
+  /** @type {import('tailwindcss').Config} */
+  export default {
+    content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
+    theme: {
+      extend: {},
+    },
+    plugins: [require("@tailwindcss/typography"), require("daisyui")],
+    daisyui: {
+      themes: ["light", "dark"],
+    },
+  };
+  ```
+
+- [x] Ensure global Tailwind styles are included
+  - If `astro add tailwind` created `src/styles/global.css`, ensure it contains:
+
+  ```css
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+  ```
+
+- [ ] (Recommended) Add DaisyUI theme toggle later
+  - DaisyUI reads theme from `data-theme` on `html` (or `body`)
+  - Default can be set via `<html data-theme="light">` and toggled to `dark`
 
 ---
 
