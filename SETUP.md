@@ -143,7 +143,19 @@ Recommended profile from agency-agents:
 
 ## 📊 Analytics
 
-- [ ] Add Plausible or Google Analytics
+- [x] **Google Analytics (GA4)** — page views, events, and conversion goals
+  - Create a GA4 property and obtain the Measurement ID (`G-XXXXXXXXXX`)
+  - Load gtag in the site (e.g. Astro layout or `@astrojs/partytown` for third-party scripts)
+  - Document required env vars (e.g. `PUBLIC_GA_MEASUREMENT_ID`) if IDs stay out of source control
+
+- [x] **Microsoft Clarity** — session recordings and heatmaps
+  - Create a Clarity project and copy the project / tracking snippet
+  - Add the Clarity script site-wide (same placement pattern as GA; consider Partytown)
+
+- [x] **GrowthBook** — experimentation (A/B tests, feature flags)
+  - Create a GrowthBook account and SDK key / client key for the web SDK
+  - Install `@growthbook/growthbook` (and React bindings if using React islands)
+  - Wire feature flags and experiments in layout or a dedicated provider; track exposures with GA4 where needed for analysis
 
 ---
 
