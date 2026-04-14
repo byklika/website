@@ -127,9 +127,9 @@ Recommended profile from agency-agents:
 
 ## 📝 Blog
 
-- [ ] Create blog layout
-- [ ] Create blog index page
-- [ ] Add first MDX post
+- [x] Create blog layout
+- [x] Create blog index page
+- [x] Add first MDX post
 
 ---
 

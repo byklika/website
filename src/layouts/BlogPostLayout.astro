@@ -1,0 +1,46 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+	title: string;
+	description?: string;
+	pubDate: Date;
+	updatedDate?: Date;
+}
+
+const { title, description, pubDate, updatedDate } = Astro.props;
+
+const dateFmt: Intl.DateTimeFormatOptions = {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric'
+};
+const published = pubDate.toLocaleDateString('en', dateFmt);
+const updated =
+	updatedDate && updatedDate.getTime() !== pubDate.getTime()
+		? updatedDate.toLocaleDateString('en', dateFmt)
+		: null;
+---
+
+<BaseLayout title={`${title} — Klika`} description={description}>
+	<article class="prose max-w-none">
+		<header class="not-prose mb-8">
+			<p class="text-sm text-base-content/60 mb-2">
+				<time datetime={pubDate.toISOString()}>{published}</time>
+				{
+					updated && (
+						<>
+							{' '}
+							· Updated <time datetime={updatedDate!.toISOString()}>{updated}</time>
+						</>
+					)
+				}
+			</p>
+			<h1 class="text-4xl font-bold text-base-content">{title}</h1>
+			{description && <p class="text-lg text-base-content/80 mt-2">{description}</p>}
+		</header>
+		<div class="prose-headings:scroll-mt-20">
+			<slot />
+		</div>
+	</article>
+</BaseLayout>

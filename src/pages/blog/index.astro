@@ -1,10 +1,47 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
 ---
 
 <BaseLayout title="Blog — Klika" description="News and articles from Klika.">
-	<section class="prose max-w-none">
-		<h1>Blog</h1>
-		<p>Posts will appear here once the blog is wired up. Content coming soon.</p>
+	<section class="space-y-8">
+		<div class="prose max-w-none">
+			<h1>Blog</h1>
+			<p>Updates and notes from Klika.</p>
+		</div>
+		<ul class="not-prose flex flex-col gap-4">
+			{
+				posts.map((post) => (
+					<li>
+						<a
+							href={`/blog/${post.id}/`}
+							class="card bg-base-100 border border-base-300 shadow-sm hover:shadow-md transition-shadow"
+						>
+							<div class="card-body py-4">
+								<h2 class="card-title text-lg">{post.data.title}</h2>
+								{post.data.description && (
+									<p class="text-base-content/80 text-sm">{post.data.description}</p>
+								)}
+								<time
+									class="text-xs text-base-content/50"
+									datetime={post.data.pubDate.toISOString()}
+								>
+									{post.data.pubDate.toLocaleDateString('en', {
+										year: 'numeric',
+										month: 'long',
+										day: 'numeric'
+									})}
+								</time>
+							</div>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+		{posts.length === 0 && <p class="text-base-content/70">No posts yet.</p>}
 	</section>
 </BaseLayout>
