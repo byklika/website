@@ -1,0 +1,158 @@
+---
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY?.trim();
+const configured = Boolean(accessKey);
+---
+
+<div class="not-prose w-full max-w-lg">
+	{
+		!configured && (
+			<div role="alert" class="alert alert-warning mb-4 text-sm">
+				<span>
+					Contact form is not configured. Set{' '}
+					<code class="text-xs bg-base-200 px-1 rounded">PUBLIC_WEB3FORMS_ACCESS_KEY</code> in{' '}
+					<code class="text-xs bg-base-200 px-1 rounded">.env</code> (see{' '}
+					<code class="text-xs bg-base-200 px-1 rounded">.env.example</code>) and redeploy.
+				</span>
+			</div>
+		)
+	}
+
+	<form id="contact-form" class="flex flex-col gap-4" novalidate>
+		<input type="hidden" name="access_key" value={accessKey ?? ''} />
+
+		{/* Honeypot — leave empty; Web3Forms rejects spam when filled */}
+		<label class="hidden" aria-hidden="true">
+			<span>Company</span>
+			<input type="text" name="botcheck" tabindex="-1" autocomplete="off" class="hidden" />
+		</label>
+
+		<label class="form-control w-full">
+			<span class="label">
+				<span class="label-text">Name</span>
+			</span>
+			<input
+				type="text"
+				name="name"
+				required
+				minlength="2"
+				maxlength="120"
+				class="input input-bordered w-full"
+				autocomplete="name"
+				disabled={!configured}
+			/>
+		</label>
+
+		<label class="form-control w-full">
+			<span class="label">
+				<span class="label-text">Email</span>
+			</span>
+			<input
+				type="email"
+				name="email"
+				required
+				maxlength="254"
+				class="input input-bordered w-full"
+				autocomplete="email"
+				disabled={!configured}
+			/>
+		</label>
+
+		<label class="form-control w-full">
+			<span class="label">
+				<span class="label-text">Message</span>
+			</span>
+			<textarea
+				name="message"
+				required
+				minlength="10"
+				maxlength="5000"
+				rows={6}
+				class="textarea textarea-bordered w-full resize-y"
+				disabled={!configured}
+			/>
+		</label>
+
+		<div class="flex flex-wrap items-center gap-3">
+			<button type="submit" class="btn btn-primary" disabled={!configured} id="contact-submit">
+				Send message
+			</button>
+			<span id="contact-form-status" class="text-sm" role="status" aria-live="polite" />
+		</div>
+	</form>
+</div>
+
+<script>
+	const form = document.getElementById('contact-form');
+	const statusEl = document.getElementById('contact-form-status');
+	const submitBtn = document.getElementById('contact-submit');
+
+	function setStatus(kind, message) {
+		if (!statusEl) return;
+		statusEl.textContent = message;
+		statusEl.className = 'text-sm';
+		if (kind === 'ok') statusEl.classList.add('text-success');
+		if (kind === 'err') statusEl.classList.add('text-error');
+		if (kind === 'loading') statusEl.classList.add('opacity-80');
+	}
+
+	form?.addEventListener('submit', async (e) => {
+		e.preventDefault();
+		if (!(form instanceof HTMLFormElement)) return;
+
+		const accessKeyInput = form.querySelector('input[name="access_key"]');
+		const key = accessKeyInput instanceof HTMLInputElement ? accessKeyInput.value.trim() : '';
+		if (!key) {
+			setStatus('err', 'Form is not configured.');
+			return;
+		}
+
+		const fd = new FormData(form);
+		const botcheck = String(fd.get('botcheck') || '');
+		if (botcheck) {
+			setStatus('err', 'Something went wrong.');
+			return;
+		}
+
+		const payload = {
+			access_key: key,
+			name: String(fd.get('name') ?? '').trim(),
+			email: String(fd.get('email') ?? '').trim(),
+			message: String(fd.get('message') ?? '').trim(),
+			subject: 'Contact form — byklika.com'
+		};
+
+		if (submitBtn instanceof HTMLButtonElement) submitBtn.disabled = true;
+		setStatus('loading', 'Sending…');
+
+		try {
+			const res = await fetch('https://api.web3forms.com/submit', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Accept: 'application/json'
+				},
+				body: JSON.stringify(payload)
+			});
+
+			const data = await res.json();
+
+			const ok = data.success === true;
+			const msg =
+				data.message ||
+				data.body?.message ||
+				(ok ? 'Message sent. We will get back to you soon.' : 'Could not send your message.');
+
+			if (ok) {
+				setStatus('ok', msg);
+				form.reset();
+				if (accessKeyInput instanceof HTMLInputElement) accessKeyInput.value = key;
+			} else {
+				setStatus('err', msg);
+			}
+		} catch {
+			setStatus('err', 'Network error. Please try again.');
+		} finally {
+			if (submitBtn instanceof HTMLButtonElement && key) submitBtn.disabled = false;
+		}
+	});
+</script>

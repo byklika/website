@@ -161,7 +161,7 @@ Recommended profile from agency-agents:
 
 ## 📬 Forms
 
-- [ ] Add contact form (Vercel Forms or external service)
+- [x] Add contact form (Vercel Forms or external service)
 
 ---
 
