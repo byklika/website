@@ -92,7 +92,7 @@ Recommended profile from agency-agents:
 
 ## 🧱 Project Structure
 
-- [ ] Create folders:
+- [x] Create folders:
   ```
   src/
     components/
