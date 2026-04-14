@@ -135,9 +135,9 @@ Recommended profile from agency-agents:
 
 ## 🔍 SEO Basics
 
-- [ ] Add dynamic `<title>` and meta tags
-- [ ] Add Open Graph tags
-- [ ] Add favicon
+- [x] Add dynamic `<title>` and meta tags
+- [x] Add Open Graph tags
+- [x] Add favicon
 
 ---
 

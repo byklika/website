@@ -22,7 +22,13 @@ const updated =
 		: null;
 ---
 
-<BaseLayout title={`${title} — Klika`} description={description}>
+<BaseLayout
+	title={`${title} — Klika`}
+	description={description ?? `Read “${title}” on the Klika blog.`}
+	ogType="article"
+	articlePublishedTime={pubDate.toISOString()}
+	articleModifiedTime={updatedDate?.toISOString()}
+>
 	<article class="prose max-w-none">
 		<header class="not-prose mb-8">
 			<p class="text-sm text-base-content/60 mb-2">
