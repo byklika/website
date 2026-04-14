@@ -78,15 +78,15 @@ Recommended profile from agency-agents:
 
 ## ✍️ Content Setup (Blog with MDX)
 
-- [ ] Add MDX support
+- [x] Add MDX support
   ```bash
   npx astro add mdx
   ```
-- [ ] Create content structure:
+- [x] Create content structure:
   ```
   src/content/blog/
   ```
-- [ ] Define content collection (schema)
+- [x] Define content collection (schema)
 
 ---
 
