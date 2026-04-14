@@ -106,11 +106,11 @@ Recommended profile from agency-agents:
 
 ## 🧩 Core Components
 
-- [ ] Create base layout (`BaseLayout.astro`)
-- [ ] Create Header component
-- [ ] Create Footer component
-- [ ] Create CTA component
-- [ ] Create Callout component (for MDX)
+- [x] Create base layout (`BaseLayout.astro`)
+- [x] Create Header component
+- [x] Create Footer component
+- [x] Create CTA component
+- [x] Create Callout component (for MDX)
 
 ---
 

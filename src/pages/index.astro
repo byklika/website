@@ -1,18 +1,19 @@
 ---
-import '../styles/global.css';
-
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CTA from '../components/CTA.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Klika" description="Klika — build something great.">
+	<div class="space-y-8">
+		<section class="prose max-w-none">
+			<h1 class="text-4xl font-bold text-base-content">Welcome</h1>
+			<p class="text-lg text-base-content/80">This site is under construction. Explore the navigation to see upcoming pages.</p>
+		</section>
+		<CTA
+			title="Get in touch"
+			description="Have a project in mind? We would love to hear from you."
+			href="/contact"
+			label="Contact us"
+		/>
+	</div>
+</BaseLayout>
