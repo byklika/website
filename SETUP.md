@@ -116,12 +116,12 @@ Recommended profile from agency-agents:
 
 ## 🏠 Pages (v1)
 
-- [ ] Home (`/`)
-- [ ] Services (`/services`)
-- [ ] How it works (`/how-it-works`)
-- [ ] About (`/about`)
-- [ ] Contact (`/contact`)
-- [ ] Blog (`/blog`)
+- [x] Home (`/`)
+- [x] Services (`/services`)
+- [x] How it works (`/how-it-works`)
+- [x] About (`/about`)
+- [x] Contact (`/contact`)
+- [x] Blog (`/blog`)
 
 ---
 
