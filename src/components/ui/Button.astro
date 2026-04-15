@@ -1,0 +1,52 @@
+---
+type Variant = 'primary' | 'secondary' | 'outlineLight' | 'mossOutline';
+
+export interface Props {
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  variant?: Variant;
+  class?: string;
+  target?: string;
+  rel?: string;
+  ariaLabel?: string;
+}
+
+const {
+  href,
+  type = 'button',
+  variant = 'primary',
+  class: className,
+  target,
+  rel,
+  ariaLabel
+} = Astro.props;
+
+const base =
+  'inline-flex items-center gap-2 rounded-pill font-semibold no-underline transition will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral focus-visible:ring-offset-2';
+
+const variants: Record<Variant, string> = {
+  primary:
+    'bg-klika-coral text-klika-white px-[1.8rem] py-[0.75rem] text-[0.9rem] shadow-btnPrimary hover:-translate-y-0.5 hover:bg-klika-coralHover hover:shadow-btnPrimaryHover',
+  secondary:
+    'border-2 border-klika-moss text-klika-moss bg-transparent px-[1.75rem] py-[0.72rem] text-[0.9rem] hover:-translate-y-0.5 hover:bg-klika-moss hover:text-klika-white',
+  outlineLight:
+    'border-2 border-white/45 text-klika-white bg-transparent px-6 py-[0.65rem] text-[0.85rem] hover:bg-white/10 hover:border-white',
+  mossOutline:
+    'border-[1.5px] border-klika-moss text-klika-moss bg-transparent px-[1.4rem] py-[0.6rem] text-[0.84rem] hover:bg-klika-moss hover:text-klika-white'
+};
+
+const cls = [base, variants[variant], className].filter(Boolean).join(' ');
+---
+
+{
+  href ? (
+    <a href={href} class={cls} target={target} rel={rel} aria-label={ariaLabel}>
+      <slot />
+    </a>
+  ) : (
+    <button type={type} class={cls} aria-label={ariaLabel}>
+      <slot />
+    </button>
+  )
+}
+

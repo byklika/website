@@ -1,0 +1,60 @@
+---
+export interface Tab {
+  id: string;
+  label: string;
+}
+
+export interface Props {
+  tabs: Tab[];
+  initialId?: string;
+  class?: string;
+}
+
+const { tabs, initialId = tabs?.[0]?.id, class: className } = Astro.props;
+---
+
+<div class={['w-full', className].filter(Boolean).join(' ')}>
+  <div class="flex flex-wrap gap-[0.6rem]">
+    {tabs.map((t) => (
+      <button
+        type="button"
+        class="js-tab rounded-pill border-[1.5px] border-klika-moss/30 px-[1.2rem] py-[0.55rem] text-[0.82rem] font-medium text-klika-moss transition hover:bg-klika-moss hover:text-klika-white hover:border-klika-moss"
+        data-tab={t.id}
+      >
+        {t.label}
+      </button>
+    ))}
+  </div>
+
+  <div class="mt-8">
+    <slot />
+  </div>
+</div>
+
+<script define:vars={{ initialId }}>
+  const root = document.currentScript?.closest('div');
+  if (!root) throw new Error('Tabs root not found');
+
+  const buttons = Array.from(root.querySelectorAll('button.js-tab'));
+  const panels = Array.from(root.querySelectorAll('[data-panel]'));
+
+  function setActive(id) {
+    for (const btn of buttons) {
+      const active = btn.dataset.tab === id;
+      btn.classList.toggle('bg-klika-moss', active);
+      btn.classList.toggle('text-klika-white', active);
+      btn.classList.toggle('border-klika-moss', active);
+    }
+    for (const panel of panels) {
+      const active = panel.getAttribute('data-panel') === id;
+      panel.toggleAttribute('hidden', !active);
+    }
+  }
+
+  for (const btn of buttons) {
+    btn.addEventListener('click', () => setActive(btn.dataset.tab));
+  }
+
+  if (initialId) setActive(initialId);
+</script>
+

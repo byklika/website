@@ -1,0 +1,63 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import ContactForm from '../ContactForm.astro';
+
+export interface Props {
+  eyebrow: string;
+  title: string;
+  description: string;
+  email: string;
+  locationLine: string;
+  instagramLabel: string;
+  instagramHref: string;
+  linkedinLabel: string;
+  linkedinHref: string;
+}
+
+const {
+  eyebrow,
+  title,
+  description,
+  email,
+  locationLine,
+  instagramLabel,
+  instagramHref,
+  linkedinLabel,
+  linkedinHref
+} = Astro.props;
+---
+
+<section
+  id="contacto"
+  class="relative overflow-hidden bg-klika-dark px-[1.5rem] py-16 text-klika-white min-[901px]:px-[3rem] min-[901px]:py-24"
+>
+  <div
+    class="pointer-events-none absolute -left-[100px] bottom-[-100px] hidden h-[400px] w-[400px] rounded-full bg-klika-coral/10 min-[901px]:block"
+    aria-hidden="true"
+  ></div>
+
+  <div class="mx-auto grid max-w-6xl grid-cols-1 gap-12 min-[901px]:grid-cols-2 min-[901px]:gap-[5rem]">
+    <div>
+      <SectionHeading eyebrow={eyebrow} title={title} tone="light" class="reveal" />
+      <p class="reveal rd1 mt-5 mb-[2.5rem] max-w-xl text-base leading-[1.7] text-white/70">{description}</p>
+
+      <div class="flex flex-col gap-2">
+        <a class="text-[0.88rem] text-white/50 no-underline hover:text-klika-coral" href={`mailto:${email}`}>
+          {email}
+        </a>
+        <span class="text-sm text-white/60">{locationLine}</span>
+        <a class="text-[0.88rem] text-white/50 no-underline hover:text-klika-coral" href={instagramHref}>
+          {instagramLabel}
+        </a>
+        <a class="text-[0.88rem] text-white/50 no-underline hover:text-klika-coral" href={linkedinHref}>
+          {linkedinLabel}
+        </a>
+      </div>
+    </div>
+
+    <div class="reveal rd1">
+      <ContactForm />
+    </div>
+  </div>
+</section>
+

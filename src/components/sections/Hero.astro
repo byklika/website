@@ -1,0 +1,63 @@
+---
+import Button from '../ui/Button.astro';
+
+export interface Props {
+  eyebrow: string;
+  titleHtml: string;
+  subtitle: string;
+  primaryHref: string;
+  primaryLabel: string;
+  secondaryHref: string;
+  secondaryLabel: string;
+  imageAlt: string;
+  imageSrc: string;
+}
+
+const {
+  eyebrow,
+  titleHtml,
+  subtitle,
+  primaryHref,
+  primaryLabel,
+  secondaryHref,
+  secondaryLabel,
+  imageAlt,
+  imageSrc
+} = Astro.props;
+---
+
+<section id="inicio" class="relative min-h-screen overflow-hidden bg-klika-hero">
+  <div
+    class="pointer-events-none absolute -right-[80px] -top-[100px] hidden h-[580px] w-[580px] min-[901px]:block"
+    aria-hidden="true"
+  >
+    <div class="h-full w-full bg-klika-moss/[0.06] animate-morphBlob"></div>
+  </div>
+
+  <div
+    class="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-[1.5rem] pb-12 pt-24 text-center min-[901px]:grid-cols-2 min-[901px]:gap-[3rem] min-[901px]:px-[3rem] min-[901px]:pb-16 min-[901px]:pt-28 min-[901px]:text-left"
+  >
+    <div>
+      <p class="mb-[1.2rem] inline-block text-[0.78rem] font-semibold uppercase tracking-[0.12em] text-klika-moss">
+        {eyebrow}
+      </p>
+      <h1 class="mb-[1.4rem] font-serif leading-[1.15] text-[clamp(2.1rem,4vw,3.2rem)] text-klika-dark animate-fadeUp">
+        <Fragment set:html={titleHtml} />
+      </h1>
+      <p class="mx-auto max-w-[480px] text-[1.02rem] leading-[1.7] text-klika-ink animate-fadeUp [animation-delay:150ms] min-[901px]:mx-0">
+        {subtitle}
+      </p>
+      <div class="mt-9 flex flex-wrap justify-center gap-4 animate-fadeUp [animation-delay:300ms] min-[901px]:justify-start">
+        <Button href={primaryHref} variant="primary">{primaryLabel}</Button>
+        <Button href={secondaryHref} variant="secondary">{secondaryLabel}</Button>
+      </div>
+    </div>
+
+    <div class="animate-fadeUp [animation-delay:200ms]">
+      <div class="overflow-hidden rounded-[2rem] bg-klika-sand shadow-heroImage aspect-[4/3]">
+        <img src={imageSrc} alt={imageAlt} class="h-full w-full object-cover [object-position:center_top]" />
+      </div>
+    </div>
+  </div>
+</section>
+

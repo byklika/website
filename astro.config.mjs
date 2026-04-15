@@ -11,7 +11,11 @@ export default defineConfig({
   site: process.env.PUBLIC_SITE_URL || 'https://byklika.com',
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [
+      tailwindcss({
+        config: './tailwind.config.mjs'
+      })
+    ]
   },
 
   integrations: [mdx()]

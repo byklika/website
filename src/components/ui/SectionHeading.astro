@@ -1,0 +1,29 @@
+---
+export interface Props {
+  eyebrow?: string;
+  title: string;
+  align?: 'left' | 'center';
+  tone?: 'light' | 'dark';
+  class?: string;
+}
+
+const { eyebrow, title, align = 'left', tone = 'dark', class: className } = Astro.props;
+
+const alignCls = align === 'center' ? 'text-center items-center' : 'text-left items-start';
+const eyebrowTone =
+  tone === 'light' ? 'text-klika-coral/80' : 'text-klika-coral';
+const titleTone = tone === 'light' ? 'text-klika-white' : 'text-klika-dark';
+---
+
+<div class={['flex flex-col gap-3', alignCls, className].filter(Boolean).join(' ')}>
+  {eyebrow && (
+    <p class={['text-xs font-semibold tracking-[0.12em] uppercase', eyebrowTone].join(' ')}>
+      {eyebrow}
+    </p>
+  )}
+  <h2 class={['font-serif font-normal leading-tight text-[clamp(1.7rem,3vw,2.4rem)]', titleTone].join(' ')}>
+    {title}
+  </h2>
+  <slot />
+</div>
+

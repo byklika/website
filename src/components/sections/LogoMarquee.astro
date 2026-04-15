@@ -1,0 +1,27 @@
+---
+export interface Props {
+  label: string;
+  items: string[];
+}
+
+const { label, items } = Astro.props;
+
+// duplicate to create the seamless marquee loop
+const doubled = [...items, ...items];
+---
+
+<div class="bg-klika-white border-y border-klika-moss/15 py-[0.9rem] overflow-hidden">
+  <div class="mx-auto max-w-6xl px-[1.5rem] min-[901px]:px-[3rem]">
+    <div class="flex whitespace-nowrap gap-[4rem] animate-marquee">
+      <span class="text-[0.75rem] font-semibold uppercase tracking-[0.1em] text-klika-muted">{label}</span>
+      {doubled.map((t) => (
+        <span
+          class="inline-flex h-7 items-center rounded-[4px] border border-klika-moss/20 px-[1.6rem] text-[0.72rem] font-semibold tracking-[0.08em] text-klika-muted2"
+        >
+          {t}
+        </span>
+      ))}
+    </div>
+  </div>
+</div>
+

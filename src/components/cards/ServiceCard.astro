@@ -1,0 +1,63 @@
+---
+import Tag from '../ui/Tag.astro';
+import Button from '../ui/Button.astro';
+
+export interface Props {
+  label: string;
+  title: string;
+  tagline?: string;
+  description?: string;
+  includes?: string[];
+  ctaHref: string;
+  ctaLabel: string;
+  class?: string;
+}
+
+const { label, title, tagline, description, includes = [], ctaHref, ctaLabel, class: className } =
+  Astro.props;
+---
+
+<article
+  class={[
+    'grid grid-cols-1 overflow-hidden rounded-[1.4rem] bg-klika-white shadow-card min-[901px]:grid-cols-[260px_1fr]',
+    'transition hover:shadow-cardHover',
+    className
+  ]
+    .filter(Boolean)
+    .join(' ')}
+>
+  <div class="flex flex-col justify-between bg-klika-dark px-[2rem] py-[2.4rem]">
+    <div>
+      <p class="mb-3 text-[0.72rem] font-semibold tracking-[0.1em] uppercase text-klika-coral">
+        {label}
+      </p>
+      <h3 class="mb-2 font-serif text-[1.15rem] leading-snug text-klika-white">{title}</h3>
+      {tagline && <p class="text-[0.84rem] leading-snug text-white/60">{tagline}</p>}
+    </div>
+    <slot name="leftBottom" />
+  </div>
+
+  <div class="flex flex-col justify-between bg-klika-white px-[2.2rem] py-[2.4rem]">
+    <div class="space-y-4">
+      {description && <p class="text-[0.9rem] leading-relaxed text-klika-ink">{description}</p>}
+
+      {includes.length > 0 && (
+        <div>
+          <p class="mb-2 text-[0.75rem] font-semibold tracking-[0.08em] uppercase text-klika-muted">
+            Incluye
+          </p>
+          <div class="flex flex-wrap gap-2">
+            {includes.map((t) => (
+              <Tag>{t}</Tag>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+
+    <div class="mt-6">
+      <Button href={ctaHref} variant="mossOutline">{ctaLabel}</Button>
+    </div>
+  </div>
+</article>
+

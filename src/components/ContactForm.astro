@@ -3,21 +3,21 @@ const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY?.trim();
 const configured = Boolean(accessKey);
 ---
 
-<div class="not-prose w-full max-w-lg">
+<div class="w-full">
   {
     !configured && (
-      <div role="alert" class="alert alert-warning mb-4 text-sm">
+      <div role="alert" class="mb-6 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white/80">
         <span>
-          Contact form is not configured. Set{' '}
-          <code class="bg-base-200 rounded px-1 text-xs">PUBLIC_WEB3FORMS_ACCESS_KEY</code> in{' '}
-          <code class="bg-base-200 rounded px-1 text-xs">.env</code> (see{' '}
-          <code class="bg-base-200 rounded px-1 text-xs">.env.example</code>) and redeploy.
+          El formulario no está configurado. Definí{' '}
+          <code class="rounded bg-white/10 px-1 text-xs text-white">PUBLIC_WEB3FORMS_ACCESS_KEY</code> en{' '}
+          <code class="rounded bg-white/10 px-1 text-xs text-white">.env</code> (ver{' '}
+          <code class="rounded bg-white/10 px-1 text-xs text-white">.env.example</code>) y volvé a desplegar.
         </span>
       </div>
     )
   }
 
-  <form id="contact-form" class="flex flex-col gap-4" novalidate>
+  <form id="contact-form" class="flex flex-col gap-5" novalidate>
     <input type="hidden" name="access_key" value={accessKey ?? ''} />
 
     {/* Honeypot — leave empty; Web3Forms rejects spam when filled */}
@@ -26,56 +26,72 @@ const configured = Boolean(accessKey);
       <input type="text" name="botcheck" tabindex="-1" autocomplete="off" class="hidden" />
     </label>
 
-    <label class="form-control w-full">
-      <span class="label">
-        <span class="label-text">Name</span>
-      </span>
+    <label class="flex flex-col gap-2">
+      <span class="text-[0.78rem] font-semibold tracking-[0.05em] text-white/50">NOMBRE</span>
       <input
         type="text"
         name="name"
         required
         minlength="2"
         maxlength="120"
-        class="input input-bordered w-full"
+        class="w-full rounded-[0.8rem] border border-white/[0.14] bg-white/[0.06] px-[1.1rem] py-[0.85rem] text-[0.9rem] text-white placeholder:text-white/25 outline-none transition focus:border-klika-coral focus:bg-white/[0.09]"
         autocomplete="name"
         disabled={!configured}
+        placeholder="tu nombre"
       />
     </label>
 
-    <label class="form-control w-full">
-      <span class="label">
-        <span class="label-text">Email</span>
-      </span>
+    <label class="flex flex-col gap-2">
+      <span class="text-[0.78rem] font-semibold tracking-[0.05em] text-white/50">ORGANIZACIÓN</span>
+      <input
+        type="text"
+        name="organization"
+        maxlength="200"
+        class="w-full rounded-[0.8rem] border border-white/[0.14] bg-white/[0.06] px-[1.1rem] py-[0.85rem] text-[0.9rem] text-white placeholder:text-white/25 outline-none transition focus:border-klika-coral focus:bg-white/[0.09]"
+        autocomplete="organization"
+        disabled={!configured}
+        placeholder="Nombre de empresa / institución"
+      />
+    </label>
+
+    <label class="flex flex-col gap-2">
+      <span class="text-[0.78rem] font-semibold tracking-[0.05em] text-white/50">EMAIL</span>
       <input
         type="email"
         name="email"
         required
         maxlength="254"
-        class="input input-bordered w-full"
+        class="w-full rounded-[0.8rem] border border-white/[0.14] bg-white/[0.06] px-[1.1rem] py-[0.85rem] text-[0.9rem] text-white placeholder:text-white/25 outline-none transition focus:border-klika-coral focus:bg-white/[0.09]"
         autocomplete="email"
         disabled={!configured}
+        placeholder="tu@correo.com"
       />
     </label>
 
-    <label class="form-control w-full">
-      <span class="label">
-        <span class="label-text">Message</span>
-      </span>
+    <label class="flex flex-col gap-2">
+      <span class="text-[0.78rem] font-semibold tracking-[0.05em] text-white/50">CONTANOS MÁS</span>
       <textarea
         name="message"
         required
         minlength="10"
         maxlength="5000"
         rows={6}
-        class="textarea textarea-bordered w-full resize-y"
-        disabled={!configured}></textarea>
+        class="min-h-[120px] w-full resize-y rounded-[0.8rem] border border-white/[0.14] bg-white/[0.06] px-[1.1rem] py-[0.85rem] text-[0.9rem] text-white placeholder:text-white/25 outline-none transition focus:border-klika-coral focus:bg-white/[0.09]"
+        disabled={!configured}
+        placeholder="¿En qué etapa de tu proyecto estás? ¿Qué necesitás?"
+      ></textarea>
     </label>
 
     <div class="flex flex-wrap items-center gap-3">
-      <button type="submit" class="btn btn-primary" disabled={!configured} id="contact-submit">
-        Send message
+      <button
+        type="submit"
+        class="inline-flex items-center gap-2 self-start rounded-pill bg-klika-coral px-[1.8rem] py-[0.75rem] text-[0.9rem] font-semibold text-klika-white transition hover:bg-klika-coralHover disabled:cursor-not-allowed disabled:opacity-60"
+        disabled={!configured}
+        id="contact-submit"
+      >
+        Enviar →
       </button>
-      <span id="contact-form-status" class="text-sm" role="status" aria-live="polite"></span>
+      <span id="contact-form-status" class="text-sm text-white/80" role="status" aria-live="polite"></span>
     </div>
   </form>
 </div>
@@ -115,13 +131,14 @@ const configured = Boolean(accessKey);
     const payload = {
       access_key: key,
       name: String(fd.get('name') ?? '').trim(),
+      organization: String(fd.get('organization') ?? '').trim(),
       email: String(fd.get('email') ?? '').trim(),
       message: String(fd.get('message') ?? '').trim(),
       subject: 'Contact form — byklika.com'
     };
 
     if (submitBtn instanceof HTMLButtonElement) submitBtn.disabled = true;
-    setStatus('loading', 'Sending…');
+    setStatus('loading', 'Enviando…');
 
     try {
       const res = await fetch('https://api.web3forms.com/submit', {
@@ -139,7 +156,7 @@ const configured = Boolean(accessKey);
       const msg =
         data.message ||
         data.body?.message ||
-        (ok ? 'Message sent. We will get back to you soon.' : 'Could not send your message.');
+        (ok ? 'Mensaje enviado. Te respondemos pronto.' : 'No pudimos enviar tu mensaje.');
 
       if (ok) {
         setStatus('ok', msg);
@@ -149,7 +166,7 @@ const configured = Boolean(accessKey);
         setStatus('err', msg);
       }
     } catch {
-      setStatus('err', 'Network error. Please try again.');
+      setStatus('err', 'Error de red. Probá de nuevo.');
     } finally {
       if (submitBtn instanceof HTMLButtonElement && key) submitBtn.disabled = false;
     }

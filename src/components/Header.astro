@@ -1,5 +1,8 @@
 ---
-const nav = [
+const pathname = Astro.url?.pathname ?? '/';
+const isHome = pathname === '/';
+
+const siteNav = [
   { href: '/', label: 'Home' },
   { href: '/services', label: 'Services' },
   { href: '/how-it-works', label: 'How it works' },
@@ -7,53 +10,126 @@ const nav = [
   { href: '/blog', label: 'Blog' },
   { href: '/contact', label: 'Contact' }
 ];
+
+const homeNav = [
+  { href: '#inicio', label: 'Inicio' },
+  { href: '#metodologia', label: 'Metodología' },
+  { href: '#servicios', label: 'Servicios' },
+  { href: '#nosotras', label: 'Nosotras' }
+];
 ---
 
-<header class="navbar bg-base-100 border-base-300 border-b shadow-sm">
-  <div class="navbar-start">
-    <a href="/" class="btn btn-ghost text-xl font-semibold tracking-tight">Klika</a>
-  </div>
-  <div class="navbar-end flex-none gap-2">
-    <ul class="menu menu-horizontal hidden gap-0 px-1 lg:flex">
-      {
-        nav.map(({ href, label }) => (
-          <li>
-            <a href={href} class="rounded-lg">
+{
+  isHome ? (
+    <header
+      id="homeHeader"
+      class="fixed inset-x-0 top-0 z-50 bg-klika-dark shadow-[0_2px_16px_rgba(0,0,0,0.15)]"
+    >
+      <div class="flex items-center justify-between gap-4 px-[1.5rem] py-4 min-[901px]:px-[2.5rem]">
+        <a href="#inicio" class="flex items-center gap-3 no-underline">
+          <svg width="52" height="32" viewBox="0 0 104 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="8" y1="54" x2="96" y2="54" stroke="currentColor" class="text-klika-moss2" stroke-width="2" />
+            <circle cx="8" cy="54" r="4" stroke="currentColor" class="text-klika-moss2" stroke-width="2" fill="none" />
+            <circle cx="96" cy="54" r="4" stroke="currentColor" class="text-klika-moss2" stroke-width="2" fill="none" />
+            <path d="M8 54 A44 44 0 0 1 96 54" stroke="currentColor" class="text-klika-moss2" stroke-width="2.2" fill="none" stroke-linecap="round" />
+            <path d="M22 54 A30 30 0 0 1 82 54" stroke="currentColor" class="text-klika-moss2" stroke-width="2.2" fill="none" stroke-linecap="round" />
+            <path d="M36 54 A16 16 0 0 1 68 54" stroke="currentColor" class="text-klika-cream" stroke-width="3" fill="none" stroke-linecap="round" />
+            <circle cx="52" cy="38" r="5.5" fill="currentColor" class="text-klika-coral" />
+          </svg>
+          <span class="font-serif text-[1.1rem] font-bold tracking-[-0.3px] text-klika-white">
+            KLIKA
+          </span>
+        </a>
+
+        <nav class="hidden items-center gap-[1.8rem] min-[901px]:flex" aria-label="Primary">
+          {homeNav.map(({ href, label }) => (
+            <a href={href} class="text-[0.88rem] font-medium text-white/85 no-underline hover:text-klika-white">
               {label}
             </a>
-          </li>
-        ))
-      }
-    </ul>
-    <div class="dropdown dropdown-end lg:hidden">
-      <div tabindex="0" role="button" class="btn btn-ghost btn-circle" aria-label="Open menu">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          aria-hidden="true"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"></path>
-        </svg>
+          ))}
+          <a
+            href="#contacto"
+            class="rounded-pill bg-klika-coral px-[1.4rem] py-[0.55rem] text-[0.85rem] font-semibold text-klika-white no-underline hover:bg-klika-coralHover"
+          >
+            Hablemos
+          </a>
+        </nav>
+
+        <details class="relative min-[901px]:hidden">
+          <summary
+            class="cursor-pointer list-none rounded-pill border border-white/20 px-4 py-2 text-sm text-klika-white"
+            aria-label="Open menu"
+          >
+            Menú
+          </summary>
+          <div class="absolute right-0 mt-2 w-56 rounded-xl bg-klika-dark p-2 shadow-[0_16px_48px_rgba(0,0,0,0.35)]">
+            <div class="flex flex-col">
+              {homeNav.map(({ href, label }) => (
+                <a href={href} class="rounded-lg px-3 py-2 text-sm text-white/85 no-underline hover:bg-white/10 hover:text-klika-white">
+                  {label}
+                </a>
+              ))}
+              <a href="#contacto" class="mt-1 rounded-lg bg-klika-coral px-3 py-2 text-sm font-semibold text-klika-white no-underline hover:bg-klika-coralHover">
+                Hablemos
+              </a>
+            </div>
+          </div>
+        </details>
       </div>
-      <ul
-        tabindex="0"
-        class="menu menu-sm dropdown-content bg-base-100 rounded-box border-base-300 z-50 mt-3 w-52 border p-2 shadow"
-      >
-        {
-          nav.map(({ href, label }) => (
+    </header>
+  ) : (
+    <header class="navbar bg-base-100 border-base-300 border-b shadow-sm">
+      <div class="navbar-start">
+        <a href="/" class="btn btn-ghost text-xl font-semibold tracking-tight">Klika</a>
+      </div>
+      <div class="navbar-end flex-none gap-2">
+        <ul class="menu menu-horizontal hidden gap-0 px-1 lg:flex">
+          {siteNav.map(({ href, label }) => (
             <li>
-              <a href={href}>{label}</a>
+              <a href={href} class="rounded-lg">
+                {label}
+              </a>
             </li>
-          ))
-        }
-      </ul>
-    </div>
-  </div>
-</header>
+          ))}
+        </ul>
+        <div class="dropdown dropdown-end lg:hidden">
+          <div tabindex="0" role="button" class="btn btn-ghost btn-circle" aria-label="Open menu">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </div>
+          <ul
+            tabindex="0"
+            class="menu menu-sm dropdown-content bg-base-100 rounded-box border-base-300 z-50 mt-3 w-52 border p-2 shadow"
+          >
+            {siteNav.map(({ href, label }) => (
+              <li>
+                <a href={href}>{label}</a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </header>
+  )
+}
+
+{
+  isHome && (
+    <script is:inline>
+      const header = document.getElementById('homeHeader');
+      function onScroll() {{
+        header?.classList.toggle('scrolled', window.scrollY > 20);
+      }}
+      window.addEventListener('scroll', onScroll, {{ passive: true }});
+      onScroll();
+    </script>
+  )
+}

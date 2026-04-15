@@ -1,0 +1,49 @@
+---
+export interface Props {
+  title: string;
+  hint?: string;
+  class?: string;
+}
+
+const { title, hint = 'Pasá el cursor para saber más', class: className } = Astro.props;
+---
+
+<div class={['h-[260px] [perspective:1000px]', className].filter(Boolean).join(' ')}>
+  <div
+    class={[
+      'relative h-full w-full transition-transform duration-700 [transform-style:preserve-3d]',
+      'hover:[transform:rotateY(180deg)]'
+    ].join(' ')}
+  >
+    <div
+      class={[
+        'absolute inset-0 flex h-full w-full flex-col justify-between rounded-[1.2rem] p-8',
+        'bg-klika-cream border border-klika-moss/15 border-l-4 border-l-klika-coral',
+        '[backface-visibility:hidden]'
+      ].join(' ')}
+    >
+      <div class="flex flex-col gap-4">
+        <div class="text-klika-moss/70">
+          <slot name="icon" />
+        </div>
+        <h3 class="font-serif text-[1.05rem] text-klika-dark">{title}</h3>
+      </div>
+      <p class="flex items-center gap-[0.4rem] text-[0.73rem] text-klika-muted">
+        <slot name="hintIcon" />
+        {hint}
+      </p>
+    </div>
+
+    <div
+      class={[
+        'absolute inset-0 flex h-full w-full items-center rounded-[1.2rem] bg-klika-moss p-8',
+        '[transform:rotateY(180deg)] [backface-visibility:hidden]'
+      ].join(' ')}
+    >
+      <p class="text-[0.86rem] leading-[1.65] text-white/90">
+        <slot />
+      </p>
+    </div>
+  </div>
+</div>
+

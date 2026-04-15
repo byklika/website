@@ -1,0 +1,107 @@
+---
+import SectionHeading from '../ui/SectionHeading.astro';
+import Tabs, { type Tab } from '../ui/Tabs.astro';
+import ServiceCard from '../cards/ServiceCard.astro';
+import Button from '../ui/Button.astro';
+import Pill from '../ui/Pill.astro';
+
+export interface ServicePanel {
+  id: string;
+  tabLabel: string;
+  card: {
+    label: string;
+    title: string;
+    tagline: string;
+    includes: string[];
+  };
+}
+
+export interface Props {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  tagline: string;
+  panels: ServicePanel[];
+}
+
+const { eyebrow, title, subtitle, tagline, panels } = Astro.props;
+const tabs: Tab[] = panels.map((p) => ({ id: p.id, label: p.tabLabel }));
+---
+
+<section id="servicios" class="bg-klika-cream px-[1.5rem] py-16 min-[901px]:px-[3rem] min-[901px]:py-24">
+  <div class="mx-auto max-w-6xl">
+    <SectionHeading eyebrow={eyebrow} title={title} class="reveal">
+      <p class="mt-2 max-w-[640px] text-base leading-[1.7] text-klika-sage">{subtitle}</p>
+    </SectionHeading>
+    <p class="reveal rd1 mt-3 max-w-3xl text-[0.84rem] italic text-klika-muted2 mb-[2.8rem]">{tagline}</p>
+
+    <div class="reveal rd2 mt-10">
+      <Tabs tabs={tabs} initialId={tabs[0]?.id}>
+        {panels.map((p) => (
+          <div data-panel={p.id} hidden={p.id !== tabs[0]?.id}>
+            <ServiceCard
+              label={p.card.label}
+              title={p.card.title}
+              tagline={p.card.tagline}
+              includes={p.card.includes}
+              ctaHref="#contacto"
+              ctaLabel="Quiero más información →"
+            />
+          </div>
+        ))}
+      </Tabs>
+    </div>
+
+    <div class="reveal mt-16 flex flex-wrap items-center justify-between gap-[1.5rem] rounded-[1.2rem] bg-klika-moss px-[2.4rem] py-[2rem] text-klika-white">
+      <div class="max-w-2xl">
+        <h3 class="mb-[0.4rem] font-serif text-[1rem] font-normal">Un primer acercamiento a Klika</h3>
+        <p class="max-w-[420px] text-[0.84rem] leading-[1.65] text-white/70">
+          Templates y guías de uso — recursos descargables para empezar a ordenar y dar forma a tu proyecto por tu cuenta, y conocer cómo trabajamos. Una buena forma de dar el primer paso.
+        </p>
+      </div>
+      <div>
+        <Button href="#contacto" variant="primary">Quiero los recursos →</Button>
+      </div>
+    </div>
+
+    <div class="reveal rd1 mt-6 flex flex-wrap items-center justify-between gap-4 rounded-[1.2rem] border-[1.5px] border-klika-moss/20 bg-klika-cream px-[2.4rem] py-[2rem]">
+      <p class="text-[0.95rem] text-klika-dark">
+        <strong class="font-serif font-bold">¿No encontraste lo que buscabas?</strong> ¡Escribinos y contanos sobre tu proyecto!
+      </p>
+      <Button href="#contacto" variant="secondary">Escribinos →</Button>
+    </div>
+
+    <div class="reveal mt-16 border-t border-klika-moss/15 pt-12">
+      <p class="text-xs font-semibold uppercase tracking-[0.12em] text-klika-coral">Con quiénes trabajamos</p>
+      <h3 class="mt-4 max-w-3xl font-serif text-[clamp(1.4rem,2.3vw,2rem)] text-klika-dark">
+        Con quienes deciden ir más allá y construir experiencias educativas memorables.
+      </h3>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        {[
+          'Equipos de Recursos Humanos y L&D',
+          'Instituciones públicas y ONGs',
+          'Academias e Instituciones educativas',
+          'Educadores particulares'
+        ].map((t) => (
+          <Pill>{t}</Pill>
+        ))}
+      </div>
+
+      <div class="mt-6 inline-flex max-w-fit items-center gap-3 rounded-[1rem] bg-klika-moss px-[2rem] py-[1.2rem]">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M2 12 Q7 9 12 12 Q17 15 22 12" />
+          <path d="M12 2 Q9 7 12 12 Q15 17 12 22" />
+        </svg>
+        <div>
+          <div class="text-[0.88rem] font-semibold tracking-[0.03em] text-klika-white">Para todo LATAM</div>
+          <div class="mt-0.5 text-[0.76rem] text-white/65">
+            Trabajamos de forma remota con equipos y organizaciones de toda la región.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

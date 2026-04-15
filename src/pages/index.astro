@@ -1,21 +1,169 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import CTA from '../components/CTA.astro';
+import MarketingLayout from '../layouts/MarketingLayout.astro';
+import Hero from '../components/sections/Hero.astro';
+import LogoMarquee from '../components/sections/LogoMarquee.astro';
+import Methodology from '../components/sections/Methodology.astro';
+import Services from '../components/sections/Services.astro';
+import AboutUs from '../components/sections/AboutUs.astro';
+import Contact from '../components/sections/Contact.astro';
+
+const heroImage =
+  'data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADY=';
 ---
 
-<BaseLayout title="Klika — Home" description="Klika — build something great.">
-  <div class="space-y-8">
-    <section class="prose max-w-none">
-      <h1 class="text-base-content text-4xl font-bold">Welcome</h1>
-      <p class="text-base-content/80 text-lg">
-        This site is under construction. Explore the navigation to see upcoming pages.
-      </p>
-    </section>
-    <CTA
-      title="Get in touch"
-      description="Have a project in mind? We would love to hear from you."
-      href="/contact"
-      label="Contact us"
-    />
-  </div>
-</BaseLayout>
+<MarketingLayout
+  title="Klika · E‑Learning Studio"
+  description="Experiencias educativas que dejan huella. Diseñamos para que educadores y aprendices sientan que valió la pena."
+>
+  <Hero
+    eyebrow="E‑Learning Studio"
+    titleHtml={'Experiencias educativas<br/>que <em class="italic text-klika-coral">dejan huella</em>'}
+    subtitle="Transformamos la manera de aprender. Diseñamos para que educadores y aprendices sientan que valió la pena."
+    primaryHref="#servicios"
+    primaryLabel="Conocé nuestros servicios →"
+    secondaryHref="#metodologia"
+    secondaryLabel="Cómo trabajamos"
+    imageSrc={heroImage}
+    imageAlt="Equipo trabajando en una experiencia educativa"
+  />
+
+  <LogoMarquee
+    label="Confían en nuestro trabajo"
+    items={['LOGO', 'LOGO', 'LOGO', 'LOGO', 'LOGO']}
+  />
+
+  <Methodology
+    eyebrow="Nuestra metodología"
+    title="Activar · Explorar · Conectar · Demostrar"
+    intro="Cada experiencia que diseñamos tiene un hilo conductor: entender a quién aprende, generar las condiciones para que quiera aprender y asegurarnos de que algo concreto cambie al final."
+    steps={[
+      {
+        title: 'Activar',
+        description:
+          'El aprendizaje empieza antes del primer contenido. Generamos una pregunta, una tensión, una razón para querer saber.'
+      },
+      {
+        title: 'Explorar',
+        description:
+          'Con el “¿por qué?” instalado, cada persona explora a su ritmo. El contenido no tiene una sola puerta: video, texto, recursos interactivos, gamificación.'
+      },
+      {
+        title: 'Conectar',
+        description:
+          'El encuentro sincrónico no es para transmitir lo que ya estaba disponible. Es para aplicar, debatir y construir con otros.'
+      },
+      {
+        title: 'Demostrar',
+        description:
+          'El cierre no es un examen. Es la demostración de que algo cambió: un proyecto real, un entregable concreto, algo que la persona puede mostrar.'
+      }
+    ]}
+  />
+
+  <Services
+    eyebrow="Nuestros servicios"
+    title="¿En qué momento de tu proyecto estás?"
+    subtitle="Acompañamos cada etapa del proceso: desde ordenar las primeras ideas, hasta tener un programa completo listo para salir."
+    tagline="Elegí lo que mejor describe tu situación y te contamos cómo podemos acompañarte."
+    panels={[
+      {
+        id: 'tab1',
+        tabLabel: 'No sé bien qué necesito',
+        card: {
+          label: 'Pensar y estructurar',
+          title: 'La idea existe. Todavía no tiene forma.',
+          tagline:
+            'Antes de diseñar o producir cualquier cosa, hay que saber a dónde se va. Por acá se empieza.',
+          includes: ['Consultoría', 'Brief', 'Diseño instruccional desde cero', 'Rediseño de proceso formativo']
+        }
+      },
+      {
+        id: 'tab2',
+        tabLabel: 'Sé qué enseñar, me falta la estructura',
+        card: {
+          label: 'Diseño del aprendizaje',
+          title: 'Sabés qué querés enseñar. Nosotras diseñamos cómo.',
+          tagline:
+            'Qué enseñar, en qué orden, con qué lógica y cómo evaluar que el aprendizaje ocurrió.',
+          includes: [
+            'Recursos y materiales a partir del contenido brindado',
+            'Creación de contenido con IA y validación posterior',
+            'Migración de contenidos'
+          ]
+        }
+      },
+      {
+        id: 'tab3',
+        tabLabel: 'Ya tengo la estructura, me falta producirlo',
+        card: {
+          label: 'Producción de materiales',
+          title: 'Ya tenés la estructura. Klika produce.',
+          tagline:
+            'Desde tu contenido, desde cero con IA y validación experta, o migrando lo que ya existe a un formato que funcione.',
+          includes: [
+            'Onboarding',
+            'Habilidades técnicas',
+            'Habilidades blandas',
+            'Sesiones eventuales',
+            'Pack Completo',
+            'Pack con Piloto'
+          ]
+        }
+      },
+      {
+        id: 'tab4',
+        tabLabel: 'Quiero una solución completa',
+        card: {
+          label: 'Programas completos',
+          title: 'No querés armar el rompecabezas solo.',
+          tagline:
+            'Klika toma el proyecto de punta a punta. Diseño, producción y acompañamiento.',
+          includes: ['Control de calidad de materiales', 'Rediseño de proceso formativo']
+        }
+      }
+    ]}
+  />
+
+  <AboutUs
+    eyebrow="Nosotras"
+    title="¿Por qué Klika?"
+    items={[
+      {
+        title: 'Quiénes somos',
+        description:
+          'Somos tres colegas que se volvieron amigas trabajando juntas en distintos proyectos. Lo que nos unió fue la pasión por la educación.'
+      },
+      {
+        title: 'Nuestra experiencia',
+        description:
+          'Tenemos más de cinco años de experiencia en e‑learning: universidades, organizaciones públicas y privadas, edtech, freelance, empresas.'
+      },
+      {
+        title: 'Creación de Klika',
+        description:
+          'Creamos Klika para capitalizar ese recorrido y trabajar como nos gusta: con profundidad pedagógica, cerca de cada proyecto.'
+      },
+      {
+        title: 'Nuestro plan',
+        description: 'Trabajamos con una metodología que se adapta a las particularidades de cada proyecto y cliente.'
+      },
+      {
+        title: 'Nuestro compromiso',
+        description:
+          'Nos comprometemos con que cada experiencia valga la pena — para quienes diseñan y para quienes aprenden.'
+      }
+    ]}
+  />
+
+  <Contact
+    eyebrow="Contacto"
+    title="Contanos sobre tu proyecto."
+    description="Ya sea que tengas todo claro o solo una idea inicial, ¡escribinos!"
+    email="hola@klikastudio.com"
+    locationLine="Argentina · LATAM"
+    instagramLabel="@klika.studio (Instagram)"
+    instagramHref="#"
+    linkedinLabel="Klika Elearning Studio (LinkedIn)"
+    linkedinHref="#"
+  />
+</MarketingLayout>

@@ -44,8 +44,8 @@ Do NOT rewrite code yet. Output structured findings."
 
 ## 🎯 Objectives
 
-- [ ] Extract design tokens (colors, typography, spacing)
-- [ ] Identify layout sections
+- [x] Extract design tokens (colors, typography, spacing)
+- [x] Identify layout sections
 - [ ] Identify reusable components
 - [ ] Normalize into a design system
 - [ ] Rebuild using Astro components
@@ -67,7 +67,7 @@ Return structured JSON."
 
 Then:
 
-- [ ] Add tokens to `tailwind.config.mjs`
+- [x] Add tokens to `tailwind.config.mjs`
 
 ---
 
@@ -84,7 +84,7 @@ Return:
 - purpose
 - key elements"
 
-- [ ] Map sections to Astro components
+- [x] Map sections to Astro components
 
 ---
 
@@ -104,7 +104,7 @@ For each:
 - define props
 - define structure"
 
-- [ ] Create components in `src/components/`
+- [x] Create components in `src/components/`
 
 ---
 
@@ -118,13 +118,13 @@ Prompt:
 - replace with Tailwind classes
 - ensure consistent spacing and typography"
 
-- [ ] Ensure no inline CSS remains
+- [x] Ensure no inline CSS remains
 
 ---
 
 ## ⚙️ Step 5: Astro Implementation
 
-- [ ] Create:
+- [x] Create:
   - `BaseLayout.astro`
   - `Header.astro`
   - `Footer.astro`
@@ -149,9 +149,9 @@ Prompt:
 
 Suggest fixes."
 
-- [ ] No inline styles
-- [ ] No hardcoded colors
-- [ ] No one-off components
+- [x] No inline styles
+- [x] No hardcoded colors
+- [x] No one-off components
 
 ---
 

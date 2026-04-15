@@ -1,0 +1,27 @@
+---
+export interface Props {
+  title: string;
+  class?: string;
+}
+
+const { title, class: className } = Astro.props;
+---
+
+<article
+  class={[
+    'group rounded-[1.2rem] border border-white/10 bg-white/5 px-[1.8rem] py-8',
+    'transition hover:-translate-y-1 hover:border-klika-coral/40 hover:bg-white/10',
+    className
+  ]
+    .filter(Boolean)
+    .join(' ')}
+>
+  <div class="mb-[1.1rem] opacity-70 group-hover:opacity-100">
+    <slot name="icon" />
+  </div>
+  <h3 class="mb-[0.8rem] font-serif text-base text-klika-white">{title}</h3>
+  <p class="text-[0.84rem] leading-[1.65] text-white/60">
+    <slot />
+  </p>
+</article>
+
