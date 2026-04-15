@@ -165,13 +165,26 @@ Recommended profile from agency-agents:
 
 ---
 
-## 🚀 Deployment
+## 🚀 Deployment (GitHub Actions → Vercel)
+
+Production deploys are triggered from **GitHub Actions**, not Vercel’s default “connect Git and build on every push” flow. The repo still uses Vercel as the host; CI runs the build (or delegates via the Vercel CLI) and publishes with a deploy token.
 
 - [x] Add Vercel project config in repo (`vercel.json`, `packageManager` for pnpm; build → `dist`)
-- [ ] Connect repo to Vercel — [Import](https://vercel.com/new) the GitHub repo and select this project root
-- [ ] Enable automatic deployments — default for `main` after Git connection; confirm Production Branch in **Settings → Git**
-- [ ] Add custom domain — **Settings → Domains**: add `byklika.com` / `www.byklika.com`, then add the shown DNS records at your registrar
-- [ ] Set environment variables on Vercel — mirror `.env.example` (`PUBLIC_*`, `PUBLIC_SITE_URL` if not using the default in `astro.config.mjs`)
+- [ ] **Vercel project** — Create a project for this app ([Vercel dashboard](https://vercel.com/new) or `vercel link` from a machine with the CLI). You need the **Team / Org** and **Project** identifiers for CI secrets (see `.vercel/project.json` after linking, or **Project Settings → General**).
+- [x] **GitHub Actions — production** — `.github/workflows/deploy-vercel.yml`: `push` to `main` + `workflow_dispatch`; `vercel pull` (production) → `vercel build` → `vercel deploy --prebuilt --prod`.
+- [x] **GitHub Actions — preview** — `.github/workflows/preview-vercel.yml`: `pull_request` (same-repo only; fork PRs skipped); `vercel pull` (preview, branch-scoped) → `vercel build` → `vercel deploy --prebuilt` (no `--prod`). If the Vercel GitHub integration **also** builds every PR, disable one side or accept duplicate preview deploys.
+- [x] **CI secrets helper (local)** — After `vercel link`, run `pnpm vercel:ci-secrets-hint` to print `VERCEL_ORG_ID` and `VERCEL_PROJECT_ID` for GitHub (reads `.vercel/project.json`; that folder stays gitignored).
+- [ ] **GitHub repository secrets** — In the repo **Settings → Secrets and variables → Actions**, add at minimum:
+  - `VERCEL_TOKEN` — [Create](https://vercel.com/account/tokens) a Vercel access token with deploy scope for this team/project.
+  - `VERCEL_ORG_ID` — Team ID (`team_…` or user scope as shown in Vercel / `.vercel/project.json`).
+  - `VERCEL_PROJECT_ID` — Project ID (`prj_…`).
+- [x] **Avoid double production deploys from Vercel Git** — `vercel.json` → `ignoreCommand` runs `scripts/vercel-ignore-git-production-on-main.sh`: Vercel-initiated **Production** builds for **`main` are skipped** (exit `0`), so GitHub Actions owns prod. **Preview** builds from Vercel Git still run (`exit 1`) unless you turn them off in Vercel or rely only on the preview workflow.
+- [x] **WWW → apex redirect** — `vercel.json` redirects `www.byklika.com` → `https://byklika.com/:path*` (applies once **both** hosts are assigned in Vercel).
+- [ ] **Add custom domain** — **Vercel → Project → Settings → Domains**: add `byklika.com` and `www.byklika.com`. In your DNS provider, add the **exact** records Vercel shows (A/ALIAS/CNAME vary by apex vs `www`). Wait for SSL “Valid configuration”, then verify both URLs load.
+- [ ] **Set environment variables on Vercel** — **Project → Settings → Environment Variables**: mirror `.env.example` for **Production** and **Preview** (`PUBLIC_*`, optional `PUBLIC_SITE_URL`). CLI deploys from GitHub Actions use the same project env as dashboard deploys; after changing vars, trigger a new deploy so CI’s `vercel pull` sees them.
+- [x] **HTTP security headers (edge)** — `vercel.json` → `headers`: `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy` on all routes (HSTS is usually handled by Vercel for custom domains).
+
+**Suggested go-live order (manual items above):** (1) Create/link the **Vercel project** → (2) run **`pnpm vercel:ci-secrets-hint`** → (3) add the three **GitHub Actions secrets** → (4) push **`main`** and confirm the production workflow is green → (5) add **domains** + DNS at your registrar → (6) set **environment variables** on the Vercel project for Production and Preview → (7) trigger another deploy if needed, then check the four boxes.
 
 ---
 
@@ -194,7 +207,7 @@ Recommended profile from agency-agents:
 
 ## ✅ Done Criteria
 
-- Site builds and deploys successfully
+- Site builds in GitHub Actions and deploys to Vercel successfully
 - Homepage complete
 - At least 1 blog post published
 - Contact form working

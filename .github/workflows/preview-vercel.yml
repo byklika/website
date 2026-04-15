@@ -1,0 +1,52 @@
+# Preview deploys for pull requests (same Vercel project; non-production URL).
+# Requires the same repo secrets as deploy-vercel.yml.
+# Skips fork PRs (no secrets). If Vercel’s GitHub app also builds every PR, you’ll get
+# duplicate previews — disable PR builds on one side or remove this workflow.
+
+name: Preview — Vercel
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: vercel-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.11.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel environment (preview)
+        run: vercel pull --yes --environment=preview --git-branch="${{ github.head_ref }}" --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build (Vercel)
+        run: vercel build --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy preview
+        run: vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }}

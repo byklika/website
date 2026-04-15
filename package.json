@@ -10,7 +10,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "vercel:ci-secrets-hint": "node ./scripts/print-vercel-ci-secrets.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.3",

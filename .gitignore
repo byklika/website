@@ -25,3 +25,8 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Vercel CLI (local `vercel link` / `vercel pull`; CI generates per run)
+.vercel/
+.vercel
+.env*.local
