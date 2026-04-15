@@ -167,9 +167,11 @@ Recommended profile from agency-agents:
 
 ## 🚀 Deployment
 
-- [ ] Connect repo to Vercel
-- [ ] Enable automatic deployments
-- [ ] Add custom domain
+- [x] Add Vercel project config in repo (`vercel.json`, `packageManager` for pnpm; build → `dist`)
+- [ ] Connect repo to Vercel — [Import](https://vercel.com/new) the GitHub repo and select this project root
+- [ ] Enable automatic deployments — default for `main` after Git connection; confirm Production Branch in **Settings → Git**
+- [ ] Add custom domain — **Settings → Domains**: add `byklika.com` / `www.byklika.com`, then add the shown DNS records at your registrar
+- [ ] Set environment variables on Vercel — mirror `.env.example` (`PUBLIC_*`, `PUBLIC_SITE_URL` if not using the default in `astro.config.mjs`)
 
 ---
 
