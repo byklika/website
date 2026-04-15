@@ -1,6 +1,7 @@
 # HTML_ANALYSIS_GUIDE.md
 
 ## Purpose
+
 Use the provided HTML homepage sketch as a **reference artifact** to extract design tokens, layout, and components, and rebuild it properly in Astro.
 
 This guide is optimized for **Cursor IDE + agency-agents profiles**.
@@ -13,9 +14,11 @@ Use profiles from:
 https://github.com/msitarzewski/agency-agents
 
 ### Primary Agent
+
 - frontend-developer
 
 ### Secondary Agents (invoke when needed)
+
 - ui-ux-designer → for spacing, hierarchy, visual consistency
 - product-designer → for CTA clarity and structure
 
@@ -24,10 +27,12 @@ https://github.com/msitarzewski/agency-agents
 ## 🧑‍💻 Cursor Workflow (How to Execute)
 
 ### 1. Open the HTML file in Cursor
+
 ### 2. Use Agent Mode with:
 
 Prompt example:
 "Analyze this HTML and extract:
+
 - color palette
 - typography scale
 - layout sections
@@ -52,6 +57,7 @@ Do NOT rewrite code yet. Output structured findings."
 Use:
 
 "From this HTML:
+
 - list all colors (hex/rgb)
 - group into primary, secondary, neutral, accent
 - extract typography (font sizes, weights, headings)
@@ -73,6 +79,7 @@ Prompt:
 (hero, features, how-it-works, CTA, footer)
 
 Return:
+
 - section name
 - purpose
 - key elements"
@@ -86,12 +93,14 @@ Return:
 Prompt:
 
 "Find repeating UI patterns:
+
 - buttons
 - cards
 - nav
 - sections
 
 For each:
+
 - define props
 - define structure"
 
@@ -104,6 +113,7 @@ For each:
 Prompt:
 
 "Refactor this HTML:
+
 - remove inline styles
 - replace with Tailwind classes
 - ensure consistent spacing and typography"
@@ -131,6 +141,7 @@ Do NOT copy raw HTML. Use clean structure and reusable classes."
 Prompt:
 
 "Check this code for:
+
 - inline styles
 - duplicated patterns
 - inconsistent spacing
@@ -160,4 +171,5 @@ Suggest fixes."
 > It is input for abstraction.
 
 Cursor + agents should:
+
 - analyze → extract → systematize → rebuild

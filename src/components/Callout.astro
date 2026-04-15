@@ -4,25 +4,25 @@
  * <Callout variant="info" title="Note">Body text</Callout>
  */
 interface Props {
-	variant?: 'info' | 'warning' | 'error' | 'success';
-	title?: string;
+  variant?: 'info' | 'warning' | 'error' | 'success';
+  title?: string;
 }
 
 const { variant = 'info', title } = Astro.props;
 
 const variantClass = {
-	info: 'alert-info',
-	warning: 'alert-warning',
-	error: 'alert-error',
-	success: 'alert-success'
+  info: 'alert-info',
+  warning: 'alert-warning',
+  error: 'alert-error',
+  success: 'alert-success'
 } as const;
 ---
 
 <div class:list={['alert', variantClass[variant], 'text-start shadow-sm']} role="note">
-	<div class="flex flex-col gap-1 w-full">
-		{title && <span class="font-semibold">{title}</span>}
-		<div class="text-sm [&_p]:my-1">
-			<slot />
-		</div>
-	</div>
+  <div class="flex w-full flex-col gap-1">
+    {title && <span class="font-semibold">{title}</span>}
+    <div class="text-sm [&_p]:my-1">
+      <slot />
+    </div>
+  </div>
 </div>

@@ -4,16 +4,18 @@ import CTA from '../components/CTA.astro';
 ---
 
 <BaseLayout title="Klika — Home" description="Klika — build something great.">
-	<div class="space-y-8">
-		<section class="prose max-w-none">
-			<h1 class="text-4xl font-bold text-base-content">Welcome</h1>
-			<p class="text-lg text-base-content/80">This site is under construction. Explore the navigation to see upcoming pages.</p>
-		</section>
-		<CTA
-			title="Get in touch"
-			description="Have a project in mind? We would love to hear from you."
-			href="/contact"
-			label="Contact us"
-		/>
-	</div>
+  <div class="space-y-8">
+    <section class="prose max-w-none">
+      <h1 class="text-base-content text-4xl font-bold">Welcome</h1>
+      <p class="text-base-content/80 text-lg">
+        This site is under construction. Explore the navigation to see upcoming pages.
+      </p>
+    </section>
+    <CTA
+      title="Get in touch"
+      description="Have a project in mind? We would love to hear from you."
+      href="/contact"
+      label="Contact us"
+    />
+  </div>
 </BaseLayout>

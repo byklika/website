@@ -1,55 +1,59 @@
 ---
 const nav = [
-	{ href: '/', label: 'Home' },
-	{ href: '/services', label: 'Services' },
-	{ href: '/how-it-works', label: 'How it works' },
-	{ href: '/about', label: 'About' },
-	{ href: '/blog', label: 'Blog' },
-	{ href: '/contact', label: 'Contact' }
+  { href: '/', label: 'Home' },
+  { href: '/services', label: 'Services' },
+  { href: '/how-it-works', label: 'How it works' },
+  { href: '/about', label: 'About' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/contact', label: 'Contact' }
 ];
 ---
 
-<header class="navbar bg-base-100 shadow-sm border-b border-base-300">
-	<div class="navbar-start">
-		<a href="/" class="btn btn-ghost text-xl font-semibold tracking-tight">Klika</a>
-	</div>
-	<div class="navbar-end flex-none gap-2">
-		<ul class="menu menu-horizontal px-1 gap-0 hidden lg:flex">
-			{
-				nav.map(({ href, label }) => (
-					<li>
-						<a href={href} class="rounded-lg">
-							{label}
-						</a>
-					</li>
-				))
-			}
-		</ul>
-		<div class="dropdown dropdown-end lg:hidden">
-			<div tabindex="0" role="button" class="btn btn-ghost btn-circle" aria-label="Open menu">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="h-6 w-6"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke="currentColor"
-					aria-hidden="true"
-				>
-					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-				</svg>
-			</div>
-			<ul
-				tabindex="0"
-				class="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow border border-base-300"
-			>
-				{
-					nav.map(({ href, label }) => (
-						<li>
-							<a href={href}>{label}</a>
-						</li>
-					))
-				}
-			</ul>
-		</div>
-	</div>
+<header class="navbar bg-base-100 border-base-300 border-b shadow-sm">
+  <div class="navbar-start">
+    <a href="/" class="btn btn-ghost text-xl font-semibold tracking-tight">Klika</a>
+  </div>
+  <div class="navbar-end flex-none gap-2">
+    <ul class="menu menu-horizontal hidden gap-0 px-1 lg:flex">
+      {
+        nav.map(({ href, label }) => (
+          <li>
+            <a href={href} class="rounded-lg">
+              {label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="dropdown dropdown-end lg:hidden">
+      <div tabindex="0" role="button" class="btn btn-ghost btn-circle" aria-label="Open menu">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </div>
+      <ul
+        tabindex="0"
+        class="menu menu-sm dropdown-content bg-base-100 rounded-box border-base-300 z-50 mt-3 w-52 border p-2 shadow"
+      >
+        {
+          nav.map(({ href, label }) => (
+            <li>
+              <a href={href}>{label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
 </header>

@@ -11,7 +11,16 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "vercel:ci-secrets-hint": "node ./scripts/print-vercel-ci-secrets.mjs"
+    "vercel:ci-secrets-hint": "node ./scripts/print-vercel-ci-secrets.mjs",
+    "lint": "eslint .",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,mjs,cjs,json,yml,yaml,md,mdx,css,scss,astro}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.3",
@@ -22,6 +31,15 @@
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
-    "daisyui": "^5.5.19"
+    "@eslint/js": "^10.0.1",
+    "daisyui": "^5.5.19",
+    "eslint": "^10.2.0",
+    "eslint-plugin-astro": "^1.7.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.8.3",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "typescript-eslint": "^8.58.2"
   }
 }

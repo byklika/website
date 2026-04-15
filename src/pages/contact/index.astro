@@ -4,15 +4,17 @@ import ContactForm from '../../components/ContactForm.astro';
 ---
 
 <BaseLayout title="Contact — Klika" description="Get in touch with Klika.">
-	<section class="space-y-6">
-		<div class="prose max-w-none">
-			<h1>Contact</h1>
-			<p>
-				Send a message using the form below. Submissions are delivered via{' '}
-				<a href="https://web3forms.com" rel="noopener noreferrer" target="_blank">Web3Forms</a> (configure{' '}
-				<code>PUBLIC_WEB3FORMS_ACCESS_KEY</code> for production).
-			</p>
-		</div>
-		<ContactForm />
-	</section>
+  <section class="space-y-6">
+    <div class="prose max-w-none">
+      <h1>Contact</h1>
+      <p>
+        Send a message using the form below. Submissions are delivered via{' '}
+        <a href="https://web3forms.com" rel="noopener noreferrer" target="_blank">Web3Forms</a> (configure{
+          ' '
+        }
+        <code>PUBLIC_WEB3FORMS_ACCESS_KEY</code> for production).
+      </p>
+    </div>
+    <ContactForm />
+  </section>
 </BaseLayout>

@@ -9,6 +9,7 @@ This document defines the initial setup steps for building the Klika website usi
 ## 🧠 Agent Profile
 
 Recommended profile from agency-agents:
+
 - **frontend-developer**
 - Secondary (optional): **ui-ux-designer**
 
@@ -50,14 +51,14 @@ Recommended profile from agency-agents:
   ```js
   /** @type {import('tailwindcss').Config} */
   export default {
-    content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
+    content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
     theme: {
-      extend: {},
+      extend: {}
     },
-    plugins: [require("@tailwindcss/typography"), require("daisyui")],
+    plugins: [require('@tailwindcss/typography'), require('daisyui')],
     daisyui: {
-      themes: ["light", "dark"],
-    },
+      themes: ['light', 'dark']
+    }
   };
   ```
 
@@ -190,9 +191,9 @@ Production deploys are triggered from **GitHub Actions**, not Vercel’s default
 
 ## 🔐 Quality & DX
 
-- [ ] Add ESLint
-- [ ] Add Prettier
-- [ ] Configure TypeScript strict mode
+- [x] Add ESLint
+- [x] Add Prettier
+- [x] Configure TypeScript strict mode
 
 ---
 
