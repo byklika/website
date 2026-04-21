@@ -189,6 +189,25 @@ Production deploys are triggered from **GitHub Actions**, not Vercel’s default
 
 ---
 
+## 🌿 Git workflow + protecting `main` (required)
+
+From now on, **direct pushes to `main` must be forbidden**. Production deploys happen when a PR is merged into `main` (i.e. the merge commit lands on `main`).
+
+### Required GitHub settings (repo admins)
+
+In **GitHub → Settings → Branches → Branch protection rules** (create one for `main`):
+
+- **Require a pull request before merging** (and set required approvals as desired)
+- **Require status checks to pass before merging**
+  - Add at least the Vercel preview workflow check (and any lint/test checks you use)
+- **Do not allow bypassing the above settings**
+- **Restrict who can push to matching branches**
+  - Set to **no one** (or only a “release bot” / GitHub merge queue if you use one)
+
+This is the only reliable way to *actually* prevent `git push origin main` across all users.
+
+---
+
 ## 🔐 Quality & DX
 
 - [x] Add ESLint
