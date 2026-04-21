@@ -12,14 +12,20 @@ export interface Props {
   title: string;
   intro: string;
   steps: Step[];
+  class?: string;
 }
 
-const { eyebrow, title, intro, steps } = Astro.props;
+const { eyebrow, title, intro, steps, class: className } = Astro.props;
 ---
 
 <section
   id="metodologia"
-  class="relative overflow-hidden bg-klika-dark px-[1.5rem] py-16 text-klika-white min-[901px]:px-[3rem] min-[901px]:py-24"
+  class={[
+    'relative overflow-hidden bg-klika-dark px-[1.5rem] py-16 text-klika-white min-[901px]:px-[3rem] min-[901px]:py-24',
+    className
+  ]
+    .filter(Boolean)
+    .join(' ')}
 >
   <div
     class="pointer-events-none absolute -right-[150px] -top-[200px] hidden h-[500px] w-[500px] rounded-full bg-klika-moss/20 min-[901px]:block"

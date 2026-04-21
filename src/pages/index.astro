@@ -1,14 +1,20 @@
 ---
 import MarketingLayout from '../layouts/MarketingLayout.astro';
 import Hero from '../components/sections/Hero.astro';
-import LogoMarquee from '../components/sections/LogoMarquee.astro';
 import Methodology from '../components/sections/Methodology.astro';
 import Services from '../components/sections/Services.astro';
 import AboutUs from '../components/sections/AboutUs.astro';
 import Contact from '../components/sections/Contact.astro';
+import EmailSignupPopup from '../components/EmailSignupPopup.astro';
 
-const heroImage =
-  'data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADY=';
+/**
+ * Hero raster: master lives under `src/assets/` (not publicly served).
+ * Optimized derivatives in `public/images/hero/` — regenerate: `npm run optimize:hero`
+ */
+const heroImageBase = '/images/hero/home-hero-instructional-design';
+const heroImageSizes = '(min-width: 901px) min(42vw, 30rem), min(96vw, 40rem)';
+const heroImageAlt =
+  'Three professional women collaborating on an instructional design learning map around a wooden table in a bright, plant-filled office.';
 ---
 
 <MarketingLayout
@@ -16,6 +22,7 @@ const heroImage =
   description="Experiencias educativas que dejan huella. Diseñamos para que educadores y aprendices sientan que valió la pena."
 >
   <Hero
+    class="homepage-section homepage-section-hero"
     eyebrow="E‑Learning Studio"
     titleHtml={'Experiencias educativas<br/>que <em class="italic text-klika-coral">dejan huella</em>'}
     subtitle="Transformamos la manera de aprender. Diseñamos para que educadores y aprendices sientan que valió la pena."
@@ -23,16 +30,31 @@ const heroImage =
     primaryLabel="Conocé nuestros servicios →"
     secondaryHref="#metodologia"
     secondaryLabel="Cómo trabajamos"
-    imageSrc={heroImage}
-    imageAlt="Equipo trabajando en una experiencia educativa"
-  />
-
-  <LogoMarquee
-    label="Confían en nuestro trabajo"
-    items={['LOGO', 'LOGO', 'LOGO', 'LOGO', 'LOGO']}
-  />
+    imageAlt={heroImageAlt}
+  >
+    <picture slot="media">
+      <source
+        type="image/webp"
+        srcset={`${heroImageBase}-480w.webp 480w, ${heroImageBase}-640w.webp 640w, ${heroImageBase}-960w.webp 960w, ${heroImageBase}-1280w.webp 1280w`}
+        sizes={heroImageSizes}
+      />
+      <img
+        src={`${heroImageBase}-960w.jpg`}
+        srcset={`${heroImageBase}-480w.jpg 480w, ${heroImageBase}-640w.jpg 640w, ${heroImageBase}-960w.jpg 960w, ${heroImageBase}-1280w.jpg 1280w`}
+        alt={heroImageAlt}
+        width={2400}
+        height={1792}
+        sizes={heroImageSizes}
+        class="h-full w-full object-cover [object-position:center_top]"
+        decoding="async"
+        fetchpriority="high"
+        loading="eager"
+      />
+    </picture>
+  </Hero>
 
   <Methodology
+    class="homepage-section homepage-section-methodology"
     eyebrow="Nuestra metodología"
     title="Activar · Explorar · Conectar · Demostrar"
     intro="Cada experiencia que diseñamos tiene un hilo conductor: entender a quién aprende, generar las condiciones para que quiera aprender y asegurarnos de que algo concreto cambie al final."
@@ -61,6 +83,7 @@ const heroImage =
   />
 
   <Services
+    class="homepage-section homepage-section-services"
     eyebrow="Nuestros servicios"
     title="¿En qué momento de tu proyecto estás?"
     subtitle="Acompañamos cada etapa del proceso: desde ordenar las primeras ideas, hasta tener un programa completo listo para salir."
@@ -125,6 +148,7 @@ const heroImage =
   />
 
   <AboutUs
+    class="homepage-section homepage-section-about"
     eyebrow="Nosotras"
     title="¿Por qué Klika?"
     items={[
@@ -156,14 +180,13 @@ const heroImage =
   />
 
   <Contact
+    class="homepage-section homepage-section-contact"
     eyebrow="Contacto"
     title="Contanos sobre tu proyecto."
     description="Ya sea que tengas todo claro o solo una idea inicial, ¡escribinos!"
     email="hola@klikastudio.com"
     locationLine="Argentina · LATAM"
-    instagramLabel="@klika.studio (Instagram)"
-    instagramHref="#"
-    linkedinLabel="Klika Elearning Studio (LinkedIn)"
-    linkedinHref="#"
   />
+
+  <EmailSignupPopup />
 </MarketingLayout>

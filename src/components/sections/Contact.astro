@@ -8,10 +8,11 @@ export interface Props {
   description: string;
   email: string;
   locationLine: string;
-  instagramLabel: string;
-  instagramHref: string;
-  linkedinLabel: string;
-  linkedinHref: string;
+  instagramLabel?: string;
+  instagramHref?: string;
+  linkedinLabel?: string;
+  linkedinHref?: string;
+  class?: string;
 }
 
 const {
@@ -23,13 +24,19 @@ const {
   instagramLabel,
   instagramHref,
   linkedinLabel,
-  linkedinHref
+  linkedinHref,
+  class: className
 } = Astro.props;
 ---
 
 <section
   id="contacto"
-  class="relative overflow-hidden bg-klika-dark px-[1.5rem] py-16 text-klika-white min-[901px]:px-[3rem] min-[901px]:py-24"
+  class={[
+    'relative overflow-hidden bg-klika-dark px-[1.5rem] py-16 text-klika-white min-[901px]:px-[3rem] min-[901px]:py-24',
+    className
+  ]
+    .filter(Boolean)
+    .join(' ')}
 >
   <div
     class="pointer-events-none absolute -left-[100px] bottom-[-100px] hidden h-[400px] w-[400px] rounded-full bg-klika-coral/10 min-[901px]:block"
@@ -46,12 +53,16 @@ const {
           {email}
         </a>
         <span class="text-sm text-white/60">{locationLine}</span>
-        <a class="text-[0.88rem] text-white/50 no-underline hover:text-klika-coral" href={instagramHref}>
-          {instagramLabel}
-        </a>
-        <a class="text-[0.88rem] text-white/50 no-underline hover:text-klika-coral" href={linkedinHref}>
-          {linkedinLabel}
-        </a>
+        {instagramHref && instagramLabel ? (
+          <a class="text-[0.88rem] text-white/50 no-underline hover:text-klika-coral" href={instagramHref}>
+            {instagramLabel}
+          </a>
+        ) : null}
+        {linkedinHref && linkedinLabel ? (
+          <a class="text-[0.88rem] text-white/50 no-underline hover:text-klika-coral" href={linkedinHref}>
+            {linkedinLabel}
+          </a>
+        ) : null}
       </div>
     </div>
 

@@ -11,12 +11,16 @@ export interface Props {
   eyebrow: string;
   title: string;
   items: Item[];
+  class?: string;
 }
 
-const { eyebrow, title, items } = Astro.props;
+const { eyebrow, title, items, class: className } = Astro.props;
 ---
 
-<section id="nosotras" class="bg-klika-white px-[1.5rem] py-16 min-[901px]:px-[3rem] min-[901px]:py-24">
+<section
+  id="nosotras"
+  class={['bg-klika-white px-[1.5rem] py-16 min-[901px]:px-[3rem] min-[901px]:py-24', className].filter(Boolean).join(' ')}
+>
   <div class="mx-auto max-w-6xl">
     <SectionHeading eyebrow={eyebrow} title={title} class="reveal" />
 

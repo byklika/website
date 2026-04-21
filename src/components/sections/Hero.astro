@@ -10,7 +10,9 @@ export interface Props {
   secondaryHref: string;
   secondaryLabel: string;
   imageAlt: string;
-  imageSrc: string;
+  /** Used when no `slot="media"` content is provided */
+  imageSrc?: string;
+  class?: string;
 }
 
 const {
@@ -22,11 +24,20 @@ const {
   secondaryHref,
   secondaryLabel,
   imageAlt,
-  imageSrc
+  imageSrc,
+  class: className
 } = Astro.props;
 ---
 
-<section id="inicio" class="relative min-h-screen overflow-hidden bg-klika-hero">
+<section
+  id="inicio"
+  class={[
+    'relative flex min-h-screen flex-col overflow-hidden bg-klika-hero',
+    className
+  ]
+    .filter(Boolean)
+    .join(' ')}
+>
   <div
     class="pointer-events-none absolute -right-[80px] -top-[100px] hidden h-[580px] w-[580px] min-[901px]:block"
     aria-hidden="true"
@@ -35,8 +46,11 @@ const {
   </div>
 
   <div
-    class="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-[1.5rem] pb-12 pt-24 text-center min-[901px]:grid-cols-2 min-[901px]:gap-[3rem] min-[901px]:px-[3rem] min-[901px]:pb-16 min-[901px]:pt-28 min-[901px]:text-left"
+    class="relative z-[1] flex min-h-0 flex-1 flex-col justify-center px-[1.5rem] pb-12 pt-24 min-[901px]:px-[3rem] min-[901px]:pb-16 min-[901px]:pt-28"
   >
+    <div
+      class="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 text-center min-[901px]:grid-cols-2 min-[901px]:gap-[3rem] min-[901px]:text-left"
+    >
     <div>
       <p class="mb-[1.2rem] inline-block text-[0.78rem] font-semibold uppercase tracking-[0.12em] text-klika-moss">
         {eyebrow}
@@ -55,8 +69,17 @@ const {
 
     <div class="animate-fadeUp [animation-delay:200ms]">
       <div class="overflow-hidden rounded-[2rem] bg-klika-sand shadow-heroImage aspect-[4/3]">
-        <img src={imageSrc} alt={imageAlt} class="h-full w-full object-cover [object-position:center_top]" />
+        <slot name="media">
+          {imageSrc ? (
+            <img
+              src={imageSrc}
+              alt={imageAlt}
+              class="h-full w-full object-cover [object-position:center_top]"
+            />
+          ) : null}
+        </slot>
       </div>
+    </div>
     </div>
   </div>
 </section>

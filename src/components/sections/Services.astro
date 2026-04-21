@@ -6,7 +6,7 @@ import Button from '../ui/Button.astro';
 import Pill from '../ui/Pill.astro';
 
 export interface ServicePanel {
-  id: string;
+  id: 'tab1' | 'tab2' | 'tab3' | 'tab4';
   tabLabel: string;
   card: {
     label: string;
@@ -22,13 +22,61 @@ export interface Props {
   subtitle: string;
   tagline: string;
   panels: ServicePanel[];
+  class?: string;
 }
 
-const { eyebrow, title, subtitle, tagline, panels } = Astro.props;
+const { eyebrow, title, subtitle, tagline, panels, class: className } = Astro.props;
 const tabs: Tab[] = panels.map((p) => ({ id: p.id, label: p.tabLabel }));
+
+function buildMailto({ to, subject, body }: { to: string; subject: string; body: string }) {
+  const qs = new URLSearchParams({
+    subject,
+    body
+  });
+  return `mailto:${to}?${qs.toString()}`;
+}
+
+const MAILTO_TO = 'hola@klikastudio.net';
+
+const panelMailtoById: Record<ServicePanel['id'], string> = {
+  tab1: buildMailto({
+    to: MAILTO_TO,
+    subject: 'Quiero pensar mi proyecto con Klika',
+    body:
+      'Hola, equipo Klika 👋\n\nMe interesa la etapa de diagnóstico y estructuración. Me gustaría saber cómo trabajan y si podemos agendar una charla.\n\n[Tu nombre / empresa]'
+  }),
+  tab2: buildMailto({
+    to: MAILTO_TO,
+    subject: 'Me interesa el diseño de una experiencia de aprendizaje',
+    body:
+      'Hola, equipo Klika 👋\n\nQuiero conocer más sobre cómo diseñan experiencias de aprendizaje. Me gustaría contarles el contexto y explorar si podemos trabajar juntos.\n\n[Tu nombre / empresa]'
+  }),
+  tab3: buildMailto({
+    to: MAILTO_TO,
+    subject: 'Necesito producir materiales para capacitación',
+    body:
+      'Hola, equipo Klika 👋\n\nTengo un proyecto que necesita producción de materiales. Me interesa saber cómo trabajan y qué podríamos hacer juntos.\n\n[Tu nombre / empresa]'
+  }),
+  tab4: buildMailto({
+    to: MAILTO_TO,
+    subject: 'Quiero diseñar un programa completo con Klika',
+    body:
+      'Hola, equipo Klika 👋\n\nMe interesa armar un programa de capacitación completo. Me gustaría conectar para contarles el proyecto y ver cómo pueden acompañarnos.\n\n[Tu nombre / empresa]'
+  })
+};
+
+const generalMailto = buildMailto({
+  to: MAILTO_TO,
+  subject: 'Tengo un proyecto y quiero contarles',
+  body:
+    'Hola, equipo Klika 👋\n\nEstoy buscando apoyo para un proyecto de capacitación y me gustaría contarles de qué se trata. ¿Podemos agendar una charla?\n\n[Tu nombre / empresa]'
+});
 ---
 
-<section id="servicios" class="bg-klika-cream px-[1.5rem] py-16 min-[901px]:px-[3rem] min-[901px]:py-24">
+<section
+  id="servicios"
+  class={['bg-klika-cream px-[1.5rem] py-16 min-[901px]:px-[3rem] min-[901px]:py-24', className].filter(Boolean).join(' ')}
+>
   <div class="mx-auto max-w-6xl">
     <SectionHeading eyebrow={eyebrow} title={title} class="reveal">
       <p class="mt-2 max-w-[640px] text-base leading-[1.7] text-klika-sage">{subtitle}</p>
@@ -44,7 +92,7 @@ const tabs: Tab[] = panels.map((p) => ({ id: p.id, label: p.tabLabel }));
               title={p.card.title}
               tagline={p.card.tagline}
               includes={p.card.includes}
-              ctaHref="#contacto"
+              ctaHref={panelMailtoById[p.id]}
               ctaLabel="Quiero más información →"
             />
           </div>
@@ -52,23 +100,11 @@ const tabs: Tab[] = panels.map((p) => ({ id: p.id, label: p.tabLabel }));
       </Tabs>
     </div>
 
-    <div class="reveal mt-16 flex flex-wrap items-center justify-between gap-[1.5rem] rounded-[1.2rem] bg-klika-moss px-[2.4rem] py-[2rem] text-klika-white">
-      <div class="max-w-2xl">
-        <h3 class="mb-[0.4rem] font-serif text-[1rem] font-normal">Un primer acercamiento a Klika</h3>
-        <p class="max-w-[420px] text-[0.84rem] leading-[1.65] text-white/70">
-          Templates y guías de uso — recursos descargables para empezar a ordenar y dar forma a tu proyecto por tu cuenta, y conocer cómo trabajamos. Una buena forma de dar el primer paso.
-        </p>
-      </div>
-      <div>
-        <Button href="#contacto" variant="primary">Quiero los recursos →</Button>
-      </div>
-    </div>
-
     <div class="reveal rd1 mt-6 flex flex-wrap items-center justify-between gap-4 rounded-[1.2rem] border-[1.5px] border-klika-moss/20 bg-klika-cream px-[2.4rem] py-[2rem]">
       <p class="text-[0.95rem] text-klika-dark">
         <strong class="font-serif font-bold">¿No encontraste lo que buscabas?</strong> ¡Escribinos y contanos sobre tu proyecto!
       </p>
-      <Button href="#contacto" variant="secondary">Escribinos →</Button>
+      <Button href={generalMailto} variant="secondary">Escribinos →</Button>
     </div>
 
     <div class="reveal mt-16 border-t border-klika-moss/15 pt-12">
@@ -88,7 +124,7 @@ const tabs: Tab[] = panels.map((p) => ({ id: p.id, label: p.tabLabel }));
         ))}
       </div>
 
-      <div class="mt-6 inline-flex max-w-fit items-center gap-3 rounded-[1rem] bg-klika-moss px-[2rem] py-[1.2rem]">
+      <div class="mt-6 w-full items-center gap-3 rounded-[1rem] bg-klika-moss px-[2rem] py-[1.2rem] flex">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
           <circle cx="12" cy="12" r="10" />
           <path d="M2 12 Q7 9 12 12 Q17 15 22 12" />

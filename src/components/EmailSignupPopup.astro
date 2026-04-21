@@ -1,0 +1,336 @@
+---
+export interface Props {
+  storageKey?: string;
+  openAfterMs?: number;
+  openAtScrollRatio?: number;
+  autoCloseMs?: number;
+}
+
+const {
+  storageKey = 'email_signup_popup_seen_v1',
+  openAfterMs = 50_000,
+  openAtScrollRatio = 0.6,
+  autoCloseMs = 2_500
+} = Astro.props;
+---
+
+<div
+  id="email-signup-popup-overlay"
+  class="fixed inset-0 z-[9999] hidden items-center justify-center bg-klika-dark/55 px-4"
+  data-email-signup-popup-overlay
+>
+  <div
+    id="email-signup-popup-dialog"
+    class="relative w-full max-w-[400px] rounded-[16px] bg-klika-cream px-8 pt-10 pb-8 font-sans shadow-2xl"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="email-signup-popup-title"
+    aria-describedby="email-signup-popup-desc"
+    tabindex="-1"
+    data-email-signup-popup-dialog
+  >
+    <button
+      id="email-signup-popup-close"
+      type="button"
+      class="absolute right-[18px] top-[14px] inline-flex h-9 w-9 items-center justify-center rounded-full text-klika-sage/70 hover:text-klika-sage focus:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral"
+      aria-label="Cerrar"
+      data-email-signup-popup-close
+    >
+      ✕
+    </button>
+
+    <p class="mb-4 text-[11px] font-bold uppercase tracking-[0.08em] text-klika-sage/70">E‑Learning Studio</p>
+
+    <div class="mb-5 h-1 w-9 rounded-full bg-klika-coral"></div>
+
+    <div id="email-signup-popup-form-view" data-email-signup-popup-form-view>
+      <h2
+        id="email-signup-popup-title"
+        class="mb-2 font-serif text-[19px] font-bold leading-[1.35] text-klika-dark"
+      >
+        Algo se está cocinando por acá.
+      </h2>
+      <p id="email-signup-popup-desc" class="mb-6 text-[14px] leading-[1.6] text-klika-sage">
+        De vez en cuando mandamos algo útil. Nada más.
+      </p>
+
+      <form id="email-signup-popup-form" class="space-y-[10px]" novalidate data-email-signup-popup-form>
+        <label class="block">
+          <span class="sr-only">Tu nombre</span>
+          <input
+            id="email-signup-popup-name"
+            name="name"
+            type="text"
+            autocomplete="name"
+            placeholder="Tu nombre"
+            class="w-full rounded-[8px] border-[1.5px] border-klika-sage bg-white px-[14px] py-[10px] text-[14px] text-klika-dark outline-none focus:border-klika-coral focus:ring-2 focus:ring-klika-coral/20"
+          />
+        </label>
+
+        <label class="block">
+          <span class="sr-only">Email</span>
+          <input
+            id="email-signup-popup-email"
+            name="email"
+            type="email"
+            required
+            autocomplete="email"
+            inputmode="email"
+            placeholder="nombre@empresa.com"
+            class="w-full rounded-[8px] border-[1.5px] border-klika-sage bg-white px-[14px] py-[10px] text-[14px] text-klika-dark outline-none focus:border-klika-coral focus:ring-2 focus:ring-klika-coral/20"
+            data-email-signup-popup-email
+          />
+        </label>
+
+        <p id="email-signup-popup-error" class="hidden text-[12px] text-klika-coral" role="alert" aria-live="polite">
+          Ingresá un email válido para continuar.
+        </p>
+
+        <button
+          id="email-signup-popup-submit"
+          type="submit"
+          class="mt-2 w-full cursor-pointer rounded-[8px] bg-klika-moss py-[11px] text-[15px] font-medium text-white hover:bg-klika-moss/95 focus:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral"
+        >
+          Me anoto
+        </button>
+
+        <p class="pt-1 text-center text-[11px] text-klika-sage/70">Sin spam. Te das de baja cuando quieras.</p>
+      </form>
+    </div>
+
+    <div id="email-signup-popup-confirm-view" class="hidden" data-email-signup-popup-confirm-view>
+      <h2 class="mb-2 font-serif text-[19px] font-bold leading-[1.35] text-klika-dark">¡Listo!</h2>
+      <p class="text-[14px] leading-[1.6] text-klika-sage">Te avisamos cuando haya novedades.</p>
+    </div>
+  </div>
+</div>
+
+<script
+  is:inline
+  type="module"
+  define:vars={{ storageKey, openAfterMs, openAtScrollRatio, autoCloseMs }}
+>
+  const overlay = document.querySelector('[data-email-signup-popup-overlay]');
+  const dialog = document.querySelector('[data-email-signup-popup-dialog]');
+  const closeBtn = document.querySelector('[data-email-signup-popup-close]');
+  const form = document.querySelector('[data-email-signup-popup-form]');
+  const emailInput = document.querySelector('[data-email-signup-popup-email]');
+  const errorEl = document.getElementById('email-signup-popup-error');
+  const formView = document.querySelector('[data-email-signup-popup-form-view]');
+  const confirmView = document.querySelector('[data-email-signup-popup-confirm-view]');
+
+  if (!(overlay && dialog && closeBtn && form && emailInput && errorEl && formView && confirmView)) {
+    // Markup not found; no-op.
+  } else {
+    /** @type {HTMLElement | null} */
+    let lastFocused = null;
+    /** @type {string} */
+    let prevDocOverflow = '';
+    /** @type {Array<{el: HTMLElement; ariaHidden: string | null; inert: boolean | null}>} */
+    let backgroundEls = [];
+    /** @type {number | null} */
+    let timeoutId = null;
+
+    const hasSeen = () => {
+      try {
+        return localStorage.getItem(storageKey) === '1';
+      } catch {
+        return false;
+      }
+    };
+
+    const markSeen = () => {
+      try {
+        localStorage.setItem(storageKey, '1');
+      } catch {
+        // ignore
+      }
+    };
+
+    const getFocusable = () => {
+      const selectors = [
+        'a[href]',
+        'button:not([disabled])',
+        'input:not([disabled])',
+        'select:not([disabled])',
+        'textarea:not([disabled])',
+        '[tabindex]:not([tabindex="-1"])'
+      ];
+      return Array.from(dialog.querySelectorAll(selectors.join(','))).filter((el) => {
+        const node = /** @type {HTMLElement} */ (el);
+        return !node.hasAttribute('disabled') && node.getAttribute('aria-hidden') !== 'true';
+      });
+    };
+
+    const showInvalidEmail = () => {
+      errorEl.classList.remove('hidden');
+      emailInput.classList.add('border-klika-coral');
+    };
+
+    const hideInvalidEmail = () => {
+      errorEl.classList.add('hidden');
+      emailInput.classList.remove('border-klika-coral');
+    };
+
+    const lockScroll = () => {
+      prevDocOverflow = document.documentElement.style.overflow;
+      document.documentElement.style.overflow = 'hidden';
+    };
+
+    const unlockScroll = () => {
+      document.documentElement.style.overflow = prevDocOverflow;
+    };
+
+    const setBackgroundInert = (enabled) => {
+      const header = document.querySelector('header');
+      const footer = document.querySelector('footer');
+      const main = document.querySelector('main');
+      const candidates = [];
+
+      if (header) candidates.push(header);
+      if (footer) candidates.push(footer);
+      if (main) {
+        for (const child of Array.from(main.children)) {
+          if (child === overlay) continue;
+          candidates.push(child);
+        }
+      }
+
+      if (enabled) {
+        backgroundEls = candidates.map((el) => ({
+          el,
+          ariaHidden: el.getAttribute('aria-hidden'),
+          inert: /** @type {any} */ (el).inert ?? null
+        }));
+        for (const { el } of backgroundEls) {
+          el.setAttribute('aria-hidden', 'true');
+          /** @type {any} */ (el).inert = true;
+        }
+      } else {
+        for (const { el, ariaHidden, inert } of backgroundEls) {
+          if (ariaHidden === null) el.removeAttribute('aria-hidden');
+          else el.setAttribute('aria-hidden', ariaHidden);
+          if (inert === null) {
+            // If inert wasn't supported, leave as-is.
+          } else {
+            /** @type {any} */ (el).inert = inert;
+          }
+        }
+        backgroundEls = [];
+      }
+    };
+
+    const open = () => {
+      if (hasSeen()) return;
+
+      lastFocused = /** @type {HTMLElement | null} */ (document.activeElement);
+
+      overlay.classList.remove('hidden');
+      overlay.classList.add('flex');
+
+      // reset views
+      confirmView.classList.add('hidden');
+      formView.classList.remove('hidden');
+      hideInvalidEmail();
+
+      lockScroll();
+      setBackgroundInert(true);
+
+      // Focus: close is a safe default, then tab-trap keeps users inside.
+      closeBtn.focus();
+      cleanupTriggers();
+    };
+
+    const close = ({ markSeenOnClose } = { markSeenOnClose: true }) => {
+      if (markSeenOnClose) markSeen();
+      overlay.classList.add('hidden');
+      overlay.classList.remove('flex');
+      setBackgroundInert(false);
+      unlockScroll();
+
+      const toRestore = lastFocused;
+      lastFocused = null;
+      if (toRestore && typeof toRestore.focus === 'function') toRestore.focus();
+    };
+
+    const trapFocus = (e) => {
+      if (e.key !== 'Tab') return;
+      const focusables = getFocusable();
+      if (!focusables.length) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+
+      if (e.shiftKey) {
+        if (active === first || active === dialog) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    const onScrollCheck = () => {
+      const doc = document.documentElement;
+      const scrollTop = window.scrollY || doc.scrollTop || 0;
+      const viewport = window.innerHeight || doc.clientHeight || 0;
+      const scrollHeight = doc.scrollHeight || 0;
+      const ratio = scrollHeight > 0 ? (scrollTop + viewport) / scrollHeight : 0;
+      if (ratio >= openAtScrollRatio) open();
+    };
+
+    const startTriggers = () => {
+      if (hasSeen()) return;
+      timeoutId = window.setTimeout(open, openAfterMs);
+      window.addEventListener('scroll', onScrollCheck, { passive: true });
+    };
+
+    const cleanupTriggers = () => {
+      if (timeoutId != null) window.clearTimeout(timeoutId);
+      timeoutId = null;
+      window.removeEventListener('scroll', onScrollCheck);
+    };
+
+    closeBtn.addEventListener('click', () => close({ markSeenOnClose: true }));
+
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) close({ markSeenOnClose: true });
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('flex')) close({ markSeenOnClose: true });
+    });
+
+    dialog.addEventListener('keydown', trapFocus);
+
+    emailInput.addEventListener('input', () => {
+      if (emailInput.checkValidity()) hideInvalidEmail();
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideInvalidEmail();
+
+      if (!emailInput.checkValidity()) {
+        showInvalidEmail();
+        emailInput.focus();
+        return;
+      }
+
+      // No backend wired yet; treat as successful capture once valid.
+      formView.classList.add('hidden');
+      confirmView.classList.remove('hidden');
+      markSeen(); // only mark seen on successful submit
+
+      window.setTimeout(() => close({ markSeenOnClose: false }), autoCloseMs);
+    });
+
+    startTriggers();
+    onScrollCheck();
+  }
+</script>

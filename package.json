@@ -12,6 +12,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "vercel:ci-secrets-hint": "node ./scripts/print-vercel-ci-secrets.mjs",
+    "optimize:hero": "sh scripts/optimize-hero-images.sh",
     "lint": "eslint .",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
