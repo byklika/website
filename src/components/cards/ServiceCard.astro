@@ -1,6 +1,7 @@
 ---
-import Tag from '../ui/Tag.astro';
-import Button from '../ui/Button.astro';
+import { cn } from '~/lib/helpers';
+import Tag from '~/components/ui/Tag.astro';
+import Button from '~/components/ui/Button.astro';
 
 export interface Props {
   label: string;
@@ -18,13 +19,11 @@ const { label, title, tagline, description, includes = [], ctaHref, ctaLabel, cl
 ---
 
 <article
-  class={[
-    'grid grid-cols-1 overflow-hidden rounded-[1.4rem] bg-klika-white shadow-card min-[901px]:grid-cols-[260px_1fr]',
-    'transition hover:shadow-cardHover',
+  class={cn(
+    'service-card-component',
+    'grid grid-cols-1 overflow-hidden rounded-[1.4rem] bg-klika-white shadow-card transition hover:shadow-cardHover 2xl:shadow-cardXl min-[901px]:grid-cols-[minmax(15rem,22vw)_1fr]',
     className
-  ]
-    .filter(Boolean)
-    .join(' ')}
+  )}
 >
   <div class="flex flex-col justify-between bg-klika-dark px-[2rem] py-[2.4rem]">
     <div>
@@ -38,7 +37,7 @@ const { label, title, tagline, description, includes = [], ctaHref, ctaLabel, cl
   </div>
 
   <div class="flex flex-col justify-between bg-klika-white px-[2.2rem] py-[2.4rem]">
-    <div class="space-y-4">
+    <div class="max-w-prose space-y-4">
       {description && <p class="text-[0.9rem] leading-relaxed text-klika-ink">{description}</p>}
 
       {includes.length > 0 && (

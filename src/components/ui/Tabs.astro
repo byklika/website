@@ -1,4 +1,6 @@
 ---
+import { cn } from '~/lib/helpers';
+
 export interface Tab {
   id: string;
   label: string;
@@ -13,12 +15,12 @@ export interface Props {
 const { tabs, initialId = tabs?.[0]?.id, class: className } = Astro.props;
 ---
 
-<div class={['w-full', className].filter(Boolean).join(' ')}>
+<div class={cn('tabs-component', 'w-full', className)}>
   <div class="flex flex-wrap gap-[0.6rem]">
     {tabs.map((t) => (
       <button
         type="button"
-        class="js-tab rounded-pill border-[1.5px] border-klika-moss/30 px-[1.2rem] py-[0.55rem] text-[0.82rem] font-medium text-klika-moss transition hover:bg-klika-moss hover:text-klika-white hover:border-klika-moss"
+        class="js-tab inline-flex min-h-[2.75rem] items-center rounded-pill border-[1.5px] border-klika-moss/30 px-[1.25rem] py-2 text-[0.82rem] font-medium text-klika-moss transition hover:border-klika-moss hover:bg-klika-moss hover:text-klika-white xl:px-[1.45rem] xl:text-[0.86rem]"
         data-tab={t.id}
       >
         {t.label}

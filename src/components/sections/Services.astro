@@ -1,12 +1,14 @@
 ---
-import SectionHeading from '../ui/SectionHeading.astro';
-import Tabs, { type Tab } from '../ui/Tabs.astro';
-import ServiceCard from '../cards/ServiceCard.astro';
-import Button from '../ui/Button.astro';
-import Pill from '../ui/Pill.astro';
+import { cn } from '~/lib/helpers';
+import ServicesLatamGlobeBannerIcon from '~/icons/ServicesLatamGlobeBannerIcon.astro';
+import SectionHeading from '~/components/ui/SectionHeading.astro';
+import Tabs, { type Tab } from '~/components/ui/Tabs.astro';
+import ServiceCard from '~/components/cards/ServiceCard.astro';
+import Button from '~/components/ui/Button.astro';
+import Tag from '~/components/ui/Tag.astro';
 
 export interface ServicePanel {
-  id: string;
+  id: 'tab1' | 'tab2' | 'tab3' | 'tab4';
   tabLabel: string;
   card: {
     label: string;
@@ -22,16 +24,66 @@ export interface Props {
   subtitle: string;
   tagline: string;
   panels: ServicePanel[];
+  class?: string;
 }
 
-const { eyebrow, title, subtitle, tagline, panels } = Astro.props;
+const { eyebrow, title, subtitle, tagline, panels, class: className } = Astro.props;
 const tabs: Tab[] = panels.map((p) => ({ id: p.id, label: p.tabLabel }));
+
+function buildMailto({ to, subject, body }: { to: string; subject: string; body: string }) {
+  const qs = new URLSearchParams({
+    subject,
+    body
+  });
+  return `mailto:${to}?${qs.toString()}`;
+}
+
+const MAILTO_TO = 'hola@klikastudio.net';
+
+const panelMailtoById: Record<ServicePanel['id'], string> = {
+  tab1: buildMailto({
+    to: MAILTO_TO,
+    subject: 'Quiero pensar mi proyecto con Klika',
+    body:
+      'Hola, equipo Klika 👋\n\nMe interesa la etapa de diagnóstico y estructuración. Me gustaría saber cómo trabajan y si podemos agendar una charla.\n\n[Tu nombre / empresa]'
+  }),
+  tab2: buildMailto({
+    to: MAILTO_TO,
+    subject: 'Me interesa el diseño de una experiencia de aprendizaje',
+    body:
+      'Hola, equipo Klika 👋\n\nQuiero conocer más sobre cómo diseñan experiencias de aprendizaje. Me gustaría contarles el contexto y explorar si podemos trabajar juntos.\n\n[Tu nombre / empresa]'
+  }),
+  tab3: buildMailto({
+    to: MAILTO_TO,
+    subject: 'Necesito producir materiales para capacitación',
+    body:
+      'Hola, equipo Klika 👋\n\nTengo un proyecto que necesita producción de materiales. Me interesa saber cómo trabajan y qué podríamos hacer juntos.\n\n[Tu nombre / empresa]'
+  }),
+  tab4: buildMailto({
+    to: MAILTO_TO,
+    subject: 'Quiero diseñar un programa completo con Klika',
+    body:
+      'Hola, equipo Klika 👋\n\nMe interesa armar un programa de capacitación completo. Me gustaría conectar para contarles el proyecto y ver cómo pueden acompañarnos.\n\n[Tu nombre / empresa]'
+  })
+};
+
+const generalMailto = buildMailto({
+  to: MAILTO_TO,
+  subject: 'Tengo un proyecto y quiero contarles',
+  body:
+    'Hola, equipo Klika 👋\n\nEstoy buscando apoyo para un proyecto de capacitación y me gustaría contarles de qué se trata. ¿Podemos agendar una charla?\n\n[Tu nombre / empresa]'
+});
 ---
 
-<section id="servicios" class="bg-klika-cream px-[1.5rem] py-16 min-[901px]:px-[3rem] min-[901px]:py-24">
-  <div class="mx-auto max-w-6xl">
+<section
+  id="servicios"
+  class={cn('services-component', 'section-gutter-x bg-klika-cream py-16 min-[901px]:py-24', className)}
+>
+  <div class="layout-container">
     <SectionHeading eyebrow={eyebrow} title={title} class="reveal">
-      <p class="mt-2 max-w-[640px] text-base leading-[1.7] text-klika-sage">{subtitle}</p>
+      <p class="mt-2 max-w-[640px] text-base leading-[1.7] text-klika-sage 2xl:text-[1.0625rem] 2xl:leading-[1.65]">
+        {subtitle}
+      </p>
     </SectionHeading>
     <p class="reveal rd1 mt-3 max-w-3xl text-[0.84rem] italic text-klika-muted2 mb-[2.8rem]">{tagline}</p>
 
@@ -44,7 +96,7 @@ const tabs: Tab[] = panels.map((p) => ({ id: p.id, label: p.tabLabel }));
               title={p.card.title}
               tagline={p.card.tagline}
               includes={p.card.includes}
-              ctaHref="#contacto"
+              ctaHref={panelMailtoById[p.id]}
               ctaLabel="Quiero más información →"
             />
           </div>
@@ -52,28 +104,16 @@ const tabs: Tab[] = panels.map((p) => ({ id: p.id, label: p.tabLabel }));
       </Tabs>
     </div>
 
-    <div class="reveal mt-16 flex flex-wrap items-center justify-between gap-[1.5rem] rounded-[1.2rem] bg-klika-moss px-[2.4rem] py-[2rem] text-klika-white">
-      <div class="max-w-2xl">
-        <h3 class="mb-[0.4rem] font-serif text-[1rem] font-normal">Un primer acercamiento a Klika</h3>
-        <p class="max-w-[420px] text-[0.84rem] leading-[1.65] text-white/70">
-          Templates y guías de uso — recursos descargables para empezar a ordenar y dar forma a tu proyecto por tu cuenta, y conocer cómo trabajamos. Una buena forma de dar el primer paso.
-        </p>
-      </div>
-      <div>
-        <Button href="#contacto" variant="primary">Quiero los recursos →</Button>
-      </div>
-    </div>
-
     <div class="reveal rd1 mt-6 flex flex-wrap items-center justify-between gap-4 rounded-[1.2rem] border-[1.5px] border-klika-moss/20 bg-klika-cream px-[2.4rem] py-[2rem]">
       <p class="text-[0.95rem] text-klika-dark">
         <strong class="font-serif font-bold">¿No encontraste lo que buscabas?</strong> ¡Escribinos y contanos sobre tu proyecto!
       </p>
-      <Button href="#contacto" variant="secondary">Escribinos →</Button>
+      <Button href={generalMailto} variant="secondary">Escribinos →</Button>
     </div>
 
     <div class="reveal mt-16 border-t border-klika-moss/15 pt-12">
       <p class="text-xs font-semibold uppercase tracking-[0.12em] text-klika-coral">Con quiénes trabajamos</p>
-      <h3 class="mt-4 max-w-3xl font-serif text-[clamp(1.4rem,2.3vw,2rem)] text-klika-dark">
+      <h3 class="mt-4 max-w-3xl font-serif text-[clamp(1.4rem,2vw+0.6rem,2rem)] leading-tight text-klika-dark xl:text-[clamp(1.55rem,1.6vw+0.75rem,2.5rem)] 2xl:text-[clamp(1.7rem,1.2vw+1rem,2.85rem)]">
         Con quienes deciden ir más allá y construir experiencias educativas memorables.
       </h3>
 
@@ -84,17 +124,19 @@ const tabs: Tab[] = panels.map((p) => ({ id: p.id, label: p.tabLabel }));
           'Academias e Instituciones educativas',
           'Educadores particulares'
         ].map((t) => (
-          <Pill>{t}</Pill>
+          <Tag class="px-[1.4rem] py-[0.6rem] text-[0.88rem] border-[1.5px]">{t}</Tag>
         ))}
       </div>
 
-      <div class="mt-6 inline-flex max-w-fit items-center gap-3 rounded-[1rem] bg-klika-moss px-[2rem] py-[1.2rem]">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round">
-          <circle cx="12" cy="12" r="10" />
-          <path d="M2 12 Q7 9 12 12 Q17 15 22 12" />
-          <path d="M12 2 Q9 7 12 12 Q15 17 12 22" />
-        </svg>
-        <div>
+      <div
+        class="mt-6 flex w-full min-w-0 flex-row gap-4 rounded-[1rem] bg-klika-moss px-5 py-5 max-[900px]:items-stretch min-[901px]:items-center min-[901px]:gap-5 min-[901px]:px-8 min-[901px]:py-6"
+      >
+        <div
+          class="flex min-h-0 shrink-0 items-center justify-center overflow-hidden max-[900px]:self-stretch max-[900px]:[flex:0_0_clamp(1.625rem,9vmin,2.375rem)] min-[901px]:h-2.5 min-[901px]:w-2.5"
+        >
+          <ServicesLatamGlobeBannerIcon aria-hidden="true" />
+        </div>
+        <div class="flex min-h-0 min-w-0 flex-1 flex-col justify-center">
           <div class="text-[0.88rem] font-semibold tracking-[0.03em] text-klika-white">Para todo LATAM</div>
           <div class="mt-0.5 text-[0.76rem] text-white/65">
             Trabajamos de forma remota con equipos y organizaciones de toda la región.

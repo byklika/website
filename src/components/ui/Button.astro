@@ -1,4 +1,6 @@
 ---
+import { cn } from '~/lib/helpers';
+
 type Variant = 'primary' | 'secondary' | 'outlineLight' | 'mossOutline';
 
 export interface Props {
@@ -35,7 +37,7 @@ const variants: Record<Variant, string> = {
     'border-[1.5px] border-klika-moss text-klika-moss bg-transparent px-[1.4rem] py-[0.6rem] text-[0.84rem] hover:bg-klika-moss hover:text-klika-white'
 };
 
-const cls = [base, variants[variant], className].filter(Boolean).join(' ');
+const cls = cn('button-component', base, variants[variant], className);
 ---
 
 {

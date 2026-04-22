@@ -1,49 +1,219 @@
 ---
+import FlipCardHintCoarsePointerIcon from '~/icons/FlipCardHintCoarsePointerIcon.astro';
+import FlipCardHintFinePointerIcon from '~/icons/FlipCardHintFinePointerIcon.astro';
+
 export interface Props {
   title: string;
-  hint?: string;
+  /** Shown when `(hover: hover) and (pointer: fine)` and user prefers motion. */
+  hintFinePointer?: string;
+  hintTapOpen?: string;
+  hintTapClose?: string;
+  /** Overrides default `"{title}, más información"`. */
+  ariaLabel?: string;
   class?: string;
 }
 
-const { title, hint = 'Pasá el cursor para saber más', class: className } = Astro.props;
+const {
+  title,
+  hintFinePointer = 'Pasá el cursor para saber más',
+  hintTapOpen = 'Tocá para saber más',
+  hintTapClose = 'Tocá de nuevo para cerrar',
+  ariaLabel = `${title}, más información`,
+  class: className
+} = Astro.props;
 ---
 
-<div class={['h-[260px] [perspective:1000px]', className].filter(Boolean).join(' ')}>
+<div
+  class:list={[
+    'flip-card',
+    'group',
+    'flip-card-component',
+    'h-[260px] min-h-[260px] [perspective:1000px] motion-reduce:h-auto motion-reduce:min-h-[260px]',
+    'rounded-[1.2rem] focus:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral focus-visible:ring-offset-2 focus-visible:ring-offset-klika-white',
+    className
+  ]}
+  data-flip-card
+  role="button"
+  tabindex="0"
+  aria-expanded="false"
+  data-flipped="false"
+  aria-label={ariaLabel}
+  data-hint-fine={hintFinePointer}
+  data-hint-tap-open={hintTapOpen}
+  data-hint-tap-close={hintTapClose}
+>
   <div
-    class={[
-      'relative h-full w-full transition-transform duration-700 [transform-style:preserve-3d]',
-      'hover:[transform:rotateY(180deg)]'
-    ].join(' ')}
+    class:list={[
+      'flip-card__rotator',
+      'relative h-full w-full transition-transform duration-700 [transform-style:preserve-3d] motion-reduce:transition-none',
+      '[@media(hover:hover)_and_(pointer:fine)]:hover:[transform:rotateY(180deg)]',
+      'motion-reduce:[@media(hover:hover)_and_(pointer:fine)]:hover:[transform:none]',
+      'group-[.is-flipped]:[transform:rotateY(180deg)] motion-reduce:group-[.is-flipped]:[transform:none]'
+    ]}
   >
     <div
-      class={[
+      class:list={[
+        'flip-card__face--front',
         'absolute inset-0 flex h-full w-full flex-col justify-between rounded-[1.2rem] p-8',
         'bg-klika-cream border border-klika-moss/15 border-l-4 border-l-klika-coral',
-        '[backface-visibility:hidden]'
-      ].join(' ')}
+        '[backface-visibility:hidden] motion-reduce:[backface-visibility:visible]'
+      ]}
     >
       <div class="flex flex-col gap-4">
-        <div class="text-klika-moss/70">
+        <div class="text-klika-moss/70" aria-hidden="true">
           <slot name="icon" />
         </div>
         <h3 class="font-serif text-[1.05rem] text-klika-dark">{title}</h3>
       </div>
       <p class="flex items-center gap-[0.4rem] text-[0.73rem] text-klika-muted">
-        <slot name="hintIcon" />
-        {hint}
+        <span aria-hidden="true" class="relative inline-flex h-[13px] w-[13px] shrink-0 items-center justify-center text-current">
+          <!-- Arrow cursor: fine pointer + motion (matches hover hint) -->
+          <span
+            class="absolute inset-0 hidden items-center justify-center [@media(hover:hover)_and_(pointer:fine)_and_(prefers-reduced-motion:no-preference)]:inline-flex"
+          >
+            <FlipCardHintFinePointerIcon />
+          </span>
+          <!-- Touch / tap: coarse pointer, no-hover, or reduced motion -->
+          <span
+            class="inline-flex items-center justify-center [@media(hover:hover)_and_(pointer:fine)_and_(prefers-reduced-motion:no-preference)]:hidden"
+          >
+            <FlipCardHintCoarsePointerIcon />
+          </span>
+        </span>
+        <span data-flip-hint>{hintFinePointer}</span>
       </p>
     </div>
 
     <div
-      class={[
+      class:list={[
+        'flip-card__face--back',
         'absolute inset-0 flex h-full w-full items-center rounded-[1.2rem] bg-klika-moss p-8',
-        '[transform:rotateY(180deg)] [backface-visibility:hidden]'
-      ].join(' ')}
+        '[transform:rotateY(180deg)] [backface-visibility:hidden] motion-reduce:[backface-visibility:visible] motion-reduce:[transform:none]'
+      ]}
     >
-      <p class="text-[0.86rem] leading-[1.65] text-white/90">
+      <p class="max-w-prose text-[0.86rem] leading-[1.65] text-white/90">
         <slot />
       </p>
     </div>
   </div>
 </div>
 
+<script>
+  const HOVER_FLIP_MQ = '(hover: hover) and (pointer: fine)';
+
+  function mqHoverFine() {
+    return window.matchMedia(HOVER_FLIP_MQ).matches;
+  }
+
+  function mqReduceMotion() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  /** Touch-primary devices: scroll closes flipped cards so backs are not stuck open. */
+  function mqCoarsePointer() {
+    return window.matchMedia('(pointer: coarse)').matches;
+  }
+
+  function shouldProcessClick(root: HTMLElement) {
+    if (mqReduceMotion() || !mqHoverFine()) return true;
+    return root.classList.contains('is-flipped');
+  }
+
+  function setExpanded(root: HTMLElement, expanded: boolean) {
+    root.classList.toggle('is-flipped', expanded);
+    root.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    root.setAttribute('data-flipped', expanded ? 'true' : 'false');
+    syncHint(root);
+  }
+
+  function syncHint(root: HTMLElement) {
+    const hint = root.querySelector<HTMLElement>('[data-flip-hint]');
+    if (!hint) return;
+    const fine = root.dataset.hintFine ?? '';
+    const tapOpen = root.dataset.hintTapOpen ?? '';
+    const tapClose = root.dataset.hintTapClose ?? '';
+    const flipped = root.classList.contains('is-flipped');
+    const useFine = mqHoverFine() && !mqReduceMotion();
+    hint.textContent = useFine ? fine : flipped ? tapClose : tapOpen;
+  }
+
+  function closeCard(root: HTMLElement) {
+    if (!root.classList.contains('is-flipped')) return;
+    setExpanded(root, false);
+  }
+
+  function bindCard(root: HTMLElement) {
+    if (root.dataset.flipCardBound === '1') return;
+    root.dataset.flipCardBound = '1';
+
+    const onFine = () => syncHint(root);
+    const onReduce = () => syncHint(root);
+    window.matchMedia(HOVER_FLIP_MQ).addEventListener('change', onFine);
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', onReduce);
+
+    root.addEventListener('click', () => {
+      if (!shouldProcessClick(root)) return;
+      setExpanded(root, !root.classList.contains('is-flipped'));
+    });
+
+    root.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      setExpanded(root, !root.classList.contains('is-flipped'));
+    });
+
+    root.addEventListener('mouseleave', () => {
+      closeCard(root);
+    });
+
+    syncHint(root);
+  }
+
+  let docListenersBound = false;
+
+  function bindDocumentListeners() {
+    if (docListenersBound) return;
+    docListenersBound = true;
+
+    document.addEventListener(
+      'pointerdown',
+      (e) => {
+        const section = document.getElementById('nosotras');
+        if (!section || !(e.target instanceof Node) || !section.contains(e.target)) return;
+        section.querySelectorAll<HTMLElement>('[data-flip-card].is-flipped').forEach((card) => {
+          if (card.contains(e.target as Node)) return;
+          closeCard(card);
+        });
+      },
+      true
+    );
+
+    let scrollRaf = 0;
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!mqCoarsePointer()) return;
+        const section = document.getElementById('nosotras');
+        if (!section?.querySelector('[data-flip-card].is-flipped')) return;
+        if (scrollRaf) return;
+        scrollRaf = requestAnimationFrame(() => {
+          scrollRaf = 0;
+          if (!mqCoarsePointer()) return;
+          section.querySelectorAll<HTMLElement>('[data-flip-card].is-flipped').forEach(closeCard);
+        });
+      },
+      { passive: true, capture: true }
+    );
+  }
+
+  function initFlipCards() {
+    document.querySelectorAll<HTMLElement>('[data-flip-card]').forEach((root) => {
+      bindCard(root);
+    });
+    bindDocumentListeners();
+  }
+
+  initFlipCards();
+  document.addEventListener('astro:after-swap', initFlipCards);
+  document.addEventListener('astro:page-load', initFlipCards);
+</script>

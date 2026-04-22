@@ -1,6 +1,35 @@
 @config "../../tailwind.config.mjs";
 @import "tailwindcss";
 
+@layer components {
+  /**
+   * Homepage + marketing content width cap (FHD → 4K).
+   * Pair with `.section-gutter-x` on the outer section/header/footer.
+   */
+  .layout-container {
+    @apply mx-auto w-full max-w-6xl xl:max-w-7xl 2xl:max-w-[90rem] min-[1920px]:max-w-[100rem];
+  }
+
+  /** Horizontal gutters that grow slightly on large viewports (lg+ = 1024px). */
+  .section-gutter-x {
+    @apply px-[1.5rem] lg:px-[clamp(1.5rem,4vw,5rem)];
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fadeUp,
+  .animate-marquee,
+  .animate-morphBlob {
+    animation: none !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 /* Homepage header scroll shadow parity with prototype */
 #homeHeader.scrolled {
   box-shadow: 0 2px 20px rgba(30, 42, 26, 0.12);
@@ -27,4 +56,44 @@
 }
 .rd4 {
   transition-delay: 0.4s;
+}
+
+/* FlipCard (#nosotras): no 3D spin when reduced motion — toggle shows one face at a time */
+@media (prefers-reduced-motion: reduce) {
+  .flip-card {
+    perspective: none !important;
+  }
+
+  .flip-card .flip-card__rotator {
+    transform: none !important;
+    transform-style: flat !important;
+    display: flex;
+    flex-direction: column;
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  .flip-card .flip-card__face--front,
+  .flip-card .flip-card__face--back {
+    position: relative !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    flex: 0 0 auto;
+    transform: none !important;
+    backface-visibility: visible !important;
+  }
+
+  .flip-card:not(.is-flipped) .flip-card__face--back {
+    display: none;
+  }
+
+  .flip-card.is-flipped .flip-card__face--front {
+    display: none;
+  }
+
+  .flip-card.is-flipped .flip-card__face--back {
+    display: flex;
+  }
 }

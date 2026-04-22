@@ -1,6 +1,6 @@
 ---
 /**
- * Use in MDX: import Callout from '../components/Callout.astro'
+ * Use in MDX: import Callout from '~/components/Callout.astro'
  * <Callout variant="info" title="Note">Body text</Callout>
  */
 interface Props {
@@ -18,7 +18,7 @@ const variantClass = {
 } as const;
 ---
 
-<div class:list={['alert', variantClass[variant], 'text-start shadow-sm']} role="note">
+<div class:list={['callout-component', 'alert', variantClass[variant], 'text-start shadow-sm']} role="note">
   <div class="flex w-full flex-col gap-1">
     {title && <span class="font-semibold">{title}</span>}
     <div class="text-sm [&_p]:my-1">

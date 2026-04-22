@@ -1,0 +1,75 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+export interface Props {
+  posts: CollectionEntry<'blog'>[];
+  currentPage: number;
+  lastPage: number;
+  url: { prev: string | undefined; next: string | undefined };
+}
+
+const { posts, currentPage, lastPage, url } = Astro.props;
+---
+
+<section class="space-y-8">
+  <div class="prose max-w-none">
+    <h1>Blog</h1>
+    <p>Updates and notes from Klika.</p>
+  </div>
+  <ul class="not-prose flex flex-col gap-4">
+    {
+      posts.map((post) => (
+        <li>
+          <a
+            href={`/blog/${post.id}/`}
+            class="card bg-base-100 border-base-300 border shadow-sm transition-shadow hover:shadow-md"
+          >
+            <div class="card-body py-4">
+              <h2 class="card-title text-lg">{post.data.title}</h2>
+              {post.data.description && (
+                <p class="text-base-content/80 text-sm">{post.data.description}</p>
+              )}
+              <time
+                class="text-base-content/50 text-xs"
+                datetime={post.data.pubDate.toISOString()}
+              >
+                {post.data.pubDate.toLocaleDateString('en', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                })}
+              </time>
+            </div>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  {posts.length === 0 && <p class="text-base-content/70">No posts yet.</p>}
+
+  {
+    lastPage > 1 && (
+      <nav class="not-prose flex flex-wrap items-center justify-between gap-4 border-base-300 border-t pt-6">
+        <p class="text-base-content/70 text-sm">
+          Page {currentPage} of {lastPage}
+        </p>
+        <div class="flex flex-wrap gap-2">
+          {url.prev ? (
+            <a href={url.prev} class="btn btn-outline btn-sm">
+              ← Newer
+            </a>
+          ) : (
+            <span class="btn btn-outline btn-sm btn-disabled pointer-events-none">← Newer</span>
+          )}
+          {url.next ? (
+            <a href={url.next} class="btn btn-outline btn-sm">
+              Older →
+            </a>
+          ) : (
+            <span class="btn btn-outline btn-sm btn-disabled pointer-events-none">Older →</span>
+          )}
+        </div>
+      </nav>
+    )
+  }
+</section>
