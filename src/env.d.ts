@@ -1,12 +1,11 @@
 /// <reference types="astro/client" />
 
-import type { GrowthBook } from '@growthbook/growthbook';
-
 declare global {
   interface Window {
     dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
-    growthbook?: GrowthBook;
+    /** GrowthBook CDN bundle + initialized client (typed loosely; SDK not bundled). */
+    growthbook?: unknown;
   }
 }
 

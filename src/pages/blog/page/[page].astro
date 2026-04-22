@@ -1,0 +1,29 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import BlogListSection from '~/components/blog/BlogListSection.astro';
+import { BLOG_PAGE_SIZE, paginateBlogPosts } from '~/lib/blog-pagination';
+
+export const getStaticPaths = (async () => {
+  const sorted = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  );
+  const lastPage = Math.max(1, Math.ceil(sorted.length / BLOG_PAGE_SIZE));
+  if (lastPage <= 1) return [];
+
+  return Array.from({ length: lastPage - 1 }, (_, i) => {
+    const pageNum = i + 2;
+    return {
+      params: { page: String(pageNum) },
+      props: paginateBlogPosts(sorted, pageNum)
+    };
+  });
+}) satisfies GetStaticPaths;
+
+const { data, currentPage, lastPage, url } = Astro.props;
+---
+
+<BaseLayout title="Blog — Klika" description="News and articles from Klika.">
+  <BlogListSection posts={data} currentPage={currentPage} lastPage={lastPage} url={url} />
+</BaseLayout>

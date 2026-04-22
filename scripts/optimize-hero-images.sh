@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
 # Regenerate responsive hero assets for the homepage.
 # Master (not served): src/assets/images/hero/<name>-original.png
-# Served derivatives: public/images/hero/<name>-{width}w.{webp,jpg}
+# Served derivatives: public/images/hero/<name>-{width}w.{avif,webp,jpg}
 #
 # Requires:
 #   - cwebp (e.g. brew install webp)
-#   - magick (ImageMagick, e.g. brew install imagemagick)
+#   - magick (ImageMagick with AVIF write support, e.g. brew install imagemagick)
 
 set -eu
 ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
@@ -16,6 +16,7 @@ BASE="${OUT_DIR}/${NAME}"
 
 WEBP_Q=70
 JPEG_Q=76
+AVIF_Q=50
 WIDTHS="480 640 960 1280"
 
 if ! command -v cwebp >/dev/null 2>&1; then
@@ -34,6 +35,11 @@ if [ ! -f "$SRC" ]; then
 fi
 
 mkdir -p "$OUT_DIR"
+
+for w in $WIDTHS; do
+  magick "$SRC" -resize "${w}x" -strip -quality "$AVIF_Q" "${BASE}-${w}w.avif"
+  echo "Wrote ${BASE}-${w}w.avif"
+done
 
 for w in $WIDTHS; do
   cwebp -quiet -q "$WEBP_Q" -resize "$w" 0 "$SRC" -o "${BASE}-${w}w.webp"

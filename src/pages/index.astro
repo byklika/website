@@ -1,18 +1,23 @@
 ---
-import MarketingLayout from '../layouts/MarketingLayout.astro';
-import Hero from '../components/sections/Hero.astro';
-import Methodology from '../components/sections/Methodology.astro';
-import Services from '../components/sections/Services.astro';
-import AboutUs from '../components/sections/AboutUs.astro';
-import Contact from '../components/sections/Contact.astro';
-import EmailSignupPopup from '../components/EmailSignupPopup.astro';
+import MarketingLayout from '~/layouts/MarketingLayout.astro';
+import Hero from '~/components/sections/Hero.astro';
+import Methodology from '~/components/sections/Methodology.astro';
+import Services from '~/components/sections/Services.astro';
+import AboutUs from '~/components/sections/AboutUs.astro';
+import Contact from '~/components/sections/Contact.astro';
+import EmailSignupPopup from '~/components/EmailSignupPopup.astro';
 
 /**
  * Hero raster: master lives under `src/assets/` (not publicly served).
- * Optimized derivatives in `public/images/hero/` — regenerate: `npm run optimize:hero`
+ * Optimized derivatives in `public/images/hero/` (AVIF → WebP → JPEG) — regenerate: `pnpm optimize:hero`
  */
 const heroImageBase = '/images/hero/home-hero-instructional-design';
-const heroImageSizes = '(min-width: 901px) min(42vw, 30rem), min(96vw, 40rem)';
+/**
+ * Hero image column ≈ half of `.layout-container` (see `global.css` max-widths + `Hero` grid).
+ * Slightly conservative caps vs. prior `sizes` to reduce over-fetch on common laptop widths.
+ */
+const heroImageSizes =
+  '(min-width: 1920px) min(46rem, 42vw), (min-width: 1536px) min(40rem, 44vw), (min-width: 901px) min(36rem, 46vw), min(92vw, 42rem)';
 const heroImageAlt =
   'Three professional women collaborating on an instructional design learning map around a wooden table in a bright, plant-filled office.';
 ---
@@ -33,6 +38,11 @@ const heroImageAlt =
     imageAlt={heroImageAlt}
   >
     <picture slot="media">
+      <source
+        type="image/avif"
+        srcset={`${heroImageBase}-480w.avif 480w, ${heroImageBase}-640w.avif 640w, ${heroImageBase}-960w.avif 960w, ${heroImageBase}-1280w.avif 1280w`}
+        sizes={heroImageSizes}
+      />
       <source
         type="image/webp"
         srcset={`${heroImageBase}-480w.webp 480w, ${heroImageBase}-640w.webp 640w, ${heroImageBase}-960w.webp 960w, ${heroImageBase}-1280w.webp 1280w`}

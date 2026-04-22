@@ -155,7 +155,7 @@ Recommended profile from agency-agents:
 
 - [x] **GrowthBook** — experimentation (A/B tests, feature flags)
   - Create a GrowthBook account and SDK key / client key for the web SDK
-  - Install `@growthbook/growthbook` (and React bindings if using React islands)
+  - **Canonical load path:** deferred browser bundle from jsDelivr (`SiteAnalytics.astro`); no npm SDK required for the static site
   - Wire feature flags and experiments in layout or a dedicated provider; track exposures with GA4 where needed for analysis
 
 ---

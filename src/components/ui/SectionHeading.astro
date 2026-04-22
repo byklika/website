@@ -1,4 +1,6 @@
 ---
+import { cn } from '~/lib/helpers';
+
 export interface Props {
   eyebrow?: string;
   title: string;
@@ -15,13 +17,18 @@ const eyebrowTone =
 const titleTone = tone === 'light' ? 'text-klika-white' : 'text-klika-dark';
 ---
 
-<div class={['flex flex-col gap-3', alignCls, className].filter(Boolean).join(' ')}>
+<div class={cn('section-heading-component', 'flex flex-col gap-3', alignCls, className)}>
   {eyebrow && (
     <p class={['text-xs font-semibold tracking-[0.12em] uppercase', eyebrowTone].join(' ')}>
       {eyebrow}
     </p>
   )}
-  <h2 class={['font-serif font-normal leading-tight text-[clamp(1.7rem,3vw,2.4rem)]', titleTone].join(' ')}>
+  <h2
+    class={[
+      'font-serif font-normal leading-[1.12] text-[clamp(1.7rem,2.2vw+0.75rem,2.4rem)] xl:leading-[1.1] xl:text-[clamp(1.95rem,1.8vw+0.85rem,3rem)] 2xl:text-[clamp(2.15rem,1.35vw+1.1rem,3.5rem)]',
+      titleTone
+    ].join(' ')}
+  >
     {title}
   </h2>
   <slot />

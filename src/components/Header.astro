@@ -1,4 +1,7 @@
 ---
+import KlikaHomeHeaderLogoIcon from '~/icons/KlikaHomeHeaderLogoIcon.astro';
+import NavHamburgerMenuIcon from '~/icons/NavHamburgerMenuIcon.astro';
+
 const pathname = Astro.url?.pathname ?? '/';
 const isHome = pathname === '/';
 
@@ -23,19 +26,12 @@ const homeNav = [
   isHome ? (
     <header
       id="homeHeader"
-      class="fixed inset-x-0 top-0 z-50 bg-klika-dark shadow-[0_2px_16px_rgba(0,0,0,0.15)]"
+      class="header-component fixed inset-x-0 top-0 z-50 bg-klika-dark shadow-[0_2px_16px_rgba(0,0,0,0.15)]"
     >
-      <div class="flex items-center justify-between gap-4 px-[1.5rem] py-4 min-[901px]:px-[2.5rem]">
+      <div class="section-gutter-x py-4">
+        <div class="layout-container flex items-center justify-between gap-4">
         <a href="#inicio" class="flex items-center gap-3 no-underline">
-          <svg width="52" height="32" viewBox="0 0 104 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <line x1="8" y1="54" x2="96" y2="54" stroke="currentColor" class="text-klika-moss2" stroke-width="2" />
-            <circle cx="8" cy="54" r="4" stroke="currentColor" class="text-klika-moss2" stroke-width="2" fill="none" />
-            <circle cx="96" cy="54" r="4" stroke="currentColor" class="text-klika-moss2" stroke-width="2" fill="none" />
-            <path d="M8 54 A44 44 0 0 1 96 54" stroke="currentColor" class="text-klika-moss2" stroke-width="2.2" fill="none" stroke-linecap="round" />
-            <path d="M22 54 A30 30 0 0 1 82 54" stroke="currentColor" class="text-klika-moss2" stroke-width="2.2" fill="none" stroke-linecap="round" />
-            <path d="M36 54 A16 16 0 0 1 68 54" stroke="currentColor" class="text-klika-cream" stroke-width="3" fill="none" stroke-linecap="round" />
-            <circle cx="52" cy="38" r="5.5" fill="currentColor" class="text-klika-coral" />
-          </svg>
+          <KlikaHomeHeaderLogoIcon />
           <span class="font-serif text-[1.1rem] font-bold tracking-[-0.3px] text-klika-white">
             KLIKA
           </span>
@@ -75,10 +71,11 @@ const homeNav = [
             </div>
           </div>
         </details>
+        </div>
       </div>
     </header>
   ) : (
-    <header class="navbar bg-base-100 border-base-300 border-b shadow-sm">
+    <header class="header-component navbar bg-base-100 border-base-300 border-b shadow-sm">
       <div class="navbar-start">
         <a href="/" class="btn btn-ghost text-xl font-semibold tracking-tight">Klika</a>
       </div>
@@ -94,16 +91,7 @@ const homeNav = [
         </ul>
         <div class="dropdown dropdown-end lg:hidden">
           <div tabindex="0" role="button" class="btn btn-ghost btn-circle" aria-label="Open menu">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <NavHamburgerMenuIcon />
           </div>
           <ul
             tabindex="0"

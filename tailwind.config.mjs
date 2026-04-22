@@ -6,6 +6,11 @@ export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
   theme: {
     extend: {
+      screens: {
+        /** Extra desktop tiers (default `xl`/`2xl` remain 1280 / 1536) */
+        '3xl': '1920px',
+        '4xl': '2560px'
+      },
       colors: {
         klika: {
           moss: '#4A6741',
@@ -26,8 +31,9 @@ export default {
         }
       },
       fontFamily: {
-        sans: ['"DM Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        serif: ['"Merriweather"', 'ui-serif', 'Georgia', 'serif']
+        /** System stack until self-hosted webfonts ship from `src` (avoids missing-font fallbacks). */
+        sans: ['ui-sans-serif', 'system-ui', 'sans-serif'],
+        serif: ['ui-serif', 'Georgia', 'serif']
       },
       borderRadius: {
         pill: '99px'
@@ -41,7 +47,9 @@ export default {
         cardHover: '0 16px 48px rgba(30,42,26,0.14)',
         btnPrimary: '0 4px 14px rgba(242,106,58,0.28)',
         btnPrimaryHover: '0 8px 24px rgba(242,106,58,0.38)',
-        heroImage: '0 24px 60px rgba(30,42,26,0.14)'
+        heroImage: '0 24px 60px rgba(30,42,26,0.14)',
+        heroImage2xl: '0 28px 72px rgba(30,42,26,0.12)',
+        cardXl: '0 20px 56px rgba(30,42,26,0.1)'
       },
       keyframes: {
         fadeUp: {
@@ -68,6 +76,7 @@ export default {
   },
   plugins: [typography, daisyui],
   daisyui: {
-    themes: ['light', 'dark']
+    /** Blog uses Daisy components with `data-theme="light"` only — drop unused theme CSS. */
+    themes: ['light']
   }
 };

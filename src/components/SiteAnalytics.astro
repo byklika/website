@@ -2,6 +2,9 @@
 /**
  * Loads only when the matching PUBLIC_* env var is set (e.g. in Vercel project settings).
  * See `.env.example` for variable names.
+ *
+ * Production stack: GA4 + Clarity + GrowthBook (optional). GrowthBook is deferred so it
+ * does not block first paint; init runs after the CDN bundle in document order.
  */
 const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID?.trim();
 const clarityProjectId = import.meta.env.PUBLIC_CLARITY_PROJECT_ID?.trim();
@@ -57,6 +60,7 @@ if (GrowthBook) {
   : null;
 ---
 
+<div class="site-analytics-component">
 {
   gaMeasurementId && (
     <>
@@ -71,8 +75,12 @@ if (GrowthBook) {
 {
   growthbookClientKey && (
     <>
-      <script src="https://cdn.jsdelivr.net/npm/@growthbook/growthbook/dist/bundles/index.js" />
-      <script is:inline set:html={growthbookInline!} />
+      <script
+        defer
+        src="https://cdn.jsdelivr.net/npm/@growthbook/growthbook/dist/bundles/index.js"
+      />
+      <script defer is:inline set:html={growthbookInline!} />
     </>
   )
 }
+</div>
