@@ -118,13 +118,12 @@ function boot() {
     }
   };
 
+  const isOpen = () => overlay.hasAttribute('data-open');
+
   const open = () => {
     if (hasSeen()) return;
 
     lastFocused = document.activeElement as HTMLElement | null;
-
-    overlay.classList.remove('hidden');
-    overlay.classList.add('flex');
 
     confirmView.classList.add('hidden');
     formView.classList.remove('hidden');
@@ -133,20 +132,55 @@ function boot() {
     lockScroll();
     setBackgroundInert(true);
 
-    closeBtn.focus();
+    overlay.removeAttribute('aria-hidden');
+    overlay.setAttribute('data-arm', '');
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        overlay.setAttribute('data-open', '');
+        closeBtn.focus();
+      });
+    });
+
     cleanupTriggers();
   };
 
   const close = ({ markSeenOnClose = true }: { markSeenOnClose?: boolean } = {}) => {
+    if (!isOpen()) return;
     if (markSeenOnClose) markSeen();
-    overlay.classList.add('hidden');
-    overlay.classList.remove('flex');
-    setBackgroundInert(false);
-    unlockScroll();
 
-    const toRestore = lastFocused;
-    lastFocused = null;
-    if (toRestore && typeof toRestore.focus === 'function') toRestore.focus();
+    overlay.removeAttribute('data-open');
+    overlay.setAttribute('aria-hidden', 'true');
+
+    const finish = () => {
+      overlay.removeAttribute('data-arm');
+      setBackgroundInert(false);
+      unlockScroll();
+      const toRestore = lastFocused;
+      lastFocused = null;
+      if (toRestore && typeof toRestore.focus === 'function') toRestore.focus();
+    };
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      finish();
+      return;
+    }
+
+    let done = false;
+    const guard = () => {
+      if (done) return;
+      done = true;
+      overlay.removeEventListener('transitionend', onEnd);
+      finish();
+    };
+
+    const onEnd = (e: TransitionEvent) => {
+      if (e.target !== overlay || e.propertyName !== 'opacity') return;
+      guard();
+    };
+
+    overlay.addEventListener('transitionend', onEnd);
+    window.setTimeout(guard, 400);
   };
 
   const trapFocus = (e: KeyboardEvent) => {
@@ -199,7 +233,7 @@ function boot() {
   });
 
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && overlay.classList.contains('flex')) close({ markSeenOnClose: true });
+    if (e.key === 'Escape' && isOpen()) close({ markSeenOnClose: true });
   });
 
   dialog.addEventListener('keydown', trapFocus);

@@ -1,6 +1,4 @@
 ---
-import emailSignupPopupUrl from '~/scripts/email-signup-popup.ts?url';
-
 export interface Props {
   storageKey?: string;
   openAfterMs?: number;
@@ -18,8 +16,9 @@ const {
 
 <div
   id="email-signup-popup-overlay"
-  class="email-signup-popup-component fixed inset-0 z-[9999] hidden items-center justify-center bg-klika-dark/55 px-4 sm:px-8"
+  class="email-signup-popup-component group/popup fixed inset-0 z-[9999] flex items-center justify-center bg-klika-dark/55 px-4 sm:px-8 pointer-events-none opacity-0 transition-opacity duration-300 ease-out motion-reduce:duration-150 [&[data-arm]]:pointer-events-auto [&[data-open]]:opacity-100"
   data-email-signup-popup-overlay
+  aria-hidden="true"
   data-storage-key={storageKey}
   data-open-after-ms={openAfterMs}
   data-open-at-scroll-ratio={openAtScrollRatio}
@@ -27,7 +26,7 @@ const {
 >
   <div
     id="email-signup-popup-dialog"
-    class="relative w-full max-w-[min(100%,28rem)] rounded-[16px] bg-klika-cream px-6 pt-10 pb-8 font-sans shadow-2xl min-[1920px]:max-w-[32rem] min-[1920px]:px-10 min-[1920px]:pb-10 sm:px-8"
+    class="relative w-full max-w-[min(100%,28rem)] translate-y-2 scale-[0.98] rounded-[16px] bg-klika-cream px-6 pt-10 pb-8 font-sans opacity-0 shadow-2xl transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:translate-y-0 motion-reduce:scale-100 motion-reduce:duration-150 motion-reduce:ease-out min-[1920px]:max-w-[32rem] min-[1920px]:px-10 min-[1920px]:pb-10 sm:px-8 group-data-[open]/popup:translate-y-0 group-data-[open]/popup:scale-100 group-data-[open]/popup:opacity-100"
     role="dialog"
     aria-modal="true"
     aria-labelledby="email-signup-popup-title"
@@ -111,4 +110,6 @@ const {
   </div>
 </div>
 
-<script type="module" src={emailSignupPopupUrl}></script>
+<script>
+  import '~/scripts/email-signup-popup.ts';
+</script>
