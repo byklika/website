@@ -1,0 +1,277 @@
+---
+import { cn } from '~/lib/helpers';
+import SectionHeading from '~/components/ui/SectionHeading.astro';
+import type { Item } from './AboutUs.astro';
+
+export interface Props {
+  eyebrow: string;
+  title: string;
+  items: Item[];
+  class?: string;
+}
+
+const { eyebrow, title, items, class: className } = Astro.props;
+
+const RESPONSIVE_WIDTHS = [320, 480, 640, 800, 960] as const;
+const buildSrcSet = (name: string, ext: 'avif' | 'webp' | 'jpg') =>
+  RESPONSIVE_WIDTHS.map((width) => `/about-us/${name}-${width}w.${ext} ${width}w`).join(', ');
+
+const imageByTitle: Record<
+  string,
+  {
+    avifSrcSet: string;
+    webpSrcSet: string;
+    jpgSrcSet: string;
+    jpgFallback: string;
+    alt: string;
+  }
+> = {
+  'Quiénes somos': {
+    avifSrcSet: buildSrcSet('quienes-somos', 'avif'),
+    webpSrcSet: buildSrcSet('quienes-somos', 'webp'),
+    jpgSrcSet: buildSrcSet('quienes-somos', 'jpg'),
+    jpgFallback: '/about-us/quienes-somos-640w.jpg',
+    alt: 'Tres mujeres conversan y colaboran en una mesa de trabajo.'
+  },
+  'Nuestra experiencia': {
+    avifSrcSet: buildSrcSet('nuestra-experiencia', 'avif'),
+    webpSrcSet: buildSrcSet('nuestra-experiencia', 'webp'),
+    jpgSrcSet: buildSrcSet('nuestra-experiencia', 'jpg'),
+    jpgFallback: '/about-us/nuestra-experiencia-640w.jpg',
+    alt: 'Equipo revisando contenido formativo con foco pedagógico.'
+  },
+  'Creación de Klika': {
+    avifSrcSet: buildSrcSet('creacion-de-klika', 'avif'),
+    webpSrcSet: buildSrcSet('creacion-de-klika', 'webp'),
+    jpgSrcSet: buildSrcSet('creacion-de-klika', 'jpg'),
+    jpgFallback: '/about-us/creacion-de-klika-640w.jpg',
+    alt: 'Personas organizan ideas y definen el enfoque de un proyecto educativo.'
+  },
+  'Nuestro plan': {
+    avifSrcSet: buildSrcSet('nuestro-plan', 'avif'),
+    webpSrcSet: buildSrcSet('nuestro-plan', 'webp'),
+    jpgSrcSet: buildSrcSet('nuestro-plan', 'jpg'),
+    jpgFallback: '/about-us/nuestro-plan-640w.jpg',
+    alt: 'Materiales, notas y laptop sobre una mesa durante planificación.'
+  },
+  'Nuestro compromiso': {
+    avifSrcSet: buildSrcSet('nuestro-compromiso', 'avif'),
+    webpSrcSet: buildSrcSet('nuestro-compromiso', 'webp'),
+    jpgSrcSet: buildSrcSet('nuestro-compromiso', 'jpg'),
+    jpgFallback: '/about-us/nuestro-compromiso-640w.jpg',
+    alt: 'Equipo trabajando con atención en contenidos y decisiones de aprendizaje.'
+  }
+};
+
+const teaserByTitle: Record<string, string> = {
+  'Quiénes somos': 'Tres colegas, una amistad y una misma pasión por educar.',
+  'Nuestra experiencia': 'Más de cinco años creando aprendizaje en contextos diversos.',
+  'Creación de Klika': 'Nacimos para diseñar con profundidad y cercanía real.',
+  'Nuestro plan': 'Metodología flexible para cada proyecto y cada cliente.',
+  'Nuestro compromiso': 'Buscamos que cada experiencia realmente valga la pena.'
+};
+---
+
+<section
+  id="nosotras-v4"
+  class={cn(
+    'about-us-nosotras-v4-component',
+    'section-gutter-x bg-klika-cream py-16 min-[901px]:py-24 lg:bg-[radial-gradient(120%_95%_at_6%_8%,rgba(74,103,65,0.14)_0%,rgba(74,103,65,0)_52%),radial-gradient(92%_75%_at_100%_100%,rgba(242,106,58,0.15)_0%,rgba(242,106,58,0)_58%),linear-gradient(180deg,#f2f5ee_0%,#f4f7f0_48%,#f2f5ee_100%)]',
+    className
+  )}
+  aria-label={`${eyebrow} — versión alternativa (v4)`}
+>
+  <div class="layout-container">
+    <SectionHeading eyebrow={eyebrow} title={title} class="reveal" />
+
+    <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:hidden 2xl:gap-8">
+      {
+        items.map((it, idx) => {
+          const image = imageByTitle[it.title];
+          const teaser = teaserByTitle[it.title] ?? it.description;
+
+          return (
+            <article
+              class:list={[
+                'group relative isolate min-h-[340px] overflow-hidden rounded-[1.2rem] border-l-4 border-l-klika-coral shadow-card',
+                'reveal',
+                idx % 3 === 1 ? 'rd1' : idx % 3 === 2 ? 'rd2' : ''
+              ]}
+            >
+              <picture class="pointer-events-none absolute inset-0">
+                <source
+                  srcset={image?.avifSrcSet ?? ''}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  type="image/avif"
+                />
+                <source
+                  srcset={image?.webpSrcSet ?? ''}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  type="image/webp"
+                />
+                <img
+                  src={image?.jpgFallback ?? ''}
+                  srcset={image?.jpgSrcSet ?? ''}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  alt={image?.alt ?? ''}
+                  class="nosotras-v4-image h-full w-full object-cover object-center"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </picture>
+
+              <div
+                class="pointer-events-none absolute inset-0 bg-gradient-to-t from-klika-dark/68 via-transparent to-transparent"
+                aria-hidden="true"
+              />
+
+              <div class="relative z-[1] flex min-h-[340px] flex-col justify-between p-6">
+                <h3 class="inline-block max-w-[88%] rounded-md bg-klika-dark px-3.5 py-2 font-serif text-[1.35rem] font-normal leading-snug text-klika-white min-[901px]:text-[1.55rem]">
+                  {it.title}
+                </h3>
+
+                <div class="space-y-3 text-klika-white">
+                  <p class="rounded-md bg-klika-dark/56 px-4 py-2.5 text-[0.95rem] leading-[1.5] text-klika-white/95">
+                    {teaser}
+                  </p>
+
+                  <span class="inline-flex items-center gap-1 rounded-md bg-klika-dark/50 px-3 py-1.5 text-[0.82rem] font-medium tracking-wide text-klika-white/90">
+                    Leer más
+                    <span aria-hidden="true">+</span>
+                  </span>
+                </div>
+              </div>
+
+              <div
+                class="nosotras-v4-details pointer-events-none absolute inset-x-0 bottom-0 z-[2] bg-klika-dark/88 px-6 pb-6 pt-5 text-[0.95rem] leading-[1.6] text-klika-white/95 lg:opacity-0 lg:translate-y-4 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 lg:group-focus-within:opacity-100 lg:group-focus-within:translate-y-0"
+              >
+                {it.description}
+              </div>
+            </article>
+          );
+        })
+      }
+    </div>
+
+    <div class="hidden lg:block">
+      <div class="mt-12 space-y-4">
+        {
+          items.map((it, idx) => {
+            const image = imageByTitle[it.title];
+            const teaser = teaserByTitle[it.title] ?? it.description;
+            const storyId = `nosotras-v4-story-${idx + 1}`;
+
+            return (
+              <article class="nosotras-v4-row reveal rounded-2xl border border-klika-sage/25 bg-klika-white/72 px-6 py-5 text-klika-dark backdrop-blur-[1px]">
+                <div class="flex flex-col gap-5 xl:grid xl:grid-cols-[auto_1fr_auto] xl:items-start xl:gap-6">
+                  <div class="flex items-baseline gap-3">
+                    <span class="text-[0.9rem] font-semibold tracking-[0.08em] text-klika-coral/85">
+                      {(idx + 1).toString().padStart(2, '0')}
+                    </span>
+                    <h3 id={storyId} class="font-serif text-[1.45rem] leading-tight text-klika-dark xl:text-[1.62rem]">
+                      {it.title}
+                    </h3>
+                  </div>
+
+                  <div class="space-y-3">
+                    <p class="nosotras-v4-teaser text-[1rem] leading-[1.55] text-klika-dark/80">
+                      {teaser}
+                    </p>
+                    <p
+                      class="max-w-[70ch] rounded-lg bg-klika-dark/5 px-4 py-3 text-[0.97rem] leading-[1.62] text-klika-dark/88"
+                      aria-labelledby={storyId}
+                    >
+                      {it.description}
+                    </p>
+                  </div>
+
+                  <div class="flex items-center justify-end">
+                    <picture>
+                      <source
+                        srcset={image?.avifSrcSet ?? ''}
+                        sizes="(max-width: 1279px) 96px, 112px"
+                        type="image/avif"
+                      />
+                      <source
+                        srcset={image?.webpSrcSet ?? ''}
+                        sizes="(max-width: 1279px) 96px, 112px"
+                        type="image/webp"
+                      />
+                      <img
+                        src={image?.jpgFallback ?? ''}
+                        srcset={image?.jpgSrcSet ?? ''}
+                        sizes="(max-width: 1279px) 96px, 112px"
+                        alt={image?.alt ?? ''}
+                        class="h-20 w-24 rounded-xl object-cover object-center shadow-sm xl:h-24 xl:w-28"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </picture>
+                  </div>
+                </div>
+              </article>
+            );
+          })
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .nosotras-v4-image {
+    transform: scale(1);
+    transition: transform 220ms ease;
+  }
+
+  .group:hover .nosotras-v4-image,
+  .group:focus-within .nosotras-v4-image {
+    transform: scale(1.03);
+  }
+
+  .nosotras-v4-details {
+    transition:
+      opacity 220ms ease,
+      transform 220ms ease;
+  }
+
+  @media (max-width: 1023px) {
+    .nosotras-v4-details {
+      pointer-events: auto;
+      position: static;
+      margin-top: 0.75rem;
+      border-radius: 0.75rem;
+      background: color-mix(in srgb, var(--color-klika-dark) 64%, transparent);
+      padding: 0.9rem 1rem;
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .nosotras-v4-row {
+    transition:
+      border-color 200ms ease,
+      background-color 200ms ease,
+      box-shadow 200ms ease;
+  }
+
+  .nosotras-v4-row:hover,
+  .nosotras-v4-row:focus-within {
+    border-color: color-mix(in srgb, var(--color-klika-coral) 52%, transparent);
+    background-color: color-mix(in srgb, var(--color-klika-white) 80%, transparent);
+    box-shadow: 0 10px 24px -20px rgba(28, 39, 36, 0.55);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nosotras-v4-image,
+    .nosotras-v4-details,
+    .nosotras-v4-row {
+      transition: none;
+    }
+
+    .group:hover .nosotras-v4-image,
+    .group:focus-within .nosotras-v4-image {
+      transform: none;
+    }
+  }
+</style>

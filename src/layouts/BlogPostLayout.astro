@@ -15,37 +15,37 @@ const dateFmt: Intl.DateTimeFormatOptions = {
   month: 'long',
   day: 'numeric'
 };
-const published = pubDate.toLocaleDateString('en', dateFmt);
+const published = pubDate.toLocaleDateString('es', dateFmt);
 const updated =
   updatedDate && updatedDate.getTime() !== pubDate.getTime()
-    ? updatedDate.toLocaleDateString('en', dateFmt)
+    ? updatedDate.toLocaleDateString('es', dateFmt)
     : null;
 ---
 
 <BaseLayout
   title={`${title} — Klika`}
-  description={description ?? `Read “${title}” on the Klika blog.`}
+  description={description ?? `Leé “${title}” en el blog de Klika.`}
   ogType="article"
   articlePublishedTime={pubDate.toISOString()}
   articleModifiedTime={updatedDate?.toISOString()}
 >
-  <article class="prose max-w-none">
+  <article class="prose prose-neutral max-w-none text-klika-dark">
     <header class="not-prose mb-8">
-      <p class="text-base-content/60 mb-2 text-sm">
+      <p class="mb-2 text-sm text-klika-dark/60">
         <time datetime={pubDate.toISOString()}>{published}</time>
         {
           updated && (
             <>
               {' '}
-              · Updated <time datetime={updatedDate!.toISOString()}>{updated}</time>
+              · Actualizado <time datetime={updatedDate!.toISOString()}>{updated}</time>
             </>
           )
         }
       </p>
-      <h1 class="text-base-content text-4xl font-bold">{title}</h1>
-      {description && <p class="text-base-content/80 mt-2 text-lg">{description}</p>}
+      <h1 class="text-4xl font-bold text-klika-dark">{title}</h1>
+      {description && <p class="mt-2 text-lg text-klika-dark/80">{description}</p>}
     </header>
-    <div class="prose-headings:scroll-mt-20">
+    <div class="prose-headings:scroll-mt-28">
       <slot />
     </div>
   </article>

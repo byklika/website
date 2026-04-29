@@ -1,0 +1,132 @@
+---
+/**
+ * Nosotras “ingredient grid” mock (Thesis-style). Parallel to `#nosotras` / AboutUs — not a replacement.
+ *
+ * **Design handoff — tile imagery:** Target a portrait tile ~ **4:5 aspect** (e.g. 800×1000px) per card;
+ * safe area: keep subject / contrast in the **right two-thirds** so the left gradient + coral bar stay legible.
+ */
+import { cn } from '~/lib/helpers';
+import SectionHeading from '~/components/ui/SectionHeading.astro';
+import type { Item } from './AboutUs.astro';
+
+export interface Props {
+  eyebrow: string;
+  title: string;
+  items: Item[];
+  class?: string;
+}
+
+const { eyebrow, title, items, class: className } = Astro.props;
+
+const RESPONSIVE_WIDTHS = [320, 480, 640, 800, 960] as const;
+const buildSrcSet = (name: string, ext: 'avif' | 'webp' | 'jpg') =>
+  RESPONSIVE_WIDTHS.map((width) => `/about-us/${name}-${width}w.${ext} ${width}w`).join(', ');
+
+const imageByTitle: Record<
+  string,
+  { avifSrcSet: string; webpSrcSet: string; jpgSrcSet: string; jpgFallback: string }
+> = {
+  'Quiénes somos': {
+    avifSrcSet: buildSrcSet('quienes-somos', 'avif'),
+    webpSrcSet: buildSrcSet('quienes-somos', 'webp'),
+    jpgSrcSet: buildSrcSet('quienes-somos', 'jpg'),
+    jpgFallback: '/about-us/quienes-somos-640w.jpg'
+  },
+  'Nuestra experiencia': {
+    avifSrcSet: buildSrcSet('nuestra-experiencia', 'avif'),
+    webpSrcSet: buildSrcSet('nuestra-experiencia', 'webp'),
+    jpgSrcSet: buildSrcSet('nuestra-experiencia', 'jpg'),
+    jpgFallback: '/about-us/nuestra-experiencia-640w.jpg'
+  },
+  'Creación de Klika': {
+    avifSrcSet: buildSrcSet('creacion-de-klika', 'avif'),
+    webpSrcSet: buildSrcSet('creacion-de-klika', 'webp'),
+    jpgSrcSet: buildSrcSet('creacion-de-klika', 'jpg'),
+    jpgFallback: '/about-us/creacion-de-klika-640w.jpg'
+  },
+  'Nuestro plan': {
+    avifSrcSet: buildSrcSet('nuestro-plan', 'avif'),
+    webpSrcSet: buildSrcSet('nuestro-plan', 'webp'),
+    jpgSrcSet: buildSrcSet('nuestro-plan', 'jpg'),
+    jpgFallback: '/about-us/nuestro-plan-640w.jpg'
+  },
+  'Nuestro compromiso': {
+    avifSrcSet: buildSrcSet('nuestro-compromiso', 'avif'),
+    webpSrcSet: buildSrcSet('nuestro-compromiso', 'webp'),
+    jpgSrcSet: buildSrcSet('nuestro-compromiso', 'jpg'),
+    jpgFallback: '/about-us/nuestro-compromiso-640w.jpg'
+  }
+};
+---
+
+<section
+  id="nosotras-v2"
+  class={cn(
+    'about-us-nosotras-v2-component',
+    'section-gutter-x bg-klika-cream py-16 min-[901px]:py-24',
+    className
+  )}
+  aria-label={`${eyebrow} — versión alternativa (demostración)`}
+>
+  <div class="layout-container">
+    <SectionHeading eyebrow={eyebrow} title={title} class="reveal" />
+
+    <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:gap-8">
+      {
+        items.map((it, idx) => {
+          const image = imageByTitle[it.title];
+          return (
+            <article
+              class:list={[
+                'relative isolate min-h-[340px] overflow-hidden rounded-[1.2rem] border-l-4 border-l-klika-coral shadow-card',
+                'reveal',
+                idx % 3 === 1 ? 'rd1' : idx % 3 === 2 ? 'rd2' : ''
+              ]}
+            >
+              <picture class="pointer-events-none absolute inset-0">
+                <source
+                  srcset={image?.avifSrcSet ?? ''}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  type="image/avif"
+                />
+                <source
+                  srcset={image?.webpSrcSet ?? ''}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  type="image/webp"
+                />
+                <img
+                  src={image?.jpgFallback ?? ''}
+                  srcset={image?.jpgSrcSet ?? ''}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  alt=""
+                  class="h-full w-full object-cover object-center"
+                  loading="lazy"
+                  decoding="async"
+                  aria-hidden="true"
+                />
+              </picture>
+              <div
+                class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_90%_80%_at_80%_40%,rgba(242,245,238,0.45),rgba(30,42,26,0.35)),linear-gradient(118deg,rgba(242,106,58,0.18)_0%,rgba(242,245,238,0.35)_28%,rgba(74,103,65,0.25)_55%,rgba(74,90,69,0.5)_100%)]"
+                aria-hidden="true"
+              />
+              <div
+                class="pointer-events-none absolute inset-0 bg-gradient-to-r from-klika-cream/95 via-klika-cream/55 to-transparent"
+                aria-hidden="true"
+              />
+              <div class="relative z-[1] flex min-h-[340px] flex-col justify-between">
+                <div class="p-6">
+                  <h3 class="inline-block max-w-[85%] rounded-md bg-klika-dark/75 px-3 py-2 font-serif text-[1.25rem] font-normal leading-snug text-klika-white min-[901px]:text-[1.35rem]">
+                    {it.title}
+                  </h3>
+                </div>
+                <div class="flex min-h-[10.5rem] items-start border-t border-white/25 bg-klika-dark/82 px-6 pb-6 pt-4 text-[0.95rem] leading-[1.65] text-klika-white">
+                  {it.description}
+                </div>
+              </div>
+            </article>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>

@@ -9,13 +9,28 @@ export interface Props {
   tagline?: string;
   description?: string;
   includes?: string[];
-  ctaHref: string;
+  /** Link destination when not using `ctaSheetId`. */
+  ctaHref?: string;
   ctaLabel: string;
+  /** When set, CTA opens the sheet instead of navigating. */
+  ctaSheetId?: string;
+  /** Optional: stage label to attach to CTA for project_stage. */
+  projectStageValue?: string;
   class?: string;
 }
 
-const { label, title, tagline, description, includes = [], ctaHref, ctaLabel, class: className } =
-  Astro.props;
+const {
+  label,
+  title,
+  tagline,
+  description,
+  includes = [],
+  ctaHref,
+  ctaLabel,
+  ctaSheetId,
+  projectStageValue,
+  class: className
+} = Astro.props;
 ---
 
 <article
@@ -55,7 +70,21 @@ const { label, title, tagline, description, includes = [], ctaHref, ctaLabel, cl
     </div>
 
     <div class="mt-6">
-      <Button href={ctaHref} variant="mossOutline">{ctaLabel}</Button>
+      {ctaSheetId ? (
+        <button
+          type="button"
+          class="button-component inline-flex items-center gap-2 rounded-pill font-semibold no-underline transition will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral focus-visible:ring-offset-2 border-[1.5px] border-klika-moss text-klika-moss bg-transparent px-[1.4rem] py-[0.6rem] text-[0.84rem] hover:bg-klika-moss hover:text-klika-white"
+          aria-haspopup="dialog"
+          aria-controls={ctaSheetId}
+          data-sheet-open={ctaSheetId}
+          data-project-stage-source="service-card"
+          data-project-stage-value={projectStageValue}
+        >
+          {ctaLabel}
+        </button>
+      ) : (
+        <Button href={ctaHref!} variant="mossOutline">{ctaLabel}</Button>
+      )}
     </div>
   </div>
 </article>

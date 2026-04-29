@@ -1,46 +1,52 @@
 ---
+import { siteNavItems } from '~/data/siteNav';
+
 const year = new Date().getFullYear();
-const pathname = Astro.url?.pathname ?? '/';
-const isHome = pathname === '/';
 ---
 
-{
-  isHome ? (
-    <footer class="footer-component section-gutter-x border-t border-white/10 bg-klika-dark py-8 text-klika-white">
-      <div class="layout-container flex flex-col items-center justify-between gap-6 min-[901px]:flex-row">
-        <div class="text-center min-[901px]:text-left">
-          <p class="font-serif text-[1rem] font-bold">KLIKA</p>
-          <p class="mt-1 text-[0.75rem] text-white/35">E‑Learning Studio</p>
-        </div>
+<footer class="footer-component section-gutter-x border-t border-white/10 bg-klika-dark py-8 text-klika-white">
+  <div class="layout-container flex flex-col items-center justify-between gap-6 min-[901px]:flex-row">
+    <div class="text-center min-[901px]:text-left">
+      <p class="font-serif text-[1rem] font-bold">KLIKA</p>
+      <p class="mt-1 text-[0.75rem] text-white/35">E‑Learning Studio</p>
+    </div>
 
-        <nav class="flex flex-wrap justify-center gap-[1.8rem]" aria-label="Footer">
-          {[
-            { href: '#inicio', label: 'Inicio' },
-            { href: '#metodologia', label: 'Metodología' },
-            { href: '#servicios', label: 'Servicios' },
-            { href: '#nosotras', label: 'Nosotras' }
-          ].map(({ href, label }) => (
-            <a href={href} class="text-[0.8rem] text-white/40 no-underline transition hover:text-klika-coral">
-              {label}
+    <nav class="flex flex-wrap justify-center gap-[1.8rem]" aria-label="Footer">
+      {
+        siteNavItems.map((item) =>
+          item.kind === 'link' ? (
+            <a
+              href={item.href}
+              class="text-[0.8rem] text-white/40 no-underline transition hover:text-klika-coral"
+            >
+              {item.label}
             </a>
-          ))}
-        </nav>
+          ) : (
+            <button
+              type="button"
+              class="cursor-pointer border-0 bg-transparent p-0 text-[0.8rem] text-white/40 no-underline transition hover:text-klika-coral"
+              aria-haspopup="dialog"
+              aria-controls="contact-sheet"
+              data-sheet-open="contact-sheet"
+            >
+              {item.label}
+            </button>
+          )
+        )
+      }
+    </nav>
 
-        <a
-          href="#contacto"
-          class="rounded-pill bg-klika-coral px-[1.3rem] py-[0.55rem] text-[0.8rem] font-semibold text-klika-white no-underline hover:bg-klika-coralHover"
-        >
-          Hablemos
-        </a>
-      </div>
-      <p class="layout-container mt-4 text-center text-[0.75rem] text-white/35">&copy; {year} Klika. All rights reserved.</p>
-    </footer>
-  ) : (
-    <footer class="footer-component footer footer-center bg-base-100 text-base-content border-base-300 border-t px-4 py-8">
-      <aside>
-        <p class="font-semibold">Klika</p>
-        <p class="text-sm opacity-80">&copy; {year} Klika. All rights reserved.</p>
-      </aside>
-    </footer>
-  )
-}
+    <button
+      type="button"
+      class="rounded-pill bg-klika-coral px-[1.3rem] py-[0.55rem] text-[0.8rem] font-semibold text-klika-white hover:bg-klika-coralHover"
+      aria-haspopup="dialog"
+      aria-controls="contact-sheet"
+      data-sheet-open="contact-sheet"
+    >
+      Hablemos
+    </button>
+  </div>
+  <p class="layout-container mt-4 text-center text-[0.75rem] text-white/35">
+    &copy; {year} Klika. All rights reserved.
+  </p>
+</footer>

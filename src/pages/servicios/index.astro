@@ -1,0 +1,44 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro';
+import CTA from '~/components/CTA.astro';
+---
+
+<BaseLayout
+  title="Servicios — Klika"
+  description="Diseño instruccional, desarrollo e-learning y acompañamiento para equipos educativos."
+>
+  <div class="page-copy space-y-10">
+    <header class="max-w-none">
+      <h1>Servicios</h1>
+      <p>
+        Ofrecemos diseño instruccional, producción de experiencias digitales y soporte pedagógico para
+        que tu propuesta formativa llegue con claridad y impacto. Contenido de ejemplo — se reemplaza
+        con copy final.
+      </p>
+    </header>
+
+    <section class="max-w-none" aria-labelledby="servicios-lista">
+      <h2 id="servicios-lista">Qué hacemos</h2>
+      <ul>
+        <li>Diseño instruccional y rutas de aprendizaje</li>
+        <li>Producción de cápsulas, cursos y evaluaciones</li>
+        <li>Implementación en LMS y materiales descargables</li>
+      </ul>
+    </section>
+
+    <section class="max-w-none" aria-labelledby="servicios-proceso">
+      <h2 id="servicios-proceso">Cómo lo encaramos</h2>
+      <p>
+        Partimos de objetivos medibles, perfil de audiencia y restricciones reales (tiempo, plataforma,
+        accesibilidad). Iteramos con revisiones cortas para mantener el ritmo sin perder calidad.
+      </p>
+    </section>
+
+    <CTA
+      title="¿Querés avanzar?"
+      description="Contanos tu contexto y armamos un primer paso a medida."
+      openContactSheet
+      label="Abrir contacto"
+    />
+  </div>
+</BaseLayout>

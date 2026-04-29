@@ -1,123 +1,182 @@
 ---
 import KlikaHomeHeaderLogoIcon from '~/icons/KlikaHomeHeaderLogoIcon.astro';
-import NavHamburgerMenuIcon from '~/icons/NavHamburgerMenuIcon.astro';
+import { siteNavItems } from '~/data/siteNav';
 
 const pathname = Astro.url?.pathname ?? '/';
-const isHome = pathname === '/';
 
-const siteNav = [
-  { href: '/', label: 'Home' },
-  { href: '/services', label: 'Services' },
-  { href: '/how-it-works', label: 'How it works' },
-  { href: '/about', label: 'About' },
-  { href: '/blog', label: 'Blog' },
-  { href: '/contact', label: 'Contact' }
-];
-
-const homeNav = [
-  { href: '#inicio', label: 'Inicio' },
-  { href: '#metodologia', label: 'Metodología' },
-  { href: '#servicios', label: 'Servicios' },
-  { href: '#nosotras', label: 'Nosotras' }
-];
+function isLinkActive(href: string) {
+  return href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
+}
 ---
 
-{
-  isHome ? (
-    <header
-      id="homeHeader"
-      class="header-component fixed inset-x-0 top-0 z-50 bg-klika-dark shadow-[0_2px_16px_rgba(0,0,0,0.15)]"
-    >
-      <div class="section-gutter-x py-4">
-        <div class="layout-container flex items-center justify-between gap-4">
-        <a href="#inicio" class="flex items-center gap-3 no-underline">
-          <KlikaHomeHeaderLogoIcon />
-          <span class="font-serif text-[1.1rem] font-bold tracking-[-0.3px] text-klika-white">
-            KLIKA
-          </span>
-        </a>
+<header
+  id="homeHeader"
+  class="header-component fixed inset-x-0 top-0 z-50 bg-klika-dark shadow-[0_2px_16px_rgba(0,0,0,0.15)]"
+>
+  <div class="section-gutter-x py-4">
+    <div class="layout-container flex items-center justify-between gap-4">
+      <a href="/" class="flex items-center gap-3 no-underline">
+        <KlikaHomeHeaderLogoIcon />
+        <span class="font-serif text-[1.1rem] font-bold tracking-[-0.3px] text-klika-white">
+          KLIKA
+        </span>
+      </a>
 
-        <nav class="hidden items-center gap-[1.8rem] min-[901px]:flex" aria-label="Primary">
-          {homeNav.map(({ href, label }) => (
-            <a href={href} class="text-[0.88rem] font-medium text-white/85 no-underline hover:text-klika-white">
-              {label}
-            </a>
-          ))}
-          <a
-            href="#contacto"
-            class="rounded-pill bg-klika-coral px-[1.4rem] py-[0.55rem] text-[0.85rem] font-semibold text-klika-white no-underline hover:bg-klika-coralHover"
-          >
-            Hablemos
-          </a>
-        </nav>
-
-        <details class="relative min-[901px]:hidden">
-          <summary
-            class="cursor-pointer list-none rounded-pill border border-white/20 px-4 py-2 text-sm text-klika-white"
-            aria-label="Open menu"
-          >
-            Menú
-          </summary>
-          <div class="absolute right-0 mt-2 w-56 rounded-xl bg-klika-dark p-2 shadow-[0_16px_48px_rgba(0,0,0,0.35)]">
-            <div class="flex flex-col">
-              {homeNav.map(({ href, label }) => (
-                <a href={href} class="rounded-lg px-3 py-2 text-sm text-white/85 no-underline hover:bg-white/10 hover:text-klika-white">
-                  {label}
-                </a>
-              ))}
-              <a href="#contacto" class="mt-1 rounded-lg bg-klika-coral px-3 py-2 text-sm font-semibold text-klika-white no-underline hover:bg-klika-coralHover">
-                Hablemos
+      <nav class="hidden items-center gap-[1.8rem] min-[901px]:flex" aria-label="Primary">
+        {
+          siteNavItems.map((item) =>
+            item.kind === 'link' ? (
+              <a
+                href={item.href}
+                class={`text-[0.88rem] font-medium no-underline hover:text-klika-white ${
+                  isLinkActive(item.href) ? 'text-klika-white font-semibold' : 'text-white/85'
+                }`}
+                aria-current={isLinkActive(item.href) ? 'page' : undefined}
+                data-nav-nosotras-label={item.href === '/nosotras' ? 'true' : undefined}
+              >
+                {item.label}
               </a>
-            </div>
-          </div>
-        </details>
-        </div>
-      </div>
-    </header>
-  ) : (
-    <header class="header-component navbar bg-base-100 border-base-300 border-b shadow-sm">
-      <div class="navbar-start">
-        <a href="/" class="btn btn-ghost text-xl font-semibold tracking-tight">Klika</a>
-      </div>
-      <div class="navbar-end flex-none gap-2">
-        <ul class="menu menu-horizontal hidden gap-0 px-1 lg:flex">
-          {siteNav.map(({ href, label }) => (
-            <li>
-              <a href={href} class="rounded-lg">
-                {label}
-              </a>
-            </li>
-          ))}
-        </ul>
-        <div class="dropdown dropdown-end lg:hidden">
-          <div tabindex="0" role="button" class="btn btn-ghost btn-circle" aria-label="Open menu">
-            <NavHamburgerMenuIcon />
-          </div>
-          <ul
-            tabindex="0"
-            class="menu menu-sm dropdown-content bg-base-100 rounded-box border-base-300 z-50 mt-3 w-52 border p-2 shadow"
-          >
-            {siteNav.map(({ href, label }) => (
-              <li>
-                <a href={href}>{label}</a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </header>
-  )
-}
+            ) : (
+              <button
+                type="button"
+                class="text-[0.88rem] font-medium text-white/85 no-underline hover:text-klika-white"
+                aria-haspopup="dialog"
+                aria-controls="contact-sheet"
+                data-sheet-open="contact-sheet"
+              >
+                {item.label}
+              </button>
+            )
+          )
+        }
+        <button
+          type="button"
+          class="rounded-pill bg-klika-coral px-[1.4rem] py-[0.55rem] text-[0.85rem] font-semibold text-klika-white hover:bg-klika-coralHover"
+          aria-haspopup="dialog"
+          aria-controls="contact-sheet"
+          data-sheet-open="contact-sheet"
+        >
+          Hablemos
+        </button>
+      </nav>
 
-{
-  isHome && (
-    <script is:inline>
-      const header = document.getElementById('homeHeader');
-      function onScroll() {{
-        header?.classList.toggle('scrolled', window.scrollY > 20);
-      }}
-      window.addEventListener('scroll', onScroll, {{ passive: true }});
-      onScroll();
-    </script>
-  )
-}
+      <details class="relative min-[901px]:hidden">
+        <summary
+          class="cursor-pointer list-none rounded-pill border border-white/20 px-4 py-2 text-sm text-klika-white"
+          aria-label="Open menu"
+        >
+          Menú
+        </summary>
+        <div class="absolute right-0 mt-2 w-56 rounded-xl bg-klika-dark p-2 shadow-[0_16px_48px_rgba(0,0,0,0.35)]">
+          <div class="flex flex-col">
+            {
+              siteNavItems.map((item) =>
+                item.kind === 'link' ? (
+                  <a
+                    href={item.href}
+                    class={`rounded-lg px-3 py-2 text-sm no-underline hover:bg-white/10 hover:text-klika-white ${
+                      isLinkActive(item.href) ? 'bg-white/10 text-klika-white font-semibold' : 'text-white/85'
+                    }`}
+                    aria-current={isLinkActive(item.href) ? 'page' : undefined}
+                    data-nav-nosotras-label={item.href === '/nosotras' ? 'true' : undefined}
+                  >
+                    {item.label}
+                  </a>
+                ) : (
+                  <button
+                    type="button"
+                    class="rounded-lg px-3 py-2 text-left text-sm text-white/85 hover:bg-white/10 hover:text-klika-white"
+                    aria-haspopup="dialog"
+                    aria-controls="contact-sheet"
+                    data-sheet-open="contact-sheet"
+                  >
+                    {item.label}
+                  </button>
+                )
+              )
+            }
+            <button
+              type="button"
+              class="mt-1 rounded-lg bg-klika-coral px-3 py-2 text-left text-sm font-semibold text-klika-white hover:bg-klika-coralHover"
+              aria-haspopup="dialog"
+              aria-controls="contact-sheet"
+              data-sheet-open="contact-sheet"
+            >
+              Hablemos
+            </button>
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+</header>
+
+<script is:inline>
+  const header = document.getElementById('homeHeader');
+  const EXPERIMENT_KEY = 'nav-nosotras-label-v1';
+  let navVariant = 'control';
+
+  function getNosotrasLinks() {
+    return Array.from(document.querySelectorAll('[data-nav-nosotras-label="true"]'));
+  }
+
+  function applyLabel(label) {
+    getNosotrasLinks().forEach((link) => {
+      link.textContent = label;
+      link.setAttribute('data-nav-label-shown', label);
+    });
+  }
+
+  function trackExposure(variant) {
+    if (typeof window.gtag === 'function') {
+      window.gtag('event', 'experiment_exposure', {
+        experiment_key: EXPERIMENT_KEY,
+        variant
+      });
+    }
+  }
+
+  function trackNavClick(event) {
+    const target = event.target instanceof Element ? event.target.closest('[data-nav-nosotras-label="true"]') : null;
+    if (!target || typeof window.gtag !== 'function') return;
+    window.gtag('event', 'nav_item_click', {
+      experiment_key: EXPERIMENT_KEY,
+      variant: navVariant,
+      label_shown: target.getAttribute('data-nav-label-shown') || target.textContent?.trim() || 'Nosotras',
+      href: '/nosotras'
+    });
+  }
+
+  function runNavLabelExperiment() {
+    if (header?.dataset.navExperimentApplied === 'true') return;
+    const gb = window.growthbook;
+    if (!gb || typeof gb.run !== 'function') return;
+
+    const result = gb.run({
+      key: EXPERIMENT_KEY,
+      variations: ['Nosotras', 'Equipo'],
+      weights: [0.5, 0.5],
+      hashAttribute: 'anonId'
+    });
+
+    const label = result?.value === 'Equipo' ? 'Equipo' : 'Nosotras';
+    navVariant = label === 'Equipo' ? 'variation_1' : 'control';
+    applyLabel(label);
+    trackExposure(navVariant);
+    header?.setAttribute('data-nav-experiment-applied', 'true');
+  }
+
+  function onScroll() {
+    header?.classList.toggle('scrolled', window.scrollY > 20);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  document.addEventListener('click', trackNavClick, { capture: true });
+  window.addEventListener('growthbook:ready', runNavLabelExperiment);
+
+  if (window.growthbook && typeof window.growthbook.run === 'function') {
+    runNavLabelExperiment();
+  }
+
+  onScroll();
+</script>

@@ -1,10 +1,13 @@
 ---
-import MarketingLayout from '~/layouts/MarketingLayout.astro';
+import BaseLayout from '~/layouts/BaseLayout.astro';
 import Hero from '~/components/sections/Hero.astro';
 import Methodology from '~/components/sections/Methodology.astro';
 import Services from '~/components/sections/Services.astro';
 import AboutUs from '~/components/sections/AboutUs.astro';
-import Contact from '~/components/sections/Contact.astro';
+import type { Item as AboutUsItem } from '~/components/sections/AboutUs.astro';
+import AboutUsNosotrasV2 from '~/components/sections/AboutUsNosotrasV2.astro';
+import AboutUsNosotrosV3 from '~/components/sections/AboutUsNosotrosV3.astro';
+import AboutUsNosotrosV4 from '~/components/sections/AboutUsNosotrosV4.astro';
 import EmailSignupPopup from '~/components/EmailSignupPopup.astro';
 
 /**
@@ -20,9 +23,38 @@ const heroImageSizes =
   '(min-width: 1920px) min(46rem, 42vw), (min-width: 1536px) min(40rem, 44vw), (min-width: 901px) min(36rem, 46vw), min(92vw, 42rem)';
 const heroImageAlt =
   'Three professional women collaborating on an instructional design learning map around a wooden table in a bright, plant-filled office.';
+
+/** Shared with `AboutUs` + `AboutUsNosotrasV2` — keep strings identical (see WORKPLAN_NOSOTRAS.md). */
+const nosotrasAboutItems: AboutUsItem[] = [
+  {
+    title: 'Quiénes somos',
+    description:
+      'Somos tres colegas que se volvieron amigas trabajando juntas en distintos proyectos. Lo que nos unió fue la pasión por la educación.'
+  },
+  {
+    title: 'Nuestra experiencia',
+    description:
+      'Tenemos más de cinco años de experiencia en e‑learning: universidades, organizaciones públicas y privadas, edtech, freelance, empresas.'
+  },
+  {
+    title: 'Creación de Klika',
+    description:
+      'Creamos Klika para capitalizar ese recorrido y trabajar como nos gusta: con profundidad pedagógica, cerca de cada proyecto.'
+  },
+  {
+    title: 'Nuestro plan',
+    description: 'Trabajamos con una metodología que se adapta a las particularidades de cada proyecto y cliente.'
+  },
+  {
+    title: 'Nuestro compromiso',
+    description:
+      'Nos comprometemos con que cada experiencia valga la pena, para quienes diseñan y para quienes aprenden.'
+  }
+];
 ---
 
-<MarketingLayout
+<BaseLayout
+  fullWidthMain
   title="Klika · E‑Learning Studio"
   description="Experiencias educativas que dejan huella. Diseñamos para que educadores y aprendices sientan que valió la pena."
 >
@@ -161,42 +193,29 @@ const heroImageAlt =
     class="homepage-section homepage-section-about"
     eyebrow="Nosotras"
     title="¿Por qué Klika?"
-    items={[
-      {
-        title: 'Quiénes somos',
-        description:
-          'Somos tres colegas que se volvieron amigas trabajando juntas en distintos proyectos. Lo que nos unió fue la pasión por la educación.'
-      },
-      {
-        title: 'Nuestra experiencia',
-        description:
-          'Tenemos más de cinco años de experiencia en e‑learning: universidades, organizaciones públicas y privadas, edtech, freelance, empresas.'
-      },
-      {
-        title: 'Creación de Klika',
-        description:
-          'Creamos Klika para capitalizar ese recorrido y trabajar como nos gusta: con profundidad pedagógica, cerca de cada proyecto.'
-      },
-      {
-        title: 'Nuestro plan',
-        description: 'Trabajamos con una metodología que se adapta a las particularidades de cada proyecto y cliente.'
-      },
-      {
-        title: 'Nuestro compromiso',
-        description:
-          'Nos comprometemos con que cada experiencia valga la pena — para quienes diseñan y para quienes aprenden.'
-      }
-    ]}
+    items={nosotrasAboutItems}
   />
 
-  <Contact
-    class="homepage-section homepage-section-contact"
-    eyebrow="Contacto"
-    title="Contanos sobre tu proyecto."
-    description="Ya sea que tengas todo claro o solo una idea inicial, ¡escribinos!"
-    email="hola@klikastudio.com"
-    locationLine="Argentina · LATAM"
+  <AboutUsNosotrasV2
+    class="homepage-section homepage-section-about-v2"
+    eyebrow="Nosotras"
+    title="¿Por qué Klika?"
+    items={nosotrasAboutItems}
+  />
+
+  <AboutUsNosotrosV3
+    class="homepage-section homepage-section-about-v3"
+    eyebrow="Nosotras"
+    title="¿Por qué Klika?"
+    items={nosotrasAboutItems}
+  />
+
+  <AboutUsNosotrosV4
+    class="homepage-section homepage-section-about-v4"
+    eyebrow="Nosotras"
+    title="¿Por qué Klika?"
+    items={nosotrasAboutItems}
   />
 
   <EmailSignupPopup />
-</MarketingLayout>
+</BaseLayout>

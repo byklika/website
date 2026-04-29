@@ -20,7 +20,8 @@ const {
   class: className,
   target,
   rel,
-  ariaLabel
+  ariaLabel,
+  ...rest
 } = Astro.props;
 
 const base =
@@ -42,11 +43,11 @@ const cls = cn('button-component', base, variants[variant], className);
 
 {
   href ? (
-    <a href={href} class={cls} target={target} rel={rel} aria-label={ariaLabel}>
+    <a href={href} class={cls} target={target} rel={rel} aria-label={ariaLabel} {...rest}>
       <slot />
     </a>
   ) : (
-    <button type={type} class={cls} aria-label={ariaLabel}>
+    <button type={type} class={cls} aria-label={ariaLabel} {...rest}>
       <slot />
     </button>
   )

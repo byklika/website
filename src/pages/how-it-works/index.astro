@@ -1,13 +1,5 @@
 ---
-import BaseLayout from '~/layouts/BaseLayout.astro';
+import LegacyRedirect from '~/components/LegacyRedirect.astro';
 ---
 
-<BaseLayout
-  title="How it works — Klika"
-  description="How Klika works with you from start to finish."
->
-  <section class="prose max-w-none">
-    <h1>How it works</h1>
-    <p>This page will outline our process. Content coming soon.</p>
-  </section>
-</BaseLayout>
+<LegacyRedirect fromPathLabel="/how-it-works" toPath="/como-trabajamos" />

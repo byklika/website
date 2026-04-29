@@ -7,6 +7,8 @@ interface Props {
   title?: string;
   description?: string;
   lang?: string;
+  /** Homepage and other full-bleed pages: no inner max-width wrapper (still clears fixed header). */
+  fullWidthMain?: boolean;
   /** Path or absolute URL for og:image / twitter:image */
   image?: string;
   ogType?: 'website' | 'article';
@@ -17,12 +19,13 @@ interface Props {
 
 const SITE_NAME = 'Klika';
 const DEFAULT_DESCRIPTION =
-  'Klika helps you ship modern web experiences — static-first, fast, and focused on conversion.';
+  'E‑Learning Studio — experiencias educativas que dejan huella.';
 
 const {
   title = SITE_NAME,
   description = DEFAULT_DESCRIPTION,
-  lang = 'en',
+  lang = 'es',
+  fullWidthMain = false,
   image,
   ogType = 'website',
   articlePublishedTime,
@@ -40,12 +43,13 @@ function toAbsoluteImage(src: string): string {
 }
 
 const ogImage = image ? toAbsoluteImage(image) : toAbsoluteImage('/favicon.svg');
+const ogLocale = lang === 'es' ? 'es_AR' : 'en_US';
 ---
 
 <!doctype html>
 <html {lang} data-theme="light">
   <head>
-    <HeadEssentials />
+    <HeadEssentials showGenerator={false} />
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -57,7 +61,7 @@ const ogImage = image ? toAbsoluteImage(image) : toAbsoluteImage('/favicon.svg')
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL.href} />
     <meta property="og:site_name" content={SITE_NAME} />
-    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale" content={ogLocale} />
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:alt" content={title} />
     {
@@ -76,11 +80,38 @@ const ogImage = image ? toAbsoluteImage(image) : toAbsoluteImage('/favicon.svg')
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
   </head>
-  <body class="bg-base-200 text-base-content flex min-h-screen flex-col">
+  <body class="bg-klika-cream text-klika-dark flex min-h-screen flex-col">
     <SiteBodyChrome>
-      <main class="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
-        <slot />
-      </main>
+      {
+        fullWidthMain ? (
+          <main class="w-full flex-1">
+            <slot />
+          </main>
+        ) : (
+          <main class="w-full flex-1">
+            <div class="mx-auto w-full max-w-5xl px-4 pb-12 pt-24">
+              <slot />
+            </div>
+          </main>
+        )
+      }
     </SiteBodyChrome>
+    <script is:inline>
+      const els = Array.from(document.querySelectorAll('.reveal'));
+      if (els.length) {
+        const obs = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                obs.unobserve(e.target);
+              }
+            }
+          },
+          { threshold: 0.08 }
+        );
+        for (const el of els) obs.observe(el);
+      }
+    </script>
   </body>
 </html>

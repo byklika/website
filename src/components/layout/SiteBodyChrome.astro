@@ -2,9 +2,28 @@
 import Header from '~/components/Header.astro';
 import Footer from '~/components/Footer.astro';
 import SiteAnalytics from '~/components/SiteAnalytics.astro';
+import Sheet from '~/components/Sheet.astro';
+import ContactForm from '~/components/ContactForm.astro';
 ---
 
 <Header />
 <slot />
 <Footer />
+
+<Sheet id="contact-sheet" side="right">
+  <span slot="title">Contacto</span>
+
+  <div class="space-y-4">
+    <p class="text-sm leading-relaxed text-klika-dark/75">
+      Escribinos y te respondemos a la brevedad.
+    </p>
+
+    <ContactForm tone="light" idBase="contact-sheet" />
+  </div>
+</Sheet>
+
 <SiteAnalytics />
+
+<script>
+  import '~/scripts/projectStage.ts';
+</script>

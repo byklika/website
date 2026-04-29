@@ -1,24 +1,69 @@
 ---
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY?.trim();
 const configured = Boolean(accessKey);
+
+export interface Props {
+  /** Visual tone for contrasting backgrounds. */
+  tone?: 'dark' | 'light';
+  /** Base used to generate stable, unique ids (avoid duplicates across page + sheet). */
+  idBase?: string;
+}
+
+const { tone = 'dark', idBase = 'contact' } = Astro.props;
+
+const isDark = tone === 'dark';
+const formId = `${idBase}-form`;
+const statusId = `${idBase}-status`;
+const submitId = `${idBase}-submit`;
 ---
 
 <div class="contact-form-component w-full">
   {
     !configured && (
-      <div role="alert" class="mb-6 rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-white/80">
+      <div
+        role="alert"
+        class:list={[
+          'mb-6 rounded-xl px-4 py-3 text-sm',
+          isDark ? 'border border-white/15 bg-white/5 text-white/80' : 'border border-klika-sage/20 bg-klika-mist text-klika-dark/80'
+        ]}
+      >
         <span>
           El formulario no está configurado. Definí{' '}
-          <code class="rounded bg-white/10 px-1 text-xs text-white">PUBLIC_WEB3FORMS_ACCESS_KEY</code> en{' '}
-          <code class="rounded bg-white/10 px-1 text-xs text-white">.env</code> (ver{' '}
-          <code class="rounded bg-white/10 px-1 text-xs text-white">.env.example</code>) y volvé a desplegar.
+          <code
+            class:list={[
+              'rounded px-1 text-xs',
+              isDark ? 'bg-white/10 text-white' : 'bg-klika-cream text-klika-dark'
+            ]}
+          >
+            PUBLIC_WEB3FORMS_ACCESS_KEY
+          </code>{' '}
+          en{' '}
+          <code
+            class:list={[
+              'rounded px-1 text-xs',
+              isDark ? 'bg-white/10 text-white' : 'bg-klika-cream text-klika-dark'
+            ]}
+          >
+            .env
+          </code>{' '}
+          (ver{' '}
+          <code
+            class:list={[
+              'rounded px-1 text-xs',
+              isDark ? 'bg-white/10 text-white' : 'bg-klika-cream text-klika-dark'
+            ]}
+          >
+            .env.example
+          </code>
+          ) y volvé a desplegar.
         </span>
       </div>
     )
   }
 
-  <form id="contact-form" class="flex flex-col gap-5" novalidate>
+  <form id={formId} class="flex flex-col gap-5" novalidate>
     <input type="hidden" name="access_key" value={accessKey ?? ''} />
+    <input type="hidden" name="project_stage" value="" />
 
     {/* Honeypot — leave empty; Web3Forms rejects spam when filled */}
     <label class="hidden" aria-hidden="true">
@@ -27,41 +72,20 @@ const configured = Boolean(accessKey);
     </label>
 
     <label class="flex flex-col gap-2">
-      <span class="text-[0.78rem] font-semibold tracking-[0.05em] text-white/50">NOMBRE</span>
-      <input
-        type="text"
-        name="name"
-        required
-        minlength="2"
-        maxlength="120"
-        class="w-full rounded-[0.8rem] border border-white/[0.14] bg-white/[0.06] px-[1.1rem] py-[0.85rem] text-[0.9rem] text-white placeholder:text-white/25 outline-none transition focus:border-klika-coral focus:bg-white/[0.09]"
-        autocomplete="name"
-        disabled={!configured}
-        placeholder="tu nombre"
-      />
-    </label>
-
-    <label class="flex flex-col gap-2">
-      <span class="text-[0.78rem] font-semibold tracking-[0.05em] text-white/50">ORGANIZACIÓN</span>
-      <input
-        type="text"
-        name="organization"
-        maxlength="200"
-        class="w-full rounded-[0.8rem] border border-white/[0.14] bg-white/[0.06] px-[1.1rem] py-[0.85rem] text-[0.9rem] text-white placeholder:text-white/25 outline-none transition focus:border-klika-coral focus:bg-white/[0.09]"
-        autocomplete="organization"
-        disabled={!configured}
-        placeholder="Nombre de empresa / institución"
-      />
-    </label>
-
-    <label class="flex flex-col gap-2">
-      <span class="text-[0.78rem] font-semibold tracking-[0.05em] text-white/50">EMAIL</span>
+      <span class:list={['text-[0.78rem] font-semibold tracking-[0.05em]', isDark ? 'text-white/50' : 'text-klika-sage/80']}>
+        EMAIL
+      </span>
       <input
         type="email"
         name="email"
         required
         maxlength="254"
-        class="w-full rounded-[0.8rem] border border-white/[0.14] bg-white/[0.06] px-[1.1rem] py-[0.85rem] text-[0.9rem] text-white placeholder:text-white/25 outline-none transition focus:border-klika-coral focus:bg-white/[0.09]"
+        class:list={[
+          'w-full rounded-[0.8rem] px-[1.1rem] py-[0.85rem] text-[0.9rem] outline-none transition',
+          isDark
+            ? 'border border-white/[0.14] bg-white/[0.06] text-white placeholder:text-white/25 focus:border-klika-coral focus:bg-white/[0.09]'
+            : 'border border-klika-sage/25 bg-klika-cream text-klika-dark placeholder:text-klika-dark/35 focus:border-klika-coral'
+        ]}
         autocomplete="email"
         disabled={!configured}
         placeholder="tu@correo.com"
@@ -69,16 +93,21 @@ const configured = Boolean(accessKey);
     </label>
 
     <label class="flex flex-col gap-2">
-      <span class="text-[0.78rem] font-semibold tracking-[0.05em] text-white/50">CONTANOS MÁS</span>
+      <span class:list={['text-[0.78rem] font-semibold tracking-[0.05em]', isDark ? 'text-white/50' : 'text-klika-sage/80']}>
+        CONTANOS MÁS
+      </span>
       <textarea
         name="message"
-        required
-        minlength="10"
         maxlength="5000"
         rows={6}
-        class="min-h-[120px] w-full resize-y rounded-[0.8rem] border border-white/[0.14] bg-white/[0.06] px-[1.1rem] py-[0.85rem] text-[0.9rem] text-white placeholder:text-white/25 outline-none transition focus:border-klika-coral focus:bg-white/[0.09]"
+        class:list={[
+          'min-h-[120px] w-full resize-y rounded-[0.8rem] px-[1.1rem] py-[0.85rem] text-[0.9rem] outline-none transition',
+          isDark
+            ? 'border border-white/[0.14] bg-white/[0.06] text-white placeholder:text-white/25 focus:border-klika-coral focus:bg-white/[0.09]'
+            : 'border border-klika-sage/25 bg-klika-cream text-klika-dark placeholder:text-klika-dark/35 focus:border-klika-coral'
+        ]}
         disabled={!configured}
-        placeholder="¿En qué etapa de tu proyecto estás? ¿Qué necesitás?"
+        placeholder="(Opcional) ¿En qué etapa de tu proyecto estás? ¿Qué necesitás?"
       ></textarea>
     </label>
 
@@ -87,24 +116,37 @@ const configured = Boolean(accessKey);
         type="submit"
         class="inline-flex items-center gap-2 self-start rounded-pill bg-klika-coral px-[1.8rem] py-[0.75rem] text-[0.9rem] font-semibold text-klika-white transition hover:bg-klika-coralHover disabled:cursor-not-allowed disabled:opacity-60"
         disabled={!configured}
-        id="contact-submit"
+        id={submitId}
       >
         Enviar →
       </button>
-      <span id="contact-form-status" class="text-sm text-white/80" role="status" aria-live="polite"></span>
+      <span
+        id={statusId}
+        class:list={['text-sm', isDark ? 'text-white/80' : 'text-klika-dark/70']}
+        role="status"
+        aria-live="polite"
+      ></span>
     </div>
   </form>
 </div>
 
-<script>
-  const form = document.getElementById('contact-form');
-  const statusEl = document.getElementById('contact-form-status');
-  const submitBtn = document.getElementById('contact-submit');
+<script
+  is:inline
+  define:vars={{
+    formId,
+    statusId,
+    submitId,
+    baseStatusClass: `text-sm ${isDark ? 'text-white/80' : 'text-klika-dark/70'}`
+  }}
+>
+  const form = document.getElementById(formId);
+  const statusEl = document.getElementById(statusId);
+  const submitBtn = document.getElementById(submitId);
 
   function setStatus(kind, message) {
     if (!statusEl) return;
     statusEl.textContent = message;
-    statusEl.className = 'text-sm';
+    statusEl.className = baseStatusClass;
     if (kind === 'ok') statusEl.classList.add('text-success');
     if (kind === 'err') statusEl.classList.add('text-error');
     if (kind === 'loading') statusEl.classList.add('opacity-80');
@@ -121,6 +163,23 @@ const configured = Boolean(accessKey);
       return;
     }
 
+    const emailEl = form.querySelector('input[name="email"]');
+    if (emailEl instanceof HTMLInputElement) {
+      emailEl.setCustomValidity('');
+      const value = emailEl.value.trim();
+      if (!value) {
+        emailEl.setCustomValidity('Ingresá tu email.');
+      } else if (emailEl.validity.typeMismatch) {
+        emailEl.setCustomValidity('Ingresá un email válido.');
+      }
+      if (!emailEl.checkValidity()) {
+        if (typeof emailEl.reportValidity === 'function') emailEl.reportValidity();
+        emailEl.focus();
+        setStatus('err', 'Por favor, revisá el email.');
+        return;
+      }
+    }
+
     const fd = new FormData(form);
     const botcheck = String(fd.get('botcheck') || '');
     if (botcheck) {
@@ -130,12 +189,15 @@ const configured = Boolean(accessKey);
 
     const payload = {
       access_key: key,
-      name: String(fd.get('name') ?? '').trim(),
-      organization: String(fd.get('organization') ?? '').trim(),
       email: String(fd.get('email') ?? '').trim(),
       message: String(fd.get('message') ?? '').trim(),
       subject: 'Contact form — byklika.com'
     };
+
+    const projectStage = String(fd.get('project_stage') ?? '').trim();
+    if (projectStage) {
+      payload.project_stage = projectStage;
+    }
 
     if (submitBtn instanceof HTMLButtonElement) submitBtn.disabled = true;
     setStatus('loading', 'Enviando…');

@@ -35,6 +35,19 @@ const clarityInline = clarityProjectId
 const growthbookInline = growthbookClientKey
   ? `const { GrowthBook } = window.growthbook || {};
 if (GrowthBook) {
+	const getAnonymousId = () => {
+		const key = 'gb_anon_id';
+		try {
+			const existing = window.localStorage.getItem(key);
+			if (existing) return existing;
+			const created = (window.crypto?.randomUUID?.() || Math.random().toString(36).slice(2)) + Date.now().toString(36);
+			window.localStorage.setItem(key, created);
+			return created;
+		} catch {
+			return 'anon-fallback';
+		}
+	};
+
 	const gb = new GrowthBook({
 		apiHost: 'https://cdn.growthbook.io',
 		clientKey: '${growthbookClientKey}',
@@ -49,9 +62,14 @@ if (GrowthBook) {
 		}
 	});
 
+	gb.setAttributes({
+		anonId: getAnonymousId()
+	});
+
 	gb.init()
 		.then(() => {
 			window.growthbook = gb;
+			window.dispatchEvent(new CustomEvent('growthbook:ready'));
 		})
 		.catch((err) => {
 			if (${import.meta.env.DEV ? 'true' : 'false'}) console.error('[GrowthBook]', err);
