@@ -12,38 +12,53 @@ export interface Props {
 
 const { eyebrow, title, items, class: className } = Astro.props;
 
+const RESPONSIVE_WIDTHS = [320, 480, 640, 800, 960] as const;
+const buildSrcSet = (name: string, ext: 'avif' | 'webp' | 'jpg') =>
+  RESPONSIVE_WIDTHS.map((width) => `/about-us/${name}-${width}w.${ext} ${width}w`).join(', ');
+
 const imageByTitle: Record<
   string,
-  { avifSrc: string; webpSrc: string; jpgSrc: string; alt: string }
+  {
+    avifSrcSet: string;
+    webpSrcSet: string;
+    jpgSrcSet: string;
+    jpgFallback: string;
+    alt: string;
+  }
 > = {
   'Quiénes somos': {
-    avifSrc: '/about-us/quienes-somos.avif',
-    webpSrc: '/about-us/quienes-somos.webp',
-    jpgSrc: '/about-us/quienes-somos.jpg',
+    avifSrcSet: buildSrcSet('quienes-somos', 'avif'),
+    webpSrcSet: buildSrcSet('quienes-somos', 'webp'),
+    jpgSrcSet: buildSrcSet('quienes-somos', 'jpg'),
+    jpgFallback: '/about-us/quienes-somos-640w.jpg',
     alt: 'Tres mujeres conversan y colaboran en una mesa de trabajo.'
   },
   'Nuestra experiencia': {
-    avifSrc: '/about-us/nuestra-experiencia.avif',
-    webpSrc: '/about-us/nuestra-experiencia.webp',
-    jpgSrc: '/about-us/nuestra-experiencia.jpg',
+    avifSrcSet: buildSrcSet('nuestra-experiencia', 'avif'),
+    webpSrcSet: buildSrcSet('nuestra-experiencia', 'webp'),
+    jpgSrcSet: buildSrcSet('nuestra-experiencia', 'jpg'),
+    jpgFallback: '/about-us/nuestra-experiencia-640w.jpg',
     alt: 'Equipo revisando contenido formativo con foco pedagógico.'
   },
   'Creación de Klika': {
-    avifSrc: '/about-us/creacion-de-klika.avif',
-    webpSrc: '/about-us/creacion-de-klika.webp',
-    jpgSrc: '/about-us/creacion-de-klika.jpg',
+    avifSrcSet: buildSrcSet('creacion-de-klika', 'avif'),
+    webpSrcSet: buildSrcSet('creacion-de-klika', 'webp'),
+    jpgSrcSet: buildSrcSet('creacion-de-klika', 'jpg'),
+    jpgFallback: '/about-us/creacion-de-klika-640w.jpg',
     alt: 'Personas organizan ideas y definen el enfoque de un proyecto educativo.'
   },
   'Nuestro plan': {
-    avifSrc: '/about-us/nuestro-plan.avif',
-    webpSrc: '/about-us/nuestro-plan.webp',
-    jpgSrc: '/about-us/nuestro-plan.jpg',
+    avifSrcSet: buildSrcSet('nuestro-plan', 'avif'),
+    webpSrcSet: buildSrcSet('nuestro-plan', 'webp'),
+    jpgSrcSet: buildSrcSet('nuestro-plan', 'jpg'),
+    jpgFallback: '/about-us/nuestro-plan-640w.jpg',
     alt: 'Materiales, notas y laptop sobre una mesa durante planificación.'
   },
   'Nuestro compromiso': {
-    avifSrc: '/about-us/nuestro-compromiso.avif',
-    webpSrc: '/about-us/nuestro-compromiso.webp',
-    jpgSrc: '/about-us/nuestro-compromiso.jpg',
+    avifSrcSet: buildSrcSet('nuestro-compromiso', 'avif'),
+    webpSrcSet: buildSrcSet('nuestro-compromiso', 'webp'),
+    jpgSrcSet: buildSrcSet('nuestro-compromiso', 'jpg'),
+    jpgFallback: '/about-us/nuestro-compromiso-640w.jpg',
     alt: 'Equipo trabajando con atención en contenidos y decisiones de aprendizaje.'
   }
 };
@@ -74,10 +89,20 @@ const imageByTitle: Record<
               ]}
             >
               <picture class="pointer-events-none absolute inset-0">
-                <source srcset={image?.avifSrc ?? ''} type="image/avif" />
-                <source srcset={image?.webpSrc ?? ''} type="image/webp" />
+                <source
+                  srcset={image?.avifSrcSet ?? ''}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  type="image/avif"
+                />
+                <source
+                  srcset={image?.webpSrcSet ?? ''}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  type="image/webp"
+                />
                 <img
-                  src={image?.jpgSrc ?? ''}
+                  src={image?.jpgFallback ?? ''}
+                  srcset={image?.jpgSrcSet ?? ''}
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   alt={image?.alt ?? ''}
                   class="nosotras-v3-image h-full w-full object-cover object-center"
                   loading="lazy"
