@@ -2,9 +2,73 @@
 import Header from '~/components/Header.astro';
 import Footer from '~/components/Footer.astro';
 import SiteAnalytics from '~/components/SiteAnalytics.astro';
+import Sheet from '~/components/Sheet.astro';
+import ContactForm from '~/components/ContactForm.astro';
 ---
 
 <Header />
 <slot />
 <Footer />
+
+<Sheet id="site-menu">
+  <span slot="title">Menú</span>
+
+  <nav aria-label="Site">
+    <ul class="flex flex-col gap-1">
+      {[
+        { href: '/', label: 'Home' },
+        { href: '/services', label: 'Services' },
+        { href: '/how-it-works', label: 'How it works' },
+        { href: '/about', label: 'About' },
+        { href: '/blog', label: 'Blog' },
+        { href: '/contact', label: 'Contact' }
+      ].map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            class="block rounded-lg px-3 py-2 text-[0.95rem] font-medium text-klika-dark no-underline hover:bg-klika-mist focus:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral"
+          >
+            {label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <div slot="footer" class="flex flex-wrap gap-2">
+    <button
+      type="button"
+      class="rounded-pill bg-klika-coral px-[1.2rem] py-[0.55rem] text-[0.85rem] font-semibold text-klika-white no-underline hover:bg-klika-coralHover focus:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral"
+      aria-haspopup="dialog"
+      aria-controls="contact-sheet"
+      data-sheet-open="contact-sheet"
+    >
+      Hablemos
+    </button>
+    <button
+      type="button"
+      class="rounded-pill border border-klika-sage/25 px-[1.2rem] py-[0.55rem] text-[0.85rem] font-semibold text-klika-dark hover:bg-klika-mist focus:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral"
+      data-sheet-close
+    >
+      Cerrar
+    </button>
+  </div>
+</Sheet>
+
+<Sheet id="contact-sheet" side="right">
+  <span slot="title">Contacto</span>
+
+  <div class="space-y-4">
+    <p class="text-sm leading-relaxed text-klika-dark/75">
+      Escribinos y te respondemos a la brevedad.
+    </p>
+
+    <ContactForm tone="light" idBase="contact-sheet" />
+  </div>
+</Sheet>
+
 <SiteAnalytics />
+
+<script>
+  import '~/scripts/projectStage.ts';
+</script>

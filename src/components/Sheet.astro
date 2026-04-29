@@ -1,0 +1,80 @@
+---
+export interface Props {
+  /** Stable DOM id used by triggers (`aria-controls` + `data-sheet-open`). */
+  id: string;
+  side?: 'right' | 'left';
+  closeOnOverlayClick?: boolean;
+  closeOnEsc?: boolean;
+  initialOpen?: boolean;
+  class?: string;
+}
+
+const {
+  id,
+  side = 'right',
+  closeOnOverlayClick = true,
+  closeOnEsc = true,
+  initialOpen = false,
+  class: className
+} = Astro.props;
+
+const titleId = `${id}-title`;
+---
+
+<div
+  id={id}
+  class:list={[
+    'sheet-component group/sheet fixed inset-0 z-[9999] pointer-events-none opacity-0 transition-opacity duration-300 ease-out motion-reduce:duration-150',
+    '[&[data-arm]]:pointer-events-auto [&[data-open]]:opacity-100',
+    className
+  ]}
+  data-sheet-root
+  data-side={side}
+  data-close-on-overlay-click={closeOnOverlayClick ? 'true' : 'false'}
+  data-close-on-esc={closeOnEsc ? 'true' : 'false'}
+  aria-hidden={initialOpen ? undefined : 'true'}
+  {...(initialOpen ? { 'data-arm': '', 'data-open': '' } : {})}
+>
+  <div class="absolute inset-0 bg-klika-dark/55" data-sheet-overlay></div>
+
+  <div
+    class:list={[
+      'absolute inset-y-0 flex w-full max-w-[min(92vw,26rem)] flex-col bg-klika-cream shadow-2xl',
+      'transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:duration-150 motion-reduce:ease-out',
+      side === 'left' ? 'left-0 -translate-x-full group-data-[open]/sheet:translate-x-0' : 'right-0 translate-x-full group-data-[open]/sheet:translate-x-0'
+    ]}
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby={titleId}
+    tabindex="-1"
+    data-sheet-panel
+  >
+    <div class="flex items-start justify-between gap-4 border-b border-klika-sage/15 px-6 py-5">
+      <h2 id={titleId} class="font-serif text-[18px] font-bold leading-[1.25] text-klika-dark">
+        <slot name="title" />
+      </h2>
+
+      <button
+        type="button"
+        class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-klika-sage/75 hover:text-klika-sage focus:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral"
+        aria-label="Cerrar"
+        data-sheet-close
+      >
+        ✕
+      </button>
+    </div>
+
+    <div class="min-h-0 flex-1 overflow-auto px-6 py-5">
+      <slot />
+    </div>
+
+    <div class="border-t border-klika-sage/15 px-6 py-4">
+      <slot name="footer" />
+    </div>
+  </div>
+</div>
+
+<script>
+  import '~/scripts/sheet.ts';
+</script>
+

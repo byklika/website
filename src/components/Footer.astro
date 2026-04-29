@@ -26,12 +26,15 @@ const isHome = pathname === '/';
           ))}
         </nav>
 
-        <a
-          href="#contacto"
-          class="rounded-pill bg-klika-coral px-[1.3rem] py-[0.55rem] text-[0.8rem] font-semibold text-klika-white no-underline hover:bg-klika-coralHover"
+        <button
+          type="button"
+          class="rounded-pill bg-klika-coral px-[1.3rem] py-[0.55rem] text-[0.8rem] font-semibold text-klika-white hover:bg-klika-coralHover"
+          aria-haspopup="dialog"
+          aria-controls="contact-sheet"
+          data-sheet-open="contact-sheet"
         >
           Hablemos
-        </a>
+        </button>
       </div>
       <p class="layout-container mt-4 text-center text-[0.75rem] text-white/35">&copy; {year} Klika. All rights reserved.</p>
     </footer>

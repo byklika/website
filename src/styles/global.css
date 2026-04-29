@@ -35,6 +35,17 @@
   box-shadow: 0 2px 20px rgba(30, 42, 26, 0.12);
 }
 
+/* Consistent affordance: pointer cursor on interactive elements */
+a:hover,
+button:hover {
+  cursor: pointer;
+}
+
+button:disabled:hover,
+button[aria-disabled='true']:hover {
+  cursor: not-allowed;
+}
+
 /* Prototype reveal-on-scroll */
 .reveal {
   opacity: 0;

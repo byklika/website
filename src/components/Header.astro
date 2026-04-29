@@ -43,12 +43,15 @@ const homeNav = [
               {label}
             </a>
           ))}
-          <a
-            href="#contacto"
-            class="rounded-pill bg-klika-coral px-[1.4rem] py-[0.55rem] text-[0.85rem] font-semibold text-klika-white no-underline hover:bg-klika-coralHover"
+          <button
+            type="button"
+            class="rounded-pill bg-klika-coral px-[1.4rem] py-[0.55rem] text-[0.85rem] font-semibold text-klika-white hover:bg-klika-coralHover"
+            aria-haspopup="dialog"
+            aria-controls="contact-sheet"
+            data-sheet-open="contact-sheet"
           >
             Hablemos
-          </a>
+          </button>
         </nav>
 
         <details class="relative min-[901px]:hidden">
@@ -65,9 +68,15 @@ const homeNav = [
                   {label}
                 </a>
               ))}
-              <a href="#contacto" class="mt-1 rounded-lg bg-klika-coral px-3 py-2 text-sm font-semibold text-klika-white no-underline hover:bg-klika-coralHover">
+              <button
+                type="button"
+                class="mt-1 rounded-lg bg-klika-coral px-3 py-2 text-left text-sm font-semibold text-klika-white hover:bg-klika-coralHover"
+                aria-haspopup="dialog"
+                aria-controls="contact-sheet"
+                data-sheet-open="contact-sheet"
+              >
                 Hablemos
-              </a>
+              </button>
             </div>
           </div>
         </details>
@@ -89,21 +98,16 @@ const homeNav = [
             </li>
           ))}
         </ul>
-        <div class="dropdown dropdown-end lg:hidden">
-          <div tabindex="0" role="button" class="btn btn-ghost btn-circle" aria-label="Open menu">
-            <NavHamburgerMenuIcon />
-          </div>
-          <ul
-            tabindex="0"
-            class="menu menu-sm dropdown-content bg-base-100 rounded-box border-base-300 z-50 mt-3 w-52 border p-2 shadow"
-          >
-            {siteNav.map(({ href, label }) => (
-              <li>
-                <a href={href}>{label}</a>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <button
+          type="button"
+          class="btn btn-ghost btn-circle lg:hidden"
+          aria-label="Open menu"
+          aria-haspopup="dialog"
+          aria-controls="site-menu"
+          data-sheet-open="site-menu"
+        >
+          <NavHamburgerMenuIcon />
+        </button>
       </div>
     </header>
   )
@@ -113,10 +117,10 @@ const homeNav = [
   isHome && (
     <script is:inline>
       const header = document.getElementById('homeHeader');
-      function onScroll() {{
+      function onScroll() {
         header?.classList.toggle('scrolled', window.scrollY > 20);
-      }}
-      window.addEventListener('scroll', onScroll, {{ passive: true }});
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
       onScroll();
     </script>
   )
