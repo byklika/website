@@ -130,11 +130,18 @@ const submitId = `${idBase}-submit`;
   </form>
 </div>
 
-<script is:inline>
-  const form = document.getElementById(${JSON.stringify(formId)});
-  const statusEl = document.getElementById(${JSON.stringify(statusId)});
-  const submitBtn = document.getElementById(${JSON.stringify(submitId)});
-  const baseStatusClass = ${JSON.stringify(`text-sm ${isDark ? 'text-white/80' : 'text-klika-dark/70'}`)};
+<script
+  is:inline
+  define:vars={{
+    formId,
+    statusId,
+    submitId,
+    baseStatusClass: `text-sm ${isDark ? 'text-white/80' : 'text-klika-dark/70'}`
+  }}
+>
+  const form = document.getElementById(formId);
+  const statusEl = document.getElementById(statusId);
+  const submitBtn = document.getElementById(submitId);
 
   function setStatus(kind, message) {
     if (!statusEl) return;

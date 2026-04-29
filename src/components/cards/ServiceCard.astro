@@ -13,11 +13,23 @@ export interface Props {
   ctaLabel: string;
   /** Optional: open an existing Sheet (and keep href as no-JS fallback). */
   ctaSheetId?: string;
+  /** Optional: stage label to attach to CTA for project_stage. */
+  projectStageValue?: string;
   class?: string;
 }
 
-const { label, title, tagline, description, includes = [], ctaHref, ctaLabel, ctaSheetId, class: className } =
-  Astro.props;
+const {
+  label,
+  title,
+  tagline,
+  description,
+  includes = [],
+  ctaHref,
+  ctaLabel,
+  ctaSheetId,
+  projectStageValue,
+  class: className
+} = Astro.props;
 ---
 
 <article
@@ -64,6 +76,8 @@ const { label, title, tagline, description, includes = [], ctaHref, ctaLabel, ct
           aria-haspopup="dialog"
           aria-controls={ctaSheetId}
           data-sheet-open={ctaSheetId}
+          data-project-stage-source="service-card"
+          data-project-stage-value={projectStageValue}
         >
           {ctaLabel}
         </a>

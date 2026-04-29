@@ -29,50 +29,6 @@ export interface Props {
 
 const { eyebrow, title, subtitle, tagline, panels, class: className } = Astro.props;
 const tabs: Tab[] = panels.map((p) => ({ id: p.id, label: p.tabLabel }));
-
-function buildMailto({ to, subject, body }: { to: string; subject: string; body: string }) {
-  const qs = new URLSearchParams({
-    subject,
-    body
-  });
-  return `mailto:${to}?${qs.toString()}`;
-}
-
-const MAILTO_TO = 'hola@klikastudio.net';
-
-const panelMailtoById: Record<ServicePanel['id'], string> = {
-  tab1: buildMailto({
-    to: MAILTO_TO,
-    subject: 'Quiero pensar mi proyecto con Klika',
-    body:
-      'Hola, equipo Klika 👋\n\nMe interesa la etapa de diagnóstico y estructuración. Me gustaría saber cómo trabajan y si podemos agendar una charla.\n\n[Tu nombre / empresa]'
-  }),
-  tab2: buildMailto({
-    to: MAILTO_TO,
-    subject: 'Me interesa el diseño de una experiencia de aprendizaje',
-    body:
-      'Hola, equipo Klika 👋\n\nQuiero conocer más sobre cómo diseñan experiencias de aprendizaje. Me gustaría contarles el contexto y explorar si podemos trabajar juntos.\n\n[Tu nombre / empresa]'
-  }),
-  tab3: buildMailto({
-    to: MAILTO_TO,
-    subject: 'Necesito producir materiales para capacitación',
-    body:
-      'Hola, equipo Klika 👋\n\nTengo un proyecto que necesita producción de materiales. Me interesa saber cómo trabajan y qué podríamos hacer juntos.\n\n[Tu nombre / empresa]'
-  }),
-  tab4: buildMailto({
-    to: MAILTO_TO,
-    subject: 'Quiero diseñar un programa completo con Klika',
-    body:
-      'Hola, equipo Klika 👋\n\nMe interesa armar un programa de capacitación completo. Me gustaría conectar para contarles el proyecto y ver cómo pueden acompañarnos.\n\n[Tu nombre / empresa]'
-  })
-};
-
-const generalMailto = buildMailto({
-  to: MAILTO_TO,
-  subject: 'Tengo un proyecto y quiero contarles',
-  body:
-    'Hola, equipo Klika 👋\n\nEstoy buscando apoyo para un proyecto de capacitación y me gustaría contarles de qué se trata. ¿Podemos agendar una charla?\n\n[Tu nombre / empresa]'
-});
 ---
 
 <section
@@ -99,6 +55,7 @@ const generalMailto = buildMailto({
               ctaHref="#contacto"
               ctaLabel="Quiero más información →"
               ctaSheetId="contact-sheet"
+              projectStageValue={p.tabLabel}
             />
           </div>
         ))}
@@ -109,7 +66,15 @@ const generalMailto = buildMailto({
       <p class="text-[0.95rem] text-klika-dark">
         <strong class="font-serif font-bold">¿No encontraste lo que buscabas?</strong> ¡Escribinos y contanos sobre tu proyecto!
       </p>
-      <Button href={generalMailto} variant="secondary">Escribinos →</Button>
+      <Button
+        type="button"
+        variant="secondary"
+        aria-haspopup="dialog"
+        aria-controls="contact-sheet"
+        data-sheet-open="contact-sheet"
+      >
+        Escribinos →
+      </Button>
     </div>
 
     <div class="reveal mt-16 border-t border-klika-moss/15 pt-12">
