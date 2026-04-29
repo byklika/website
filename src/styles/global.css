@@ -69,6 +69,30 @@ button[aria-disabled='true']:hover {
   transition-delay: 0.4s;
 }
 
+/* Content pages: typography aligned with homepage style */
+.page-copy h1,
+.page-copy h2 {
+  @apply font-serif leading-[1.15] text-klika-dark;
+}
+
+.page-copy h1 {
+  @apply mb-4 text-[clamp(2rem,2.5vw+0.8rem,3.2rem)] tracking-[-0.015em];
+}
+
+.page-copy h2 {
+  @apply mb-3 text-[clamp(1.45rem,1.4vw+0.65rem,2.05rem)];
+}
+
+.page-copy p,
+.page-copy li {
+  @apply text-base leading-[1.72] text-klika-ink;
+}
+
+.page-copy ul,
+.page-copy ol {
+  @apply ml-5 grid gap-[0.35rem];
+}
+
 /* FlipCard (#nosotras): no 3D spin when reduced motion — toggle shows one face at a time */
 @media (prefers-reduced-motion: reduce) {
   .flip-card {

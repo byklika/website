@@ -9,9 +9,10 @@ export interface Props {
   tagline?: string;
   description?: string;
   includes?: string[];
-  ctaHref: string;
+  /** Link destination when not using `ctaSheetId`. */
+  ctaHref?: string;
   ctaLabel: string;
-  /** Optional: open an existing Sheet (and keep href as no-JS fallback). */
+  /** When set, CTA opens the sheet instead of navigating. */
   ctaSheetId?: string;
   /** Optional: stage label to attach to CTA for project_stage. */
   projectStageValue?: string;
@@ -70,8 +71,8 @@ const {
 
     <div class="mt-6">
       {ctaSheetId ? (
-        <a
-          href={ctaHref}
+        <button
+          type="button"
           class="button-component inline-flex items-center gap-2 rounded-pill font-semibold no-underline transition will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral focus-visible:ring-offset-2 border-[1.5px] border-klika-moss text-klika-moss bg-transparent px-[1.4rem] py-[0.6rem] text-[0.84rem] hover:bg-klika-moss hover:text-klika-white"
           aria-haspopup="dialog"
           aria-controls={ctaSheetId}
@@ -80,9 +81,9 @@ const {
           data-project-stage-value={projectStageValue}
         >
           {ctaLabel}
-        </a>
+        </button>
       ) : (
-        <Button href={ctaHref} variant="mossOutline">{ctaLabel}</Button>
+        <Button href={ctaHref!} variant="mossOutline">{ctaLabel}</Button>
       )}
     </div>
   </div>

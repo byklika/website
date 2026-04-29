@@ -1,15 +1,40 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '~/layouts/BaseLayout.astro';
-import BlogListSection from '~/components/blog/BlogListSection.astro';
-import { paginateBlogPosts } from '~/lib/blog-pagination';
-
-const sorted = (await getCollection('blog', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
-const { data, currentPage, lastPage, url } = paginateBlogPosts(sorted, 1);
+import CTA from '~/components/CTA.astro';
 ---
 
-<BaseLayout title="Blog — Klika" description="News and articles from Klika.">
-  <BlogListSection posts={data} currentPage={currentPage} lastPage={lastPage} url={url} />
+<BaseLayout title="Blog — Klika" description="Publicaciones, recursos y aprendizajes compartidos por el equipo de Klika.">
+  <div class="page-copy space-y-10">
+    <header class="max-w-none">
+      <h1>Blog</h1>
+      <p>
+        Estamos preparando este espacio con artículos breves y recursos prácticos sobre diseño
+        instruccional y experiencias de aprendizaje digital.
+      </p>
+    </header>
+
+    <section class="max-w-none" aria-labelledby="blog-proximos-temas">
+      <h2 id="blog-proximos-temas">Próximos temas</h2>
+      <ul>
+        <li>Cómo convertir contenido experto en secuencias didácticas claras</li>
+        <li>Checklist para lanzar cursos sin fricción en LMS</li>
+        <li>Ejemplos de evaluaciones formativas que mejoran retención</li>
+      </ul>
+    </section>
+
+    <section class="max-w-none" aria-labelledby="blog-coming-soon">
+      <h2 id="blog-coming-soon">Coming soon</h2>
+      <p>
+        El blog estará disponible pronto. Mientras tanto, podemos compartirte materiales y casos por
+        contacto directo.
+      </p>
+    </section>
+
+    <CTA
+      title="¿Querés recibir novedades primero?"
+      description="Escribinos y te avisamos cuando publiquemos los primeros artículos."
+      openContactSheet
+      label="Abrir contacto"
+    />
+  </div>
 </BaseLayout>

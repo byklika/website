@@ -11,6 +11,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "test:growthbook-flags": "node ./scripts/test-growthbook-flags.mjs",
     "vercel:ci-secrets-hint": "node ./scripts/print-vercel-ci-secrets.mjs",
     "optimize:hero": "sh scripts/optimize-hero-images.sh",
     "css:measure": "astro build && node ./scripts/measure-built-css.mjs",
