@@ -3,6 +3,12 @@
  * Loads only when the matching PUBLIC_* env var is set (e.g. in Vercel project settings).
  * See `.env.example` for variable names.
  *
+ * **GA4 / PUBLIC_ vars:** Astro inlines `import.meta.env.PUBLIC_*` at **build** time. Adding
+ * `PUBLIC_GA_MEASUREMENT_ID` only in `.env.local` affects `astro dev` / local `astro build`;
+ * production HTML will **omit** the GA snippet unless the same variable is set for the
+ * **build** on the host (e.g. Vercel → Settings → Environment Variables → Production) and you
+ * **redeploy** after saving.
+ *
  * Production stack: GA4 + Clarity + GrowthBook (optional). GA uses an external tag + inline
  * bootstrap; GrowthBook uses a deferred bundled module when the client key is set.
  */
@@ -10,11 +16,23 @@ const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID?.trim();
 const clarityProjectId = import.meta.env.PUBLIC_CLARITY_PROJECT_ID?.trim();
 const growthbookClientKey = import.meta.env.PUBLIC_GROWTHBOOK_CLIENT_KEY?.trim();
 
+/** Third argument to `gtag('config', …)` — disable auto page_view so we send one explicit `page_view` event below (avoids double counting). */
+const gaConfigOpts: Record<string, boolean> = { send_page_view: false };
+if (import.meta.env.DEV) {
+  gaConfigOpts.debug_mode = true;
+}
+const gaConfigLiteral = JSON.stringify(gaConfigOpts);
+
 const gaInline = gaMeasurementId
   ? `window.dataLayer = window.dataLayer || [];
-function gtag(){window.dataLayer.push(Array.prototype.slice.call(arguments));}
+function gtag(){window.dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', '${gaMeasurementId}');`
+gtag('config', '${gaMeasurementId}', ${gaConfigLiteral});
+gtag('event', 'page_view', {
+  page_location: location.href,
+  page_path: location.pathname + location.search,
+  page_title: document.title || ''
+});`
   : null;
 
 const clarityInline = clarityProjectId
@@ -33,7 +51,7 @@ const clarityInline = clarityProjectId
   : null;
 ---
 
-<div class="site-analytics-component">
+<div class="site-analytics-component" data-public-ga={gaMeasurementId ? 'on' : 'off'}>
   {
     gaMeasurementId && (
       <>
@@ -44,6 +62,11 @@ const clarityInline = clarityProjectId
   }
 
   {clarityProjectId && <script is:inline set:html={clarityInline!} />}
+
+  <script>
+    import { initAnalytics } from '~/lib/analytics/bus';
+    initAnalytics();
+  </script>
 
   {
     growthbookClientKey && (
@@ -106,8 +129,12 @@ const clarityInline = clarityProjectId
               trackingCallback: growthbookTrackingCallback
             });
 
+            const anonId = getAnonymousId();
+            // Experiments default to hashAttribute `id`; without it, hashValue is empty and
+            // the SDK never fires trackingCallback (no GA `experiment_viewed`).
             gb.setAttributes({
-              anonId: getAnonymousId()
+              id: anonId,
+              anonId
             });
 
             void gb

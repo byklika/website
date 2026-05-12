@@ -1,11 +1,9 @@
-import {
-  normalizeNavNosotrasPayload,
-  type NavNosotrasLabelPayload
-} from '~/lib/experiments/nav-nosotras-label';
+import { publish } from '~/lib/analytics/bus';
+import { normalizeNavNosotrasLabel } from '~/lib/experiments/nav-nosotras-label';
 
 type HeaderNavExperimentConfig = {
   flagKey: string;
-  fallback: NavNosotrasLabelPayload;
+  fallback: string;
   growthbookEnabled: boolean;
 };
 
@@ -14,7 +12,7 @@ function readExperimentConfig(): HeaderNavExperimentConfig {
   if (!el?.textContent) {
     return {
       flagKey: '',
-      fallback: { label: 'Nosotras', variation: 'control' },
+      fallback: 'Nosotras',
       growthbookEnabled: false
     };
   }
@@ -35,7 +33,8 @@ function applyNosotrasLabel(label: string): void {
 export function initHeaderNav(): void {
   const cfg = readExperimentConfig();
   const header = document.getElementById('homeHeader');
-  let navVariant = cfg.fallback.variation;
+  /** GrowthBook `Result.key` for the experiment arm (`"0"` = control, `"1"` … = treatments). */
+  let navVariant = '0';
   let applied = false;
 
   function syncNosotrasLabelFromGrowthBook(): void {
@@ -43,32 +42,12 @@ export function initHeaderNav(): void {
     if (!cfg.growthbookEnabled) return;
 
     const gb = window.growthbook;
-    if (!gb || typeof gb.getFeatureValue !== 'function') return;
+    if (!gb || typeof gb.evalFeature !== 'function') return;
 
-    const raw = gb.getFeatureValue(cfg.flagKey, cfg.fallback);
-    const payload = normalizeNavNosotrasPayload(raw, cfg.fallback);
-    if (import.meta.env.DEV) {
-      const rawObj = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : null;
-      const rawLooksValid =
-        rawObj &&
-        typeof rawObj.label === 'string' &&
-        rawObj.label.trim() &&
-        typeof rawObj.variation === 'string' &&
-        rawObj.variation.trim();
-      console.debug('[nav-nosotras-label] GrowthBook payload', {
-        raw,
-        normalized: payload,
-        /** If true, GB already returned usable strings; normalize still clones/trims. */
-        rawHadLabelAndVariationKeys: Boolean(rawLooksValid),
-        /** True when normalize changed the effective label or variation vs raw. */
-        normalizeChangedResult:
-          !rawObj ||
-          payload.label !== String(rawObj.label ?? '').trim() ||
-          payload.variation !== String(rawObj.variation ?? '').trim()
-      });
-    }
-    navVariant = payload.variation;
-    applyNosotrasLabel(payload.label);
+    const fr = gb.evalFeature(cfg.flagKey);
+    const label = normalizeNavNosotrasLabel(fr.value, cfg.fallback);
+    navVariant = fr.experimentResult?.key ?? '0';
+    applyNosotrasLabel(label);
     applied = true;
     header?.setAttribute('data-nav-nosotras-label-synced', 'true');
   }
@@ -76,13 +55,16 @@ export function initHeaderNav(): void {
   function trackNavClick(event: Event): void {
     const target =
       event.target instanceof Element ? event.target.closest('[data-nav-nosotras-label="true"]') : null;
-    if (!target || typeof window.gtag !== 'function') return;
-    window.gtag('event', 'nav_item_click', {
-      experiment_key: cfg.flagKey,
-      variant: navVariant,
-      label_shown:
-        target.getAttribute('data-nav-label-shown') || target.textContent?.trim() || cfg.fallback.label,
-      href: '/nosotras'
+    if (!target) return;
+    publish({
+      name: 'nav_item_click',
+      params: {
+        experiment_key: cfg.flagKey,
+        variant: navVariant,
+        label_shown:
+          target.getAttribute('data-nav-label-shown') || target.textContent?.trim() || cfg.fallback,
+        href: '/nosotras'
+      }
     });
   }
 
@@ -92,7 +74,7 @@ export function initHeaderNav(): void {
 
   if (cfg.growthbookEnabled) {
     window.addEventListener('growthbook:ready', syncNosotrasLabelFromGrowthBook, { once: true });
-    if (window.growthbook && typeof window.growthbook.getFeatureValue === 'function') {
+    if (window.growthbook && typeof window.growthbook.evalFeature === 'function') {
       syncNosotrasLabelFromGrowthBook();
     }
   }

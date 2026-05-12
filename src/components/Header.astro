@@ -5,12 +5,12 @@ import { NAV_NOSOTRAS_FLAG_KEY } from '~/lib/experiments/constants';
 import { getNavNosotrasLabelFallback } from '~/lib/experiments/nav-nosotras-label';
 
 const pathname = Astro.url?.pathname ?? '/';
-const navFlagFallback = getNavNosotrasLabelFallback();
+const navLabelFallback = getNavNosotrasLabelFallback();
 const growthbookEnabled = Boolean(import.meta.env.PUBLIC_GROWTHBOOK_CLIENT_KEY?.trim());
 
 const headerNavExperimentConfig = {
   flagKey: NAV_NOSOTRAS_FLAG_KEY,
-  fallback: navFlagFallback,
+  fallback: navLabelFallback,
   growthbookEnabled
 };
 

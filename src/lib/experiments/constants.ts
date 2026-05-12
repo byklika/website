@@ -1,5 +1,5 @@
-/** GrowthBook feature key — do not rename (Product / SDK contract). */
-export const NAV_NOSOTRAS_FLAG_KEY = 'nav-nosotras-label-v1';
+/** GrowthBook feature key — string value = visible nav label; experiment arms use variation keys `0`, `1`, … */
+export const NAV_NOSOTRAS_FLAG_KEY = 'nav-nosotras-label-v2';
 
 /**
  * Stable anonymous id for GrowthBook bucketing (must match `anonId` in `SiteAnalytics.astro`).

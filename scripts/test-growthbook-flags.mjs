@@ -3,10 +3,9 @@
 /**
  * GrowthBook connectivity smoke test:
  * - fetches feature payload for PUBLIC_GROWTHBOOK_CLIENT_KEY
- * - prints active (truthy) feature flags
- * - prints experiment-related data from the same payload:
- *   - top-level `experiments` (visual / URL auto-experiments) when present
- *   - feature `rules` that define A/B tests (non-empty `variations` array)
+ * - prints every feature key (defaultValue + rule count) — not only “truthy defaultValue”
+ * - prints a subset with truthy defaultValue (legacy quick filter)
+ * - prints experiment-related data: top-level `experiments`, feature rules with `variations`
  * - exits non-zero on invalid setup/response
  */
 
@@ -169,6 +168,16 @@ try {
     console.log(`API payload dateUpdated: ${payload.dateUpdated}`);
   }
 
+  if (payload?.encryptedFeatures && (!features || Object.keys(features).length === 0)) {
+    console.error(
+      "Response uses `encryptedFeatures` without plain `features`. This script does not decrypt."
+    );
+    console.error(
+      "Fix: in GrowthBook SDK Connection, turn off feature encryption for this key, or use the SDK with `decryptionKey` in the app — not this Node smoke test."
+    );
+    process.exit(1);
+  }
+
   if (payload?.encryptedExperiments) {
     console.log(
       "\nNote: response includes `encryptedExperiments`; listing those requires a decryption key (not used in this script)."
@@ -186,18 +195,36 @@ try {
   );
 
   console.log(`GrowthBook endpoint reachable: ${url}`);
-  console.log(`Total feature flags: ${allKeys.length}`);
-  console.log(`Active (truthy defaultValue) flags: ${activeFlags.length}`);
+  console.log(`Total feature flags in payload: ${allKeys.length}`);
 
+  if (allKeys.length === 0) {
+    console.log(
+      `\nPayload top-level keys: ${Object.keys(payload).join(", ") || "(empty)"}`
+    );
+    console.log(
+      "No feature keys in this response. Common causes: flag not in a project wired to this SDK connection, wrong `PUBLIC_GROWTHBOOK_CLIENT_KEY`, flag disabled for this connection’s environment, or unpublished changes (GrowthBook omits out-of-scope features from the API)."
+    );
+  } else {
+    console.log("\nAll features (key → defaultValue, rule count):");
+    for (const key of [...allKeys].sort()) {
+      const def = features[key];
+      const dv = def?.defaultValue;
+      const ruleCount = Array.isArray(def?.rules) ? def.rules.length : 0;
+      console.log(
+        `- ${key} defaultValue=${JSON.stringify(dv)} rules=${ruleCount}`
+      );
+    }
+  }
+
+  console.log(`\nSubset — truthy defaultValue only: ${activeFlags.length}`);
   if (activeFlags.length > 0) {
-    console.log("\nActive flags:");
     for (const key of activeFlags) {
       const defaultValue = features[key]?.defaultValue;
       console.log(`- ${key} (defaultValue=${JSON.stringify(defaultValue)})`);
     }
-  } else {
+  } else if (allKeys.length > 0) {
     console.log(
-      "\nNo active truthy defaultValue flags were found. This may be expected."
+      "(none — e.g. String flag with empty default, Boolean false, or JSON null. Your flag may still be in the list above with experiment rules.)"
     );
   }
 

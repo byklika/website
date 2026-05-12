@@ -1,7 +1,30 @@
+import { publish } from '~/lib/analytics/bus';
+
 type SheetConfig = {
   closeOnOverlayClick: boolean;
   closeOnEsc: boolean;
 };
+
+/** GA4: where the user clicked to open the contact sheet. */
+function inferContactCtaPlacement(trigger: HTMLElement): string {
+  if (trigger.closest('#homeHeader')) return 'header';
+  if (trigger.closest('footer')) return 'footer';
+  if (trigger.closest('.cta-component')) return 'cta_block';
+  if (trigger.closest('.service-card-component')) return 'service_card';
+  if (trigger.closest('#servicios')) return 'servicios';
+  if (trigger.closest('main')) return 'main';
+  return 'other';
+}
+
+function trackContactSheetOpened(trigger: HTMLElement, sheetId: string) {
+  publish({
+    name: 'contact_cta_click',
+    params: {
+      placement: inferContactCtaPlacement(trigger),
+      sheet_id: sheetId
+    }
+  });
+}
 
 type BackgroundElSnapshot = {
   el: HTMLElement;
@@ -200,7 +223,14 @@ function boot() {
       if (!id) return;
       const sheet = sheetById.get(id) ?? document.getElementById(id);
       if (!(sheet instanceof HTMLElement)) return;
+      const wasClosed = !isOpen(sheet);
       open(sheet);
+      if (wasClosed && id === 'contact-sheet') {
+        queueMicrotask(() => {
+          if (!isOpen(sheet)) return;
+          trackContactSheetOpened(openEl, id);
+        });
+      }
       return;
     }
 

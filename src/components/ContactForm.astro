@@ -13,11 +13,17 @@ const { tone = 'dark', idBase = 'contact' } = Astro.props;
 
 const isDark = tone === 'dark';
 const formId = `${idBase}-form`;
-const statusId = `${idBase}-status`;
 const submitId = `${idBase}-submit`;
+/** GA4 `contact_form_submit.form_location` */
+const formSurface = idBase === 'contact-sheet' ? 'sheet' : 'inline';
 ---
 
-<div class="contact-form-component w-full">
+<div
+  class="contact-form-component w-full"
+  data-contact-form
+  data-form-surface={formSurface}
+  data-contact-tone={tone}
+>
   {
     !configured && (
       <div
@@ -121,7 +127,7 @@ const submitId = `${idBase}-submit`;
         Enviar →
       </button>
       <span
-        id={statusId}
+        data-contact-status
         class:list={['text-sm', isDark ? 'text-white/80' : 'text-klika-dark/70']}
         role="status"
         aria-live="polite"
@@ -129,108 +135,3 @@ const submitId = `${idBase}-submit`;
     </div>
   </form>
 </div>
-
-<script
-  is:inline
-  define:vars={{
-    formId,
-    statusId,
-    submitId,
-    baseStatusClass: `text-sm ${isDark ? 'text-white/80' : 'text-klika-dark/70'}`
-  }}
->
-  const form = document.getElementById(formId);
-  const statusEl = document.getElementById(statusId);
-  const submitBtn = document.getElementById(submitId);
-
-  function setStatus(kind, message) {
-    if (!statusEl) return;
-    statusEl.textContent = message;
-    statusEl.className = baseStatusClass;
-    if (kind === 'ok') statusEl.classList.add('text-success');
-    if (kind === 'err') statusEl.classList.add('text-error');
-    if (kind === 'loading') statusEl.classList.add('opacity-80');
-  }
-
-  form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if (!(form instanceof HTMLFormElement)) return;
-
-    const accessKeyInput = form.querySelector('input[name="access_key"]');
-    const key = accessKeyInput instanceof HTMLInputElement ? accessKeyInput.value.trim() : '';
-    if (!key) {
-      setStatus('err', 'Form is not configured.');
-      return;
-    }
-
-    const emailEl = form.querySelector('input[name="email"]');
-    if (emailEl instanceof HTMLInputElement) {
-      emailEl.setCustomValidity('');
-      const value = emailEl.value.trim();
-      if (!value) {
-        emailEl.setCustomValidity('Ingresá tu email.');
-      } else if (emailEl.validity.typeMismatch) {
-        emailEl.setCustomValidity('Ingresá un email válido.');
-      }
-      if (!emailEl.checkValidity()) {
-        if (typeof emailEl.reportValidity === 'function') emailEl.reportValidity();
-        emailEl.focus();
-        setStatus('err', 'Por favor, revisá el email.');
-        return;
-      }
-    }
-
-    const fd = new FormData(form);
-    const botcheck = String(fd.get('botcheck') || '');
-    if (botcheck) {
-      setStatus('err', 'Something went wrong.');
-      return;
-    }
-
-    const payload = {
-      access_key: key,
-      email: String(fd.get('email') ?? '').trim(),
-      message: String(fd.get('message') ?? '').trim(),
-      subject: 'Contact form — byklika.com'
-    };
-
-    const projectStage = String(fd.get('project_stage') ?? '').trim();
-    if (projectStage) {
-      payload.project_stage = projectStage;
-    }
-
-    if (submitBtn instanceof HTMLButtonElement) submitBtn.disabled = true;
-    setStatus('loading', 'Enviando…');
-
-    try {
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const data = await res.json();
-
-      const ok = data.success === true;
-      const msg =
-        data.message ||
-        data.body?.message ||
-        (ok ? 'Mensaje enviado. Te respondemos pronto.' : 'No pudimos enviar tu mensaje.');
-
-      if (ok) {
-        setStatus('ok', msg);
-        form.reset();
-        if (accessKeyInput instanceof HTMLInputElement) accessKeyInput.value = key;
-      } else {
-        setStatus('err', msg);
-      }
-    } catch {
-      setStatus('err', 'Error de red. Probá de nuevo.');
-    } finally {
-      if (submitBtn instanceof HTMLButtonElement && key) submitBtn.disabled = false;
-    }
-  });
-</script>
