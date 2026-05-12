@@ -3,8 +3,8 @@
  * Loads only when the matching PUBLIC_* env var is set (e.g. in Vercel project settings).
  * See `.env.example` for variable names.
  *
- * Production stack: GA4 + Clarity + GrowthBook (optional). GrowthBook is deferred so it
- * does not block first paint; init runs after the CDN bundle in document order.
+ * Production stack: GA4 + Clarity + GrowthBook (optional). GA uses an external tag + inline
+ * bootstrap; GrowthBook uses a deferred bundled module when the client key is set.
  */
 const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID?.trim();
 const clarityProjectId = import.meta.env.PUBLIC_CLARITY_PROJECT_ID?.trim();
@@ -31,74 +31,99 @@ const clarityInline = clarityProjectId
 	y.parentNode.insertBefore(t, y);
 })(window, document, 'clarity', 'script', '${clarityProjectId}');`
   : null;
-
-const growthbookInline = growthbookClientKey
-  ? `const { GrowthBook } = window.growthbook || {};
-if (GrowthBook) {
-	const getAnonymousId = () => {
-		const key = 'gb_anon_id';
-		try {
-			const existing = window.localStorage.getItem(key);
-			if (existing) return existing;
-			const created = (window.crypto?.randomUUID?.() || Math.random().toString(36).slice(2)) + Date.now().toString(36);
-			window.localStorage.setItem(key, created);
-			return created;
-		} catch {
-			return 'anon-fallback';
-		}
-	};
-
-	const gb = new GrowthBook({
-		apiHost: 'https://cdn.growthbook.io',
-		clientKey: '${growthbookClientKey}',
-		enableDevMode: ${import.meta.env.DEV ? 'true' : 'false'},
-		trackingCallback: (experiment, result) => {
-			if (typeof window.gtag === 'function') {
-				window.gtag('event', 'experiment_viewed', {
-					experiment_id: experiment.key,
-					variation_id: result.key
-				});
-			}
-		}
-	});
-
-	gb.setAttributes({
-		anonId: getAnonymousId()
-	});
-
-	gb.init()
-		.then(() => {
-			window.growthbook = gb;
-			window.dispatchEvent(new CustomEvent('growthbook:ready'));
-		})
-		.catch((err) => {
-			if (${import.meta.env.DEV ? 'true' : 'false'}) console.error('[GrowthBook]', err);
-		});
-}`
-  : null;
 ---
 
 <div class="site-analytics-component">
-{
-  gaMeasurementId && (
-    <>
-      <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`} />
-      <script is:inline set:html={gaInline!} />
-    </>
-  )
-}
+  {
+    gaMeasurementId && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`} />
+        <script is:inline set:html={gaInline!} />
+      </>
+    )
+  }
 
-{clarityProjectId && <script is:inline set:html={clarityInline!} />}
+  {clarityProjectId && <script is:inline set:html={clarityInline!} />}
 
-{
-  growthbookClientKey && (
-    <>
-      <script
-        defer
-        src="https://cdn.jsdelivr.net/npm/@growthbook/growthbook/dist/bundles/index.js"
-      />
-      <script defer is:inline set:html={growthbookInline!} />
-    </>
-  )
-}
+  {
+    growthbookClientKey && (
+      <>
+        <script>
+          import { GrowthBook } from '@growthbook/growthbook';
+
+          import { GB_ANON_ID_COOKIE } from '~/lib/experiments/constants';
+          import { growthbookTrackingCallback } from '~/lib/experiments/growthbookTrackingCallback';
+
+          function getAnonymousId() {
+            const idKey = GB_ANON_ID_COOKIE;
+            const maxAge = 60 * 60 * 24 * 400;
+            const baseAttrs = `path=/;max-age=${maxAge};SameSite=Lax`;
+            const secureAttrs =
+              typeof location !== 'undefined' && location.protocol === 'https:' ? ';Secure' : '';
+
+            try {
+              const prefix = `${idKey}=`;
+              const parts = document.cookie.split('; ');
+              for (let i = 0; i < parts.length; i++) {
+                const p = parts[i];
+                if (p.startsWith(prefix)) {
+                  const fromCookie = decodeURIComponent(p.slice(prefix.length));
+                  try {
+                    localStorage.setItem(idKey, fromCookie);
+                  } catch {
+                    /* ignore */
+                  }
+                  return fromCookie;
+                }
+              }
+
+              const existing = localStorage.getItem(idKey);
+              if (existing) {
+                document.cookie = `${idKey}=${encodeURIComponent(existing)};${baseAttrs}${secureAttrs}`;
+                return existing;
+              }
+
+              const created =
+                typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+                  ? crypto.randomUUID()
+                  : `anon-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+              localStorage.setItem(idKey, created);
+              document.cookie = `${idKey}=${encodeURIComponent(created)};${baseAttrs}${secureAttrs}`;
+              return created;
+            } catch {
+              return 'anon-fallback';
+            }
+          }
+
+          function boot() {
+            const clientKey = import.meta.env.PUBLIC_GROWTHBOOK_CLIENT_KEY?.trim();
+            if (!clientKey) return;
+
+            const gb = new GrowthBook({
+              apiHost: 'https://cdn.growthbook.io',
+              clientKey,
+              enableDevMode: import.meta.env.DEV,
+              trackingCallback: growthbookTrackingCallback
+            });
+
+            gb.setAttributes({
+              anonId: getAnonymousId()
+            });
+
+            void gb
+              .init()
+              .then(() => {
+                window.growthbook = gb;
+                window.dispatchEvent(new CustomEvent('growthbook:ready'));
+              })
+              .catch((err) => {
+                if (import.meta.env.DEV) console.error('[GrowthBook]', err);
+              });
+          }
+
+          boot();
+        </script>
+      </>
+    )
+  }
 </div>

@@ -1,8 +1,18 @@
 ---
 import KlikaHomeHeaderLogoIcon from '~/icons/KlikaHomeHeaderLogoIcon.astro';
 import { siteNavItems } from '~/data/siteNav';
+import { NAV_NOSOTRAS_FLAG_KEY } from '~/lib/experiments/constants';
+import { getNavNosotrasLabelFallback } from '~/lib/experiments/nav-nosotras-label';
 
 const pathname = Astro.url?.pathname ?? '/';
+const navFlagFallback = getNavNosotrasLabelFallback();
+const growthbookEnabled = Boolean(import.meta.env.PUBLIC_GROWTHBOOK_CLIENT_KEY?.trim());
+
+const headerNavExperimentConfig = {
+  flagKey: NAV_NOSOTRAS_FLAG_KEY,
+  fallback: navFlagFallback,
+  growthbookEnabled
+};
 
 function isLinkActive(href: string) {
   return href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
@@ -111,72 +121,10 @@ function isLinkActive(href: string) {
   </div>
 </header>
 
-<script is:inline>
-  const header = document.getElementById('homeHeader');
-  const EXPERIMENT_KEY = 'nav-nosotras-label-v1';
-  let navVariant = 'control';
+<script type="application/json" is:inline id="header-nav-experiment" set:html={JSON.stringify(headerNavExperimentConfig)}
+></script>
 
-  function getNosotrasLinks() {
-    return Array.from(document.querySelectorAll('[data-nav-nosotras-label="true"]'));
-  }
-
-  function applyLabel(label) {
-    getNosotrasLinks().forEach((link) => {
-      link.textContent = label;
-      link.setAttribute('data-nav-label-shown', label);
-    });
-  }
-
-  function trackExposure(variant) {
-    if (typeof window.gtag === 'function') {
-      window.gtag('event', 'experiment_exposure', {
-        experiment_key: EXPERIMENT_KEY,
-        variant
-      });
-    }
-  }
-
-  function trackNavClick(event) {
-    const target = event.target instanceof Element ? event.target.closest('[data-nav-nosotras-label="true"]') : null;
-    if (!target || typeof window.gtag !== 'function') return;
-    window.gtag('event', 'nav_item_click', {
-      experiment_key: EXPERIMENT_KEY,
-      variant: navVariant,
-      label_shown: target.getAttribute('data-nav-label-shown') || target.textContent?.trim() || 'Nosotras',
-      href: '/nosotras'
-    });
-  }
-
-  function runNavLabelExperiment() {
-    if (header?.dataset.navExperimentApplied === 'true') return;
-    const gb = window.growthbook;
-    if (!gb || typeof gb.run !== 'function') return;
-
-    const result = gb.run({
-      key: EXPERIMENT_KEY,
-      variations: ['Nosotras', 'Equipo'],
-      weights: [0.5, 0.5],
-      hashAttribute: 'anonId'
-    });
-
-    const label = result?.value === 'Equipo' ? 'Equipo' : 'Nosotras';
-    navVariant = label === 'Equipo' ? 'variation_1' : 'control';
-    applyLabel(label);
-    trackExposure(navVariant);
-    header?.setAttribute('data-nav-experiment-applied', 'true');
-  }
-
-  function onScroll() {
-    header?.classList.toggle('scrolled', window.scrollY > 20);
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  document.addEventListener('click', trackNavClick, { capture: true });
-  window.addEventListener('growthbook:ready', runNavLabelExperiment);
-
-  if (window.growthbook && typeof window.growthbook.run === 'function') {
-    runNavLabelExperiment();
-  }
-
-  onScroll();
+<script>
+  import { initHeaderNav } from '~/scripts/header-nav';
+  initHeaderNav();
 </script>
