@@ -268,3 +268,5 @@ if (document.readyState === 'loading') {
 } else {
   boot();
 }
+
+export {};

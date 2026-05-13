@@ -11,11 +11,16 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:growthbook-flags": "node ./scripts/test-growthbook-flags.mjs",
     "vercel:ci-secrets-hint": "node ./scripts/print-vercel-ci-secrets.mjs",
     "optimize:hero": "sh scripts/optimize-hero-images.sh",
     "css:measure": "astro build && node ./scripts/measure-built-css.mjs",
     "lint": "eslint .",
+    "typecheck:ts": "tsc --noEmit",
+    "typecheck:astro": "astro check",
+    "typecheck": "pnpm run typecheck:ts && pnpm run typecheck:astro",
     "format": "prettier . --write",
     "format:check": "prettier . --check",
     "prepare": "husky"
@@ -27,21 +32,28 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.3",
+    "@growthbook/growthbook": "^1.6.5",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.2",
     "astro": "^6.1.6",
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.9",
     "@eslint/js": "^10.0.1",
+    "@types/jsdom": "^28.0.3",
+    "@types/node": "^25.7.0",
     "daisyui": "^5.5.19",
     "eslint": "^10.2.0",
     "eslint-plugin-astro": "^1.7.0",
     "husky": "^9.1.7",
+    "jsdom": "^29.1.1",
     "lint-staged": "^16.4.0",
     "prettier": "^3.8.3",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
-    "typescript-eslint": "^8.58.2"
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.58.2",
+    "vitest": "^4.1.6"
   }
 }

@@ -4,8 +4,8 @@ declare global {
   interface Window {
     dataLayer?: unknown[];
     gtag?: (...args: unknown[]) => void;
-    /** GrowthBook CDN bundle + initialized client (typed loosely; SDK not bundled). */
-    growthbook?: unknown;
+    /** Initialized GrowthBook client (`GrowthBook` instance after `init()`). */
+    growthbook?: import('@growthbook/growthbook').GrowthBook;
   }
 }
 
