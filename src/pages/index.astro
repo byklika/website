@@ -35,9 +35,13 @@ const nosotrasAboutItems: AboutUsItem[] = [
       'Tenemos más de cinco años de experiencia en e‑learning: universidades, organizaciones públicas y privadas, edtech, freelance, empresas.'
   },
   {
-    title: 'Creación de Klika',
+    title: 'Creación de klika',
+    titleHtml:
+      'Creación de <span class="font-mitr font-normal lowercase tracking-[-0.3px]">klika</span>',
     description:
-      'Creamos Klika para capitalizar ese recorrido y trabajar como nos gusta: con profundidad pedagógica, cerca de cada proyecto.'
+      'Creamos klika para capitalizar ese recorrido y trabajar como nos gusta: con profundidad pedagógica, cerca de cada proyecto.',
+    descriptionHtml:
+      'Creamos <span class="font-mitr font-normal lowercase tracking-[-0.3px]">klika</span> para capitalizar ese recorrido y trabajar como nos gusta: con profundidad pedagógica, cerca de cada proyecto.'
   },
   {
     title: 'Nuestro plan',
@@ -53,7 +57,7 @@ const nosotrasAboutItems: AboutUsItem[] = [
 
 <BaseLayout
   fullWidthMain
-  title="Klika · E‑Learning Studio"
+  title="klika · e‑learning studio"
   description="Experiencias educativas que dejan huella. Diseñamos para que educadores y aprendices sientan que valió la pena."
 >
   <Hero
@@ -190,7 +194,8 @@ const nosotrasAboutItems: AboutUsItem[] = [
   <AboutUs
     class="homepage-section homepage-section-about"
     eyebrow="Nosotras"
-    title="¿Por qué Klika?"
+    title="¿Por qué klika?"
+    titleHtml='¿Por qué <span class="font-mitr font-normal lowercase tracking-[-0.3px]">klika</span>?'
     items={nosotrasAboutItems}
   />
 

@@ -15,6 +15,8 @@ export const siteNavItems: SiteNavItem[] = [
 ];
 
 /** Header primary nav (desktop + mobile); blog hidden until launch. */
-export const headerNavItems = siteNavItems.filter(
-  (item) => !(item.kind === 'link' && item.href === '/blog')
-);
+export const headerNavItems: SiteNavItem[] = siteNavItems
+  .filter((item) => !(item.kind === 'link' && item.href === '/blog'))
+  .map((item) =>
+    item.kind === 'link' && item.href === '/#inicio' ? { ...item, label: 'Inicio' } : item
+  );

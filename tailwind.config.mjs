@@ -39,6 +39,16 @@ export default {
       borderRadius: {
         pill: '99px'
       },
+      /**
+       * Stacking order — values live in `src/styles/global.css` (`--z-*`).
+       * raised < header < sheet < popup
+       */
+      zIndex: {
+        raised: 'var(--z-raised)',
+        header: 'var(--z-header)',
+        sheet: 'var(--z-sheet)',
+        popup: 'var(--z-popup)'
+      },
       backgroundImage: {
         'klika-hero': 'linear-gradient(135deg, #F2F5EE 0%, #eaefe3 100%)'
       },
