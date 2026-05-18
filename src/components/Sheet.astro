@@ -24,7 +24,7 @@ const titleId = `${id}-title`;
 <div
   id={id}
   class:list={[
-    'sheet-component group/sheet fixed inset-0 z-[9999] pointer-events-none opacity-0 transition-opacity duration-300 ease-out motion-reduce:duration-150',
+    'sheet-component group/sheet fixed inset-0 z-sheet pointer-events-none opacity-0 transition-opacity duration-300 ease-out motion-reduce:duration-150',
     '[&[data-arm]]:pointer-events-auto [&[data-open]]:opacity-100',
     className
   ]}
@@ -39,7 +39,7 @@ const titleId = `${id}-title`;
 
   <div
     class:list={[
-      'absolute inset-y-0 flex w-full max-w-[min(92vw,26rem)] flex-col bg-klika-cream shadow-2xl',
+      'absolute inset-y-0 flex w-full max-w-full flex-col bg-klika-cream shadow-2xl sm:max-w-[min(92vw,26rem)]',
       'transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:duration-150 motion-reduce:ease-out',
       side === 'left' ? 'left-0 -translate-x-full group-data-[open]/sheet:translate-x-0' : 'right-0 translate-x-full group-data-[open]/sheet:translate-x-0'
     ]}

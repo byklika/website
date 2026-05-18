@@ -1,6 +1,6 @@
 ---
 import KlikaHomeHeaderLogoIcon from '~/icons/KlikaHomeHeaderLogoIcon.astro';
-import { siteNavItems } from '~/data/siteNav';
+import { headerNavItems } from '~/data/siteNav';
 import { NAV_NOSOTRAS_FLAG_KEY } from '~/lib/experiments/constants';
 import { getNavNosotrasLabelFallback } from '~/lib/experiments/nav-nosotras-label';
 
@@ -15,34 +15,41 @@ const headerNavExperimentConfig = {
 };
 
 function isLinkActive(href: string) {
-  return href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
+  if (href === '/#inicio') return pathname === '/';
+  if (href.startsWith('/#')) return false;
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
 ---
 
 <header
   id="homeHeader"
-  class="header-component fixed inset-x-0 top-0 z-50 bg-klika-dark shadow-[0_2px_16px_rgba(0,0,0,0.15)]"
+  class="header-component fixed inset-x-0 top-0 z-header bg-klika-dark shadow-[0_2px_16px_rgba(0,0,0,0.15)]"
 >
   <div class="section-gutter-x py-4">
     <div class="layout-container flex items-center justify-between gap-4">
-      <a href="/" class="flex items-center gap-3 no-underline">
+      <a href="/#inicio" class="flex items-center gap-3 no-underline">
         <KlikaHomeHeaderLogoIcon />
-        <span class="font-serif text-[1.1rem] font-bold tracking-[-0.3px] text-klika-white">
-          KLIKA
+        <span class="font-mitr text-[1.1rem] font-normal lowercase tracking-[-0.3px] text-klika-white">
+          klika
         </span>
       </a>
 
-      <nav class="hidden items-center gap-[1.8rem] min-[901px]:flex" aria-label="Primary">
+      <nav
+        class="hidden cursor-pointer items-center gap-[1.8rem] min-[901px]:flex"
+        aria-label="Primary"
+      >
         {
-          siteNavItems.map((item) =>
+          headerNavItems.map((item) =>
             item.kind === 'link' ? (
               <a
                 href={item.href}
-                class={`text-[0.88rem] font-medium no-underline hover:text-klika-white ${
-                  isLinkActive(item.href) ? 'text-klika-white font-semibold' : 'text-white/85'
-                }`}
-                aria-current={isLinkActive(item.href) ? 'page' : undefined}
-                data-nav-nosotras-label={item.href === '/nosotras' ? 'true' : undefined}
+                class:list={[
+                  'header-nav-link',
+                  'text-[0.88rem] font-medium no-underline text-white/85 hover:text-klika-white'
+                ]}
+                data-nav-section={item.href.startsWith('/#') ? item.href.slice(2) : undefined}
+                aria-current={item.href.startsWith('/#') ? undefined : isLinkActive(item.href) ? 'page' : undefined}
+                data-nav-nosotras-label={item.href === '/#nosotras' ? 'true' : undefined}
               >
                 {item.label}
               </a>
@@ -80,15 +87,17 @@ function isLinkActive(href: string) {
         <div class="absolute right-0 mt-2 w-56 rounded-xl bg-klika-dark p-2 shadow-[0_16px_48px_rgba(0,0,0,0.35)]">
           <div class="flex flex-col">
             {
-              siteNavItems.map((item) =>
+              headerNavItems.map((item) =>
                 item.kind === 'link' ? (
                   <a
                     href={item.href}
-                    class={`rounded-lg px-3 py-2 text-sm no-underline hover:bg-white/10 hover:text-klika-white ${
-                      isLinkActive(item.href) ? 'bg-white/10 text-klika-white font-semibold' : 'text-white/85'
-                    }`}
-                    aria-current={isLinkActive(item.href) ? 'page' : undefined}
-                    data-nav-nosotras-label={item.href === '/nosotras' ? 'true' : undefined}
+                    class:list={[
+                      'header-nav-link header-nav-link--menu',
+                      'rounded-lg px-3 py-2 text-sm no-underline text-white/85 hover:bg-white/10 hover:text-klika-white'
+                    ]}
+                    data-nav-section={item.href.startsWith('/#') ? item.href.slice(2) : undefined}
+                    aria-current={item.href.startsWith('/#') ? undefined : isLinkActive(item.href) ? 'page' : undefined}
+                    data-nav-nosotras-label={item.href === '/#nosotras' ? 'true' : undefined}
                   >
                     {item.label}
                   </a>

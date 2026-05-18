@@ -4,12 +4,14 @@ import { cn } from '~/lib/helpers';
 export interface Props {
   eyebrow?: string;
   title: string;
+  /** When set, rendered inside the heading instead of plain `title`. */
+  titleHtml?: string;
   align?: 'left' | 'center';
   tone?: 'light' | 'dark';
   class?: string;
 }
 
-const { eyebrow, title, align = 'left', tone = 'dark', class: className } = Astro.props;
+const { eyebrow, title, titleHtml, align = 'left', tone = 'dark', class: className } = Astro.props;
 
 const alignCls = align === 'center' ? 'text-center items-center' : 'text-left items-start';
 const eyebrowTone =
@@ -29,7 +31,7 @@ const titleTone = tone === 'light' ? 'text-klika-white' : 'text-klika-dark';
       titleTone
     ].join(' ')}
   >
-    {title}
+    {titleHtml ? <Fragment set:html={titleHtml} /> : title}
   </h2>
   <slot />
 </div>

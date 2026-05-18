@@ -1,22 +1,26 @@
 ---
 import { cn } from '~/lib/helpers';
-import AboutUsFlipCardClockIcon from '~/icons/AboutUsFlipCardClockIcon.astro';
+import HeroiconOutline from '~/icons/HeroiconOutline.astro';
+import { ABOUT_US_ITEM_ICONS } from '~/icons/heroiconOutlinePaths';
 import SectionHeading from '~/components/ui/SectionHeading.astro';
 import FlipCard from '~/components/cards/FlipCard.astro';
 
 export interface Item {
   title: string;
+  titleHtml?: string;
   description: string;
+  descriptionHtml?: string;
 }
 
 export interface Props {
   eyebrow: string;
   title: string;
+  titleHtml?: string;
   items: Item[];
   class?: string;
 }
 
-const { eyebrow, title, items, class: className } = Astro.props;
+const { eyebrow, title, titleHtml, items, class: className } = Astro.props;
 ---
 
 <section
@@ -24,16 +28,18 @@ const { eyebrow, title, items, class: className } = Astro.props;
   class={cn('about-us-component', 'section-gutter-x bg-klika-white py-16 min-[901px]:py-24', className)}
 >
   <div class="layout-container">
-    <SectionHeading eyebrow={eyebrow} title={title} class="reveal" />
+    <SectionHeading eyebrow={eyebrow} title={title} titleHtml={titleHtml} class="reveal" />
 
     <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:gap-8">
       {items.map((it, idx) => (
         <FlipCard
           title={it.title}
+          titleHtml={it.titleHtml}
+          description={it.description}
+          descriptionHtml={it.descriptionHtml}
           class={['reveal', idx % 3 === 1 ? 'rd1' : idx % 3 === 2 ? 'rd2' : ''].join(' ')}
         >
-          <AboutUsFlipCardClockIcon slot="icon" />
-          {it.description}
+          <HeroiconOutline slot="icon" name={ABOUT_US_ITEM_ICONS[idx]} variant="about" />
         </FlipCard>
       ))}
     </div>

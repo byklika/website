@@ -1,4 +1,5 @@
 import { publish } from '~/lib/analytics/bus';
+import { submitToWeb3Forms } from '~/lib/web3formsSubmit';
 
 const STATUS_BASE: Record<string, string> = {
   dark: 'text-sm text-white/80',
@@ -79,29 +80,11 @@ function bindContactForm(root: HTMLElement) {
     setStatus(statusEl, 'loading', 'Enviando…', tone);
 
     try {
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const data = (await res.json()) as {
-        success?: boolean;
-        message?: string;
-        body?: { message?: string };
-      };
-
-      const ok = data.success === true;
-      const msg =
-        data.message ||
-        data.body?.message ||
-        (ok ? 'Mensaje enviado. Te respondemos pronto.' : 'No pudimos enviar tu mensaje.');
+      const { ok, message: msg } = await submitToWeb3Forms(payload);
+      const successMsg = ok ? msg || 'Mensaje enviado. Te respondemos pronto.' : msg;
 
       if (ok) {
-        setStatus(statusEl, 'ok', msg, tone);
+        setStatus(statusEl, 'ok', successMsg, tone);
         publish({
           name: 'contact_form_submit',
           params: { form_location: formSurface }
@@ -109,7 +92,7 @@ function bindContactForm(root: HTMLElement) {
         form.reset();
         if (accessKeyInput instanceof HTMLInputElement) accessKeyInput.value = key;
       } else {
-        setStatus(statusEl, 'err', msg, tone);
+        setStatus(statusEl, 'err', successMsg, tone);
       }
     } catch {
       setStatus(statusEl, 'err', 'Error de red. Probá de nuevo.', tone);

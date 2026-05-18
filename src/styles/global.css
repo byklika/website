@@ -17,6 +17,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .animate-fadeUp,
   .animate-marquee,
   .animate-morphBlob {
@@ -30,9 +34,34 @@
   }
 }
 
+/* Fixed header: one offset only (padding OR margin, not both — avoids over-scroll gap) */
+:root {
+  --site-header-height: 4.5rem;
+
+  /* Mirror tailwind.config.mjs `theme.extend.zIndex` — use z-* utilities in markup */
+  --z-raised: 1;
+  --z-header: 50;
+  --z-sheet: 100;
+  --z-popup: 110;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--site-header-height);
+}
+
 /* Homepage header scroll shadow parity with prototype */
 #homeHeader.scrolled {
   box-shadow: 0 2px 20px rgba(30, 42, 26, 0.12);
+}
+
+/* Nav scroll-spy: match hover styles while section is in view */
+#homeHeader .header-nav-link.is-section-active {
+  @apply text-klika-white;
+}
+
+#homeHeader .header-nav-link--menu.is-section-active {
+  @apply bg-white/10 text-klika-white;
 }
 
 /* Consistent affordance: pointer cursor on interactive elements */

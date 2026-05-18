@@ -4,6 +4,11 @@ import FlipCardHintFinePointerIcon from '~/icons/FlipCardHintFinePointerIcon.ast
 
 export interface Props {
   title: string;
+  /** When set, rendered inside the card heading instead of plain `title`. */
+  titleHtml?: string;
+  description: string;
+  /** When set, rendered on the card back instead of plain `description`. */
+  descriptionHtml?: string;
   /** Shown when `(hover: hover) and (pointer: fine)` and user prefers motion. */
   hintFinePointer?: string;
   hintTapOpen?: string;
@@ -15,6 +20,9 @@ export interface Props {
 
 const {
   title,
+  titleHtml,
+  description,
+  descriptionHtml,
   hintFinePointer = 'Pasá el cursor para saber más',
   hintTapOpen = 'Tocá para saber más',
   hintTapClose = 'Tocá de nuevo para cerrar',
@@ -63,7 +71,9 @@ const {
         <div class="text-klika-moss/70" aria-hidden="true">
           <slot name="icon" />
         </div>
-        <h3 class="font-serif text-[1.05rem] text-klika-dark">{title}</h3>
+        <h3 class="font-serif text-[1.05rem] text-klika-dark">
+          {titleHtml ? <Fragment set:html={titleHtml} /> : title}
+        </h3>
       </div>
       <p class="flex items-center gap-[0.4rem] text-[0.73rem] text-klika-muted">
         <span aria-hidden="true" class="relative inline-flex h-[13px] w-[13px] shrink-0 items-center justify-center text-current">
@@ -92,7 +102,7 @@ const {
       ]}
     >
       <p class="max-w-prose text-[0.86rem] leading-[1.65] text-white/90">
-        <slot />
+        {descriptionHtml ? <Fragment set:html={descriptionHtml} /> : description}
       </p>
     </div>
   </div>

@@ -1,3 +1,8 @@
+import { publish } from '~/lib/analytics/bus';
+import { submitToWeb3Forms } from '~/lib/web3formsSubmit';
+
+const DEFAULT_ERROR = 'Ingresá un email válido para continuar.';
+
 function readConfig(overlay: HTMLElement) {
   const storageKey = overlay.dataset.storageKey ?? 'email_signup_popup_seen_v1';
   const openAfterMs = Number(overlay.dataset.openAfterMs ?? 50_000);
@@ -17,6 +22,7 @@ function boot() {
   const closeBtn = document.querySelector<HTMLElement>('[data-email-signup-popup-close]');
   const form = document.querySelector<HTMLFormElement>('[data-email-signup-popup-form]');
   const emailInput = document.querySelector<HTMLInputElement>('[data-email-signup-popup-email]');
+  const submitBtn = document.querySelector<HTMLButtonElement>('[data-email-signup-popup-submit]');
   const errorEl = document.getElementById('email-signup-popup-error');
   const formView = document.querySelector<HTMLElement>('[data-email-signup-popup-form-view]');
   const confirmView = document.querySelector<HTMLElement>('[data-email-signup-popup-confirm-view]');
@@ -62,12 +68,14 @@ function boot() {
     });
   };
 
-  const showInvalidEmail = () => {
+  const showError = (message: string) => {
+    errorEl.textContent = message;
     errorEl.classList.remove('hidden');
     emailInput.classList.add('border-klika-coral');
   };
 
-  const hideInvalidEmail = () => {
+  const hideError = () => {
+    errorEl.textContent = DEFAULT_ERROR;
     errorEl.classList.add('hidden');
     emailInput.classList.remove('border-klika-coral');
   };
@@ -127,7 +135,7 @@ function boot() {
 
     confirmView.classList.add('hidden');
     formView.classList.remove('hidden');
-    hideInvalidEmail();
+    hideError();
 
     lockScroll();
     setBackgroundInert(true);
@@ -239,24 +247,71 @@ function boot() {
   dialog.addEventListener('keydown', trapFocus);
 
   emailInput.addEventListener('input', () => {
-    if (emailInput.checkValidity()) hideInvalidEmail();
+    if (emailInput.checkValidity()) hideError();
   });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    hideInvalidEmail();
+    hideError();
+
+    const accessKeyInput = form.querySelector('input[name="access_key"]');
+    const key = accessKeyInput instanceof HTMLInputElement ? accessKeyInput.value.trim() : '';
+    if (!key) {
+      showError('El formulario no está configurado.');
+      return;
+    }
 
     if (!emailInput.checkValidity()) {
-      showInvalidEmail();
+      showError(DEFAULT_ERROR);
       emailInput.focus();
       return;
     }
 
-    formView.classList.add('hidden');
-    confirmView.classList.remove('hidden');
-    markSeen();
+    const fd = new FormData(form);
+    const botcheck = String(fd.get('botcheck') || '');
+    if (botcheck) {
+      showError('No pudimos enviar tu mensaje.');
+      return;
+    }
 
-    window.setTimeout(() => close({ markSeenOnClose: false }), autoCloseMs);
+    const payload: Record<string, string> = {
+      access_key: key,
+      email: String(fd.get('email') ?? '').trim(),
+      subject: 'Email signup popup — byklika.com',
+      message: 'Newsletter / novedades signup (homepage popup).'
+    };
+
+    const defaultLabel = submitBtn?.textContent ?? 'Quiero sumarme';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando…';
+    }
+
+    try {
+      const { ok, message } = await submitToWeb3Forms(payload);
+
+      if (ok) {
+        publish({
+          name: 'contact_form_submit',
+          params: { form_location: 'popup' }
+        });
+        formView.classList.add('hidden');
+        confirmView.classList.remove('hidden');
+        markSeen();
+        window.setTimeout(() => close({ markSeenOnClose: false }), autoCloseMs);
+      } else {
+        showError(message);
+        emailInput.focus();
+      }
+    } catch {
+      showError('Error de red. Probá de nuevo.');
+      emailInput.focus();
+    } finally {
+      if (submitBtn && key) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = defaultLabel;
+      }
+    }
   });
 
   startTriggers();

@@ -16,6 +16,7 @@
     "test:growthbook-flags": "node ./scripts/test-growthbook-flags.mjs",
     "vercel:ci-secrets-hint": "node ./scripts/print-vercel-ci-secrets.mjs",
     "optimize:hero": "sh scripts/optimize-hero-images.sh",
+    "optimize:hero:v2": "sh scripts/optimize-hero-images.sh home-hero-instructional-design-v2",
     "css:measure": "astro build && node ./scripts/measure-built-css.mjs",
     "lint": "eslint .",
     "typecheck:ts": "tsc --noEmit",
