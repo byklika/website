@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 # Regenerate responsive hero assets for the homepage.
-# Master (not served): src/assets/images/hero/<name>-original.png
+# Usage: optimize-hero-images.sh [name]
+#   name defaults to home-hero-instructional-design
+# Master (not served): src/assets/images/hero/<name>-original.png or <name>.png
 # Served derivatives: public/images/hero/<name>-{width}w.{avif,webp,jpg}
 #
 # Requires:
@@ -9,8 +11,15 @@
 
 set -eu
 ROOT="$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
-NAME="home-hero-instructional-design"
-SRC="${ROOT}/src/assets/images/hero/${NAME}-original.png"
+NAME="${1:-home-hero-instructional-design}"
+HERO_ASSETS="${ROOT}/src/assets/images/hero"
+if [ -f "${HERO_ASSETS}/${NAME}-original.png" ]; then
+  SRC="${HERO_ASSETS}/${NAME}-original.png"
+elif [ -f "${HERO_ASSETS}/${NAME}.png" ]; then
+  SRC="${HERO_ASSETS}/${NAME}.png"
+else
+  SRC="${HERO_ASSETS}/${NAME}-original.png"
+fi
 OUT_DIR="${ROOT}/public/images/hero"
 BASE="${OUT_DIR}/${NAME}"
 

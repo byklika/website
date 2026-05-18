@@ -10,3 +10,8 @@ export const siteNavItems: SiteNavItem[] = [
   { kind: 'link', href: '/nosotras', label: 'Nosotras' },
   { kind: 'link', href: '/blog', label: 'Blog' }
 ];
+
+/** Header primary nav (desktop + mobile); blog hidden until launch. */
+export const headerNavItems = siteNavItems.filter(
+  (item) => !(item.kind === 'link' && item.href === '/blog')
+);

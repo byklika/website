@@ -5,16 +5,14 @@ import Methodology from '~/components/sections/Methodology.astro';
 import Services from '~/components/sections/Services.astro';
 import AboutUs from '~/components/sections/AboutUs.astro';
 import type { Item as AboutUsItem } from '~/components/sections/AboutUs.astro';
-import AboutUsNosotrasV2 from '~/components/sections/AboutUsNosotrasV2.astro';
-import AboutUsNosotrosV3 from '~/components/sections/AboutUsNosotrosV3.astro';
-import AboutUsNosotrosV4 from '~/components/sections/AboutUsNosotrosV4.astro';
 import EmailSignupPopup from '~/components/EmailSignupPopup.astro';
 
 /**
  * Hero raster: master lives under `src/assets/` (not publicly served).
- * Optimized derivatives in `public/images/hero/` (AVIF → WebP → JPEG) — regenerate: `pnpm optimize:hero`
+ * Master: `src/assets/images/hero/home-hero-instructional-design-v2.png`
+ * Optimized derivatives in `public/images/hero/` (AVIF → WebP → JPEG) — regenerate: `pnpm optimize:hero:v2`
  */
-const heroImageBase = '/images/hero/home-hero-instructional-design';
+const heroImageBase = '/images/hero/home-hero-instructional-design-v2';
 /**
  * Hero image column ≈ half of `.layout-container` (see `global.css` max-widths + `Hero` grid).
  * Slightly conservative caps vs. prior `sizes` to reduce over-fetch on common laptop widths.
@@ -24,7 +22,7 @@ const heroImageSizes =
 const heroImageAlt =
   'Three professional women collaborating on an instructional design learning map around a wooden table in a bright, plant-filled office.';
 
-/** Shared with `AboutUs` + `AboutUsNosotrasV2` — keep strings identical (see WORKPLAN_NOSOTRAS.md). */
+/** Copy for `#nosotras` / `AboutUs` — archived variants in `docs/internal/archive/about-us-nosotras-variants/`. */
 const nosotrasAboutItems: AboutUsItem[] = [
   {
     title: 'Quiénes somos',
@@ -84,8 +82,8 @@ const nosotrasAboutItems: AboutUsItem[] = [
         src={`${heroImageBase}-960w.jpg`}
         srcset={`${heroImageBase}-480w.jpg 480w, ${heroImageBase}-640w.jpg 640w, ${heroImageBase}-960w.jpg 960w, ${heroImageBase}-1280w.jpg 1280w`}
         alt={heroImageAlt}
-        width={2400}
-        height={1792}
+        width={1452}
+        height={1083}
         sizes={heroImageSizes}
         class="h-full w-full object-cover [object-position:center_top]"
         decoding="async"
@@ -191,27 +189,6 @@ const nosotrasAboutItems: AboutUsItem[] = [
 
   <AboutUs
     class="homepage-section homepage-section-about"
-    eyebrow="Nosotras"
-    title="¿Por qué Klika?"
-    items={nosotrasAboutItems}
-  />
-
-  <AboutUsNosotrasV2
-    class="homepage-section homepage-section-about-v2"
-    eyebrow="Nosotras"
-    title="¿Por qué Klika?"
-    items={nosotrasAboutItems}
-  />
-
-  <AboutUsNosotrosV3
-    class="homepage-section homepage-section-about-v3"
-    eyebrow="Nosotras"
-    title="¿Por qué Klika?"
-    items={nosotrasAboutItems}
-  />
-
-  <AboutUsNosotrosV4
-    class="homepage-section homepage-section-about-v4"
     eyebrow="Nosotras"
     title="¿Por qué Klika?"
     items={nosotrasAboutItems}
