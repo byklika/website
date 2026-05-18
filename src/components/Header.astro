@@ -15,7 +15,9 @@ const headerNavExperimentConfig = {
 };
 
 function isLinkActive(href: string) {
-  return href === '/' ? pathname === '/' : pathname === href || pathname.startsWith(`${href}/`);
+  if (href === '/#inicio') return pathname === '/';
+  if (href.startsWith('/#')) return false;
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
 ---
 
@@ -25,7 +27,7 @@ function isLinkActive(href: string) {
 >
   <div class="section-gutter-x py-4">
     <div class="layout-container flex items-center justify-between gap-4">
-      <a href="/" class="flex items-center gap-3 no-underline">
+      <a href="/#inicio" class="flex items-center gap-3 no-underline">
         <KlikaHomeHeaderLogoIcon />
         <span class="font-mitr text-[1.1rem] font-normal lowercase tracking-[-0.3px] text-klika-white">
           klika
@@ -42,7 +44,7 @@ function isLinkActive(href: string) {
                   isLinkActive(item.href) ? 'text-klika-white font-semibold' : 'text-white/85'
                 }`}
                 aria-current={isLinkActive(item.href) ? 'page' : undefined}
-                data-nav-nosotras-label={item.href === '/nosotras' ? 'true' : undefined}
+                data-nav-nosotras-label={item.href === '/#nosotras' ? 'true' : undefined}
               >
                 {item.label}
               </a>
@@ -88,7 +90,7 @@ function isLinkActive(href: string) {
                       isLinkActive(item.href) ? 'bg-white/10 text-klika-white font-semibold' : 'text-white/85'
                     }`}
                     aria-current={isLinkActive(item.href) ? 'page' : undefined}
-                    data-nav-nosotras-label={item.href === '/nosotras' ? 'true' : undefined}
+                    data-nav-nosotras-label={item.href === '/#nosotras' ? 'true' : undefined}
                   >
                     {item.label}
                   </a>

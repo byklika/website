@@ -2,12 +2,15 @@ export type SiteNavItem =
   | { kind: 'link'; href: string; label: string }
   | { kind: 'contact-sheet'; label: string };
 
-/** Primary navigation links used in desktop and mobile header menus. */
+/**
+ * Primary nav — MVP scroll targets on the homepage (`#inicio`, `#metodologia`, …).
+ * Standalone routes under `src/pages/{servicios,como-trabajamos,nosotras}/` remain for a future revamp.
+ */
 export const siteNavItems: SiteNavItem[] = [
-  { kind: 'link', href: '/', label: 'Home' },
-  { kind: 'link', href: '/servicios', label: 'Servicios' },
-  { kind: 'link', href: '/como-trabajamos', label: 'Cómo trabajamos' },
-  { kind: 'link', href: '/nosotras', label: 'Nosotras' },
+  { kind: 'link', href: '/#inicio', label: 'Home' },
+  { kind: 'link', href: '/#metodologia', label: 'Cómo trabajamos' },
+  { kind: 'link', href: '/#servicios', label: 'Servicios' },
+  { kind: 'link', href: '/#nosotras', label: 'Nosotras' },
   { kind: 'link', href: '/blog', label: 'Blog' }
 ];
 

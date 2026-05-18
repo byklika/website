@@ -30,6 +30,14 @@ function applyNosotrasLabel(label: string): void {
   });
 }
 
+/** Match `scroll-padding-top` to the real fixed header height (py-4 + logo row). */
+function syncHeaderScrollOffset(): void {
+  const header = document.getElementById('homeHeader');
+  if (!header) return;
+  const height = `${header.offsetHeight}px`;
+  document.documentElement.style.setProperty('--site-header-height', height);
+}
+
 export function initHeaderNav(): void {
   const cfg = readExperimentConfig();
   const header = document.getElementById('homeHeader');
@@ -63,7 +71,7 @@ export function initHeaderNav(): void {
         variant: navVariant,
         label_shown:
           target.getAttribute('data-nav-label-shown') || target.textContent?.trim() || cfg.fallback,
-        href: '/nosotras'
+        href: '/#nosotras'
       }
     });
   }
@@ -81,5 +89,38 @@ export function initHeaderNav(): void {
 
   window.addEventListener('scroll', onScroll, { passive: true });
   document.addEventListener('click', trackNavClick, { capture: true });
+
+  const scrollToHashTarget = (hash: string, behavior: ScrollBehavior = 'auto') => {
+    const id = hash.startsWith('#') ? hash.slice(1) : hash;
+    if (!id) return;
+    const target = document.getElementById(id);
+    if (!target) return;
+    syncHeaderScrollOffset();
+    target.scrollIntoView({ behavior, block: 'start' });
+  };
+
+  syncHeaderScrollOffset();
+  window.addEventListener('resize', syncHeaderScrollOffset, { passive: true });
+
+  const mobileMenu = header?.querySelector('details');
+  header?.querySelectorAll<HTMLAnchorElement>('a[href^="/#"]').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      mobileMenu?.removeAttribute('open');
+
+      const url = new URL(link.href, window.location.href);
+      if (url.pathname !== window.location.pathname || !url.hash) return;
+
+      e.preventDefault();
+      const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      scrollToHashTarget(url.hash, prefersReduced ? 'auto' : 'smooth');
+      history.pushState(null, '', url.hash);
+    });
+  });
+
+  const initialHash = window.location.hash;
+  if (initialHash) {
+    requestAnimationFrame(() => scrollToHashTarget(initialHash));
+  }
+
   onScroll();
 }

@@ -17,6 +17,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   .animate-fadeUp,
   .animate-marquee,
   .animate-morphBlob {
@@ -28,6 +32,16 @@
     transform: none;
     transition: none;
   }
+}
+
+/* Fixed header: one offset only (padding OR margin, not both — avoids over-scroll gap) */
+:root {
+  --site-header-height: 4.5rem;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--site-header-height);
 }
 
 /* Homepage header scroll shadow parity with prototype */
