@@ -14,9 +14,7 @@ export const siteNavItems: SiteNavItem[] = [
   { kind: 'link', href: '/blog', label: 'Blog' }
 ];
 
-/** Header primary nav (desktop + mobile); blog hidden until launch. */
-export const headerNavItems: SiteNavItem[] = siteNavItems
-  .filter((item) => !(item.kind === 'link' && item.href === '/blog'))
-  .map((item) =>
-    item.kind === 'link' && item.href === '/#inicio' ? { ...item, label: 'Inicio' } : item
-  );
+/** Header primary nav (desktop + mobile). */
+export const headerNavItems: SiteNavItem[] = siteNavItems.map((item) =>
+  item.kind === 'link' && item.href === '/#inicio' ? { ...item, label: 'Inicio' } : item
+);
