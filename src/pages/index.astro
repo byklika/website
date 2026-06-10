@@ -6,6 +6,7 @@ import Services from '~/components/sections/Services.astro';
 import AboutUs from '~/components/sections/AboutUs.astro';
 import type { Item as AboutUsItem } from '~/components/sections/AboutUs.astro';
 import EmailSignupPopup from '~/components/EmailSignupPopup.astro';
+import { seoPageMeta } from '~/data/seoOnPageContract';
 
 /**
  * Hero raster: master lives under `src/assets/` (not publicly served).
@@ -45,7 +46,8 @@ const nosotrasAboutItems: AboutUsItem[] = [
   },
   {
     title: 'Nuestro plan',
-    description: 'Trabajamos con una metodología que se adapta a las particularidades de cada proyecto y cliente.'
+    description:
+      'Trabajamos con una metodología que se adapta a las particularidades de cada proyecto y cliente.'
   },
   {
     title: 'Nuestro compromiso',
@@ -55,11 +57,7 @@ const nosotrasAboutItems: AboutUsItem[] = [
 ];
 ---
 
-<BaseLayout
-  fullWidthMain
-  title="klika · e‑learning studio"
-  description="Experiencias educativas que dejan huella. Diseñamos para que educadores y aprendices sientan que valió la pena."
->
+<BaseLayout fullWidthMain title={seoPageMeta.home.title} description={seoPageMeta.home.description}>
   <Hero
     class="homepage-section homepage-section-hero"
     eyebrow="E‑Learning Studio"
@@ -68,7 +66,7 @@ const nosotrasAboutItems: AboutUsItem[] = [
     primaryHref="#servicios"
     primaryLabel="Conocé nuestros servicios →"
     secondaryHref="#metodologia"
-    secondaryLabel="Cómo trabajamos"
+    secondaryLabel="Metodología"
     imageAlt={heroImageAlt}
   >
     <picture slot="media">
@@ -141,7 +139,12 @@ const nosotrasAboutItems: AboutUsItem[] = [
           title: 'La idea existe. Todavía no tiene forma.',
           tagline:
             'Antes de diseñar o producir cualquier cosa, hay que saber a dónde se va. Por acá se empieza.',
-          includes: ['Consultoría', 'Brief', 'Diseño instruccional desde cero', 'Rediseño de proceso formativo']
+          includes: [
+            'Consultoría',
+            'Brief',
+            'Diseño instruccional desde cero',
+            'Rediseño de proceso formativo'
+          ]
         }
       },
       {
@@ -183,8 +186,7 @@ const nosotrasAboutItems: AboutUsItem[] = [
         card: {
           label: 'Programas completos',
           title: 'No querés armar el rompecabezas solo.',
-          tagline:
-            'Klika toma el proyecto de punta a punta. Diseño, producción y acompañamiento.',
+          tagline: 'Klika toma el proyecto de punta a punta. Diseño, producción y acompañamiento.',
           includes: ['Control de calidad de materiales', 'Rediseño de proceso formativo']
         }
       }

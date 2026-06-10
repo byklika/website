@@ -1,0 +1,49 @@
+---
+import { getCollection, render } from 'astro:content';
+import BlogPostLayout from '~/layouts/BlogPostLayout.astro';
+import {
+  computeReadingTimeMinutes,
+  resolveBlogCategory,
+  resolveRelatedPosts
+} from '~/lib/blog-article';
+import { resolveBlogEntryImageSlug } from '~/lib/blog-image';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post, allPosts: posts }
+  }));
+}
+
+const { post, allPosts } = Astro.props;
+const { Content } = await render(post);
+
+const category = resolveBlogCategory(post.data.category, post.data.tags);
+const readingTimeMinutes = computeReadingTimeMinutes(post.body ?? '', post.data.readingTimeMinutes);
+const relatedPosts = resolveRelatedPosts(post.id, allPosts, {
+  relatedSlugs: post.data.relatedSlugs,
+  category: post.data.category,
+  tags: post.data.tags
+});
+const heroImageSlug = resolveBlogEntryImageSlug(post);
+---
+
+<BlogPostLayout
+  slug={post.id}
+  title={post.data.title}
+  description={post.data.description}
+  pubDate={post.data.pubDate}
+  updatedDate={post.data.updatedDate}
+  {category}
+  tags={post.data.tags}
+  {readingTimeMinutes}
+  heroImage={post.data.heroImage}
+  {heroImageSlug}
+  heroImagePosition={post.data.heroImagePosition}
+  authorName={post.data.authorName}
+  authorEmail={post.data.authorEmail}
+  {relatedPosts}
+>
+  <Content />
+</BlogPostLayout>

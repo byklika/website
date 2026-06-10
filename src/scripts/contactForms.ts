@@ -1,4 +1,5 @@
 import { publish } from '~/lib/analytics/bus';
+import { buildContactFormPayload } from '~/lib/contactFormPayload';
 import { submitToWeb3Forms } from '~/lib/web3formsSubmit';
 
 const STATUS_BASE: Record<string, string> = {
@@ -64,17 +65,7 @@ function bindContactForm(root: HTMLElement) {
       return;
     }
 
-    const payload: Record<string, string> = {
-      access_key: key,
-      email: String(fd.get('email') ?? '').trim(),
-      message: String(fd.get('message') ?? '').trim(),
-      subject: 'Contact form — byklika.com'
-    };
-
-    const projectStage = String(fd.get('project_stage') ?? '').trim();
-    if (projectStage) {
-      payload.project_stage = projectStage;
-    }
+    const payload = buildContactFormPayload(fd, key);
 
     if (submitBtn) submitBtn.disabled = true;
     setStatus(statusEl, 'loading', 'Enviando…', tone);
@@ -103,7 +94,9 @@ function bindContactForm(root: HTMLElement) {
 }
 
 export function initContactForms(): void {
-  document.querySelectorAll<HTMLElement>('.contact-form-component[data-contact-form]').forEach(bindContactForm);
+  document
+    .querySelectorAll<HTMLElement>('.contact-form-component[data-contact-form]')
+    .forEach(bindContactForm);
 }
 
 if (document.readyState === 'loading') {

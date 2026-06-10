@@ -17,6 +17,8 @@
     "vercel:ci-secrets-hint": "node ./scripts/print-vercel-ci-secrets.mjs",
     "optimize:hero": "sh scripts/optimize-hero-images.sh",
     "optimize:hero:v2": "sh scripts/optimize-hero-images.sh home-hero-instructional-design-v2",
+    "optimize:blog": "sh scripts/optimize-blog-images.sh",
+    "generate:blog-placeholders": "node ./scripts/generate-blog-placeholders.mjs",
     "css:measure": "astro build && node ./scripts/measure-built-css.mjs",
     "lint": "eslint .",
     "typecheck:ts": "tsc --noEmit",
@@ -26,13 +28,9 @@
     "format:check": "prettier . --check",
     "prepare": "husky"
   },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx,mjs,cjs,json,yml,yaml,md,mdx,css,scss,astro}": [
-      "prettier --write"
-    ]
-  },
   "dependencies": {
     "@astrojs/mdx": "^5.0.3",
+    "@astrojs/sitemap": "^3.7.3",
     "@growthbook/growthbook": "^1.6.5",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.2",

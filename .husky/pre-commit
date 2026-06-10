@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+set -e
+
+# Prettier formats whole files. Partial staging (staged + unstaged hunks) makes
+# lint-staged's stash restore fail — stage the full file before formatting.
+for file in $(git diff --cached --name-only); do
+  if ! git diff --quiet -- "$file" 2>/dev/null; then
+    git add -- "$file"
+  fi
+done
+
+pnpm exec lint-staged
+pnpm generate:blog-placeholders
+pnpm exec prettier --write src/data/blogPlaceholders.ts
+git add src/data/blogPlaceholders.ts

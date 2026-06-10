@@ -1,8 +1,10 @@
 ---
+/** Paginated list route — keep until index uses collection + `BlogArticleCard` grid. */
 import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import BlogListSection from '~/components/blog/BlogListSection.astro';
+import { formatBlogPaginationTitle, seoPageMeta } from '~/data/seoOnPageContract';
 import { BLOG_PAGE_SIZE, paginateBlogPosts } from '~/lib/blog-pagination';
 
 export const getStaticPaths = (async () => {
@@ -24,6 +26,9 @@ export const getStaticPaths = (async () => {
 const { data, currentPage, lastPage, url } = Astro.props;
 ---
 
-<BaseLayout title="Blog — Klika" description="News and articles from Klika.">
-  <BlogListSection posts={data} currentPage={currentPage} lastPage={lastPage} url={url} />
+<BaseLayout
+  title={formatBlogPaginationTitle(currentPage)}
+  description={seoPageMeta.blog.description}
+>
+  <BlogListSection posts={data} {currentPage} {lastPage} {url} />
 </BaseLayout>

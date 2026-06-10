@@ -1,0 +1,22 @@
+---
+import { blogArticleCta } from '~/data/blogArticleContract';
+---
+
+<section class="blog-article-cta reveal rd1 mb-16" aria-labelledby="blog-article-cta-title">
+  <div class="relative">
+    <h2 id="blog-article-cta-title" class="blog-article-cta__title">
+      {blogArticleCta.title}
+    </h2>
+    <p class="blog-article-cta__description">{blogArticleCta.description}</p>
+  </div>
+
+  <button
+    type="button"
+    class="blog-article-cta__action"
+    aria-haspopup="dialog"
+    aria-controls="contact-sheet"
+    data-sheet-open="contact-sheet"
+  >
+    {blogArticleCta.buttonLabel}
+  </button>
+</section>

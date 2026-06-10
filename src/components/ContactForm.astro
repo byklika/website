@@ -1,4 +1,11 @@
 ---
+import { cn } from '~/lib/helpers';
+import { contactSheetFieldContract } from '~/data/contactSheetContract';
+
+/**
+ * Contact form — inline (`tone="dark"`) and sheet (`idBase="contact-sheet"`).
+ * Sheet restyle contract: `~/data/contactSheetContract.ts` (field map, unchanged payload/GA4).
+ */
 const accessKey = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY?.trim();
 const configured = Boolean(accessKey);
 
@@ -11,15 +18,39 @@ export interface Props {
 
 const { tone = 'dark', idBase = 'contact' } = Astro.props;
 
+const isSheet = idBase === 'contact-sheet';
 const isDark = tone === 'dark';
 const formId = `${idBase}-form`;
 const submitId = `${idBase}-submit`;
 /** GA4 `contact_form_submit.form_location` */
-const formSurface = idBase === 'contact-sheet' ? 'sheet' : 'inline';
+const formSurface = isSheet ? 'sheet' : 'inline';
+
+const emailField = contactSheetFieldContract.production[0];
+const messageField = contactSheetFieldContract.production[1];
+
+const labelClass = cn(
+  isSheet
+    ? 'text-[0.72rem] font-bold tracking-[0.08em] uppercase text-klika-moss'
+    : 'text-[0.78rem] font-semibold tracking-[0.05em]',
+  !isSheet && (isDark ? 'text-white/50' : 'text-klika-sage/80')
+);
+
+const fieldClass = cn(
+  'w-full outline-none transition',
+  isSheet
+    ? 'rounded-xl border-[1.5px] border-klika-moss/20 bg-white px-4 py-[0.85rem] text-[0.94rem] text-klika-dark placeholder:text-klika-dark/35 focus:border-klika-coral'
+    : 'rounded-[0.8rem] px-[1.1rem] py-[0.85rem] text-[0.9rem]',
+  !isSheet &&
+    (isDark
+      ? 'border border-white/[0.14] bg-white/[0.06] text-white placeholder:text-white/25 focus:border-klika-coral focus:bg-white/[0.09]'
+      : 'border border-klika-sage/25 bg-klika-cream text-klika-dark placeholder:text-klika-dark/35 focus:border-klika-coral')
+);
+
+const statusClass = cn('text-sm', isDark ? 'text-white/80' : 'text-klika-dark/70');
 ---
 
 <div
-  class="contact-form-component w-full"
+  class:list={['contact-form-component w-full', isSheet && 'contact-sheet-form']}
   data-contact-form
   data-form-surface={formSurface}
   data-contact-tone={tone}
@@ -30,7 +61,9 @@ const formSurface = idBase === 'contact-sheet' ? 'sheet' : 'inline';
         role="alert"
         class:list={[
           'mb-6 rounded-xl px-4 py-3 text-sm',
-          isDark ? 'border border-white/15 bg-white/5 text-white/80' : 'border border-klika-sage/20 bg-klika-mist text-klika-dark/80'
+          isDark
+            ? 'border border-white/15 bg-white/5 text-white/80'
+            : 'border-klika-sage/20 bg-klika-mist text-klika-dark/80 border'
         ]}
       >
         <span>
@@ -67,7 +100,7 @@ const formSurface = idBase === 'contact-sheet' ? 'sheet' : 'inline';
     )
   }
 
-  <form id={formId} class="flex flex-col gap-5" novalidate>
+  <form id={formId} class:list={['flex flex-col', isSheet ? 'gap-[1.2rem]' : 'gap-5']} novalidate>
     <input type="hidden" name="access_key" value={accessKey ?? ''} />
     <input type="hidden" name="project_stage" value="" />
 
@@ -78,60 +111,56 @@ const formSurface = idBase === 'contact-sheet' ? 'sheet' : 'inline';
     </label>
 
     <label class="flex flex-col gap-2">
-      <span class:list={['text-[0.78rem] font-semibold tracking-[0.05em]', isDark ? 'text-white/50' : 'text-klika-sage/80']}>
-        EMAIL
-      </span>
+      <span class={labelClass}>{emailField.productionLabel}</span>
       <input
         type="email"
         name="email"
         required
         maxlength="254"
-        class:list={[
-          'w-full rounded-[0.8rem] px-[1.1rem] py-[0.85rem] text-[0.9rem] outline-none transition',
-          isDark
-            ? 'border border-white/[0.14] bg-white/[0.06] text-white placeholder:text-white/25 focus:border-klika-coral focus:bg-white/[0.09]'
-            : 'border border-klika-sage/25 bg-klika-cream text-klika-dark placeholder:text-klika-dark/35 focus:border-klika-coral'
-        ]}
+        class={fieldClass}
         autocomplete="email"
         disabled={!configured}
-        placeholder="tu@correo.com"
+        placeholder={emailField.productionPlaceholder}
       />
     </label>
 
     <label class="flex flex-col gap-2">
-      <span class:list={['text-[0.78rem] font-semibold tracking-[0.05em]', isDark ? 'text-white/50' : 'text-klika-sage/80']}>
-        CONTANOS MÁS
-      </span>
+      <span class={labelClass}>{messageField.productionLabel}</span>
       <textarea
         name="message"
         maxlength="5000"
         rows={6}
-        class:list={[
-          'min-h-[120px] w-full resize-y rounded-[0.8rem] px-[1.1rem] py-[0.85rem] text-[0.9rem] outline-none transition',
-          isDark
-            ? 'border border-white/[0.14] bg-white/[0.06] text-white placeholder:text-white/25 focus:border-klika-coral focus:bg-white/[0.09]'
-            : 'border border-klika-sage/25 bg-klika-cream text-klika-dark placeholder:text-klika-dark/35 focus:border-klika-coral'
-        ]}
+        class:list={[fieldClass, 'min-h-[120px] resize-y']}
         disabled={!configured}
-        placeholder="(Opcional) ¿En qué etapa de tu proyecto estás? ¿Qué necesitás?"
-      ></textarea>
+        placeholder={messageField.productionPlaceholder}></textarea>
     </label>
 
-    <div class="flex flex-wrap items-center gap-3">
-      <button
-        type="submit"
-        class="inline-flex items-center gap-2 self-start rounded-pill bg-klika-coral px-[1.8rem] py-[0.75rem] text-[0.9rem] font-semibold text-klika-white transition hover:bg-klika-coralHover disabled:cursor-not-allowed disabled:opacity-60"
-        disabled={!configured}
-        id={submitId}
-      >
-        Enviar →
-      </button>
-      <span
-        data-contact-status
-        class:list={['text-sm', isDark ? 'text-white/80' : 'text-klika-dark/70']}
-        role="status"
-        aria-live="polite"
-      ></span>
-    </div>
+    {
+      isSheet ? (
+        <div class="mt-[0.2rem] flex flex-col gap-3">
+          <button
+            type="submit"
+            class="rounded-pill bg-klika-coral text-klika-white shadow-btnPrimary hover:bg-klika-coralHover hover:shadow-btnPrimaryHover w-full px-4 py-4 text-[0.98rem] font-semibold transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
+            disabled={!configured}
+            id={submitId}
+          >
+            {contactSheetFieldContract.submit.standaloneLabel}
+          </button>
+          <span data-contact-status class={statusClass} role="status" aria-live="polite" />
+        </div>
+      ) : (
+        <div class="flex flex-wrap items-center gap-3">
+          <button
+            type="submit"
+            class="rounded-pill bg-klika-coral text-klika-white hover:bg-klika-coralHover inline-flex items-center gap-2 self-start px-[1.8rem] py-[0.75rem] text-[0.9rem] font-semibold transition disabled:cursor-not-allowed disabled:opacity-60"
+            disabled={!configured}
+            id={submitId}
+          >
+            {contactSheetFieldContract.submit.productionLabel}
+          </button>
+          <span data-contact-status class={statusClass} role="status" aria-live="polite" />
+        </div>
+      )
+    }
   </form>
 </div>
