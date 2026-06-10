@@ -1,26 +1,24 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import CTA from '~/components/CTA.astro';
+import { seoPageMeta } from '~/data/seoOnPageContract';
 ---
 
-<BaseLayout
-  title="Nosotras — Klika"
-  description="Equipo de diseño instruccional y producción e-learning con foco en experiencias memorables."
->
+<BaseLayout title={seoPageMeta.nosotras.title} description={seoPageMeta.nosotras.description}>
   <div class="page-copy space-y-10">
     <header class="max-w-none">
       <h1>Nosotras</h1>
       <p>
-        Somos un estudio orientado a aprendizajes que se sienten humanos: claros, cuidados y útiles en
-        el día a día. Este bloque es borrador — reemplazar con historia real y fotos del equipo.
+        Somos un estudio orientado a aprendizajes que se sienten humanos: claros, cuidados y útiles
+        en el día a día. Este bloque es borrador — reemplazar con historia real y fotos del equipo.
       </p>
     </header>
 
     <section class="max-w-none" aria-labelledby="historia">
       <h2 id="historia">Nuestra historia</h2>
       <p>
-        Nacimos de la intersección entre pedagogía, diseño y tecnología. Acompañamos a organizaciones
-        que necesitan formar sin abrumar: menos ruido, más intención.
+        Nacimos de la intersección entre pedagogía, diseño y tecnología. Acompañamos a
+        organizaciones que necesitan formar sin abrumar: menos ruido, más intención.
       </p>
     </section>
 
@@ -36,8 +34,8 @@ import CTA from '~/components/CTA.astro';
     <section class="max-w-none" aria-labelledby="equipo">
       <h2 id="equipo">Equipo</h2>
       <p>
-        Perfiles de diseño instruccional, producción multimedia y desarrollo e-learning trabajando en
-        binomios según el proyecto. Próximamente: bios y fotos.
+        Perfiles de diseño instruccional, producción multimedia y desarrollo e-learning trabajando
+        en binomios según el proyecto. Próximamente: bios y fotos.
       </p>
     </section>
 
