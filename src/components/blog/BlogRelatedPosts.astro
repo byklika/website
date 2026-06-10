@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import BlogRelatedCard from '~/components/blog/BlogRelatedCard.astro';
+import { blogRelatedPlaceholders, blogRelatedSectionTitle } from '~/data/blogArticleContract';
+import { resolveRelatedDisplayCards } from '~/lib/blog-article';
+
+interface Props {
+  currentSlug: string;
+  relatedPosts: CollectionEntry<'blog'>[];
+}
+
+const { currentSlug, relatedPosts } = Astro.props;
+
+const cards = resolveRelatedDisplayCards(currentSlug, relatedPosts, blogRelatedPlaceholders);
+---
+
+{
+  cards.length > 0 && (
+    <section class="blog-related-posts not-prose" aria-labelledby="blog-related-title">
+      <h2
+        id="blog-related-title"
+        class="blog-related-posts__head text-klika-dark mb-[1.4rem] font-serif text-[1.3rem] leading-tight font-bold tracking-[-0.01em]"
+      >
+        {blogRelatedSectionTitle}
+      </h2>
+      <div class="grid grid-cols-1 gap-[1.4rem] min-[561px]:grid-cols-2">
+        {cards.map((card) => (
+          <BlogRelatedCard {...card} />
+        ))}
+      </div>
+    </section>
+  )
+}

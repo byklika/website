@@ -1,8 +1,11 @@
 ---
+/** Sidedrawer shell — contact restyle contract: `~/data/contactSheetContract.ts`. */
 export interface Props {
   /** Stable DOM id used by triggers (`aria-controls` + `data-sheet-open`). */
   id: string;
   side?: 'right' | 'left';
+  /** Contact panel chrome from standalone `.contact-panel` (480px, blur overlay, top close). */
+  variant?: 'default' | 'contact';
   closeOnOverlayClick?: boolean;
   closeOnEsc?: boolean;
   initialOpen?: boolean;
@@ -12,20 +15,32 @@ export interface Props {
 const {
   id,
   side = 'right',
+  variant = 'default',
   closeOnOverlayClick = true,
   closeOnEsc = true,
   initialOpen = false,
   class: className
 } = Astro.props;
 
+const isContact = variant === 'contact';
 const titleId = `${id}-title`;
+
+const panelSideClasses =
+  side === 'left'
+    ? 'left-0 -translate-x-full group-data-[open]/sheet:translate-x-0'
+    : 'right-0 translate-x-full group-data-[open]/sheet:translate-x-0';
+
+const closeButtonClasses = isContact
+  ? 'mb-6 inline-flex h-10 w-10 shrink-0 items-center justify-center self-end rounded-full border-[1.5px] border-klika-moss/20 bg-transparent text-[1.1rem] text-klika-moss transition hover:border-klika-moss hover:bg-klika-moss hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral'
+  : 'inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-klika-sage/75 hover:text-klika-sage focus:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral';
 ---
 
 <div
-  id={id}
+  {id}
   class:list={[
-    'sheet-component group/sheet fixed inset-0 z-sheet pointer-events-none opacity-0 transition-opacity duration-300 ease-out motion-reduce:duration-150',
+    'sheet-component group/sheet z-sheet pointer-events-none fixed inset-0 opacity-0 transition-opacity duration-300 ease-out motion-reduce:duration-150',
     '[&[data-arm]]:pointer-events-auto [&[data-open]]:opacity-100',
+    isContact && 'contact-sheet',
     className
   ]}
   data-sheet-root
@@ -33,15 +48,22 @@ const titleId = `${id}-title`;
   data-close-on-overlay-click={closeOnOverlayClick ? 'true' : 'false'}
   data-close-on-esc={closeOnEsc ? 'true' : 'false'}
   aria-hidden={initialOpen ? undefined : 'true'}
-  {...(initialOpen ? { 'data-arm': '', 'data-open': '' } : {})}
+  {...initialOpen ? { 'data-arm': '', 'data-open': '' } : {}}
 >
-  <div class="absolute inset-0 bg-klika-dark/55" data-sheet-overlay></div>
+  <div
+    class:list={['bg-klika-dark/55 absolute inset-0', isContact && 'backdrop-blur-sm']}
+    data-sheet-overlay
+  >
+  </div>
 
   <div
     class:list={[
-      'absolute inset-y-0 flex w-full max-w-full flex-col bg-klika-cream shadow-2xl sm:max-w-[min(92vw,26rem)]',
+      'bg-klika-cream absolute inset-y-0 flex w-full flex-col shadow-2xl',
       'transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:duration-150 motion-reduce:ease-out',
-      side === 'left' ? 'left-0 -translate-x-full group-data-[open]/sheet:translate-x-0' : 'right-0 translate-x-full group-data-[open]/sheet:translate-x-0'
+      panelSideClasses,
+      isContact
+        ? 'max-w-[min(480px,100vw)] overflow-y-auto px-10 py-[2.4rem]'
+        : 'max-w-full sm:max-w-[min(92vw,26rem)]'
     ]}
     role="dialog"
     aria-modal="true"
@@ -49,32 +71,52 @@ const titleId = `${id}-title`;
     tabindex="-1"
     data-sheet-panel
   >
-    <div class="flex items-start justify-between gap-4 border-b border-klika-sage/15 px-6 py-5">
-      <h2 id={titleId} class="font-serif text-[18px] font-bold leading-[1.25] text-klika-dark">
-        <slot name="title" />
-      </h2>
+    {
+      isContact ? (
+        <>
+          <button type="button" class={closeButtonClasses} aria-label="Cerrar" data-sheet-close>
+            ✕
+          </button>
 
-      <button
-        type="button"
-        class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-klika-sage/75 hover:text-klika-sage focus:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral"
-        aria-label="Cerrar"
-        data-sheet-close
-      >
-        ✕
-      </button>
-    </div>
+          <div class="flex min-h-0 flex-1 flex-col">
+            <h2
+              id={titleId}
+              class="text-klika-dark mb-[0.8rem] font-serif text-[1.75rem] leading-[1.2] font-normal tracking-[-0.01em]"
+            >
+              <slot name="title" />
+            </h2>
 
-    <div class="min-h-0 flex-1 overflow-auto px-6 py-5">
-      <slot />
-    </div>
+            <slot />
+          </div>
+        </>
+      ) : (
+        <>
+          <div class="border-klika-sage/15 flex items-start justify-between gap-4 border-b px-6 py-5">
+            <h2
+              id={titleId}
+              class="text-klika-dark font-serif text-[18px] leading-[1.25] font-bold"
+            >
+              <slot name="title" />
+            </h2>
 
-    <div class="border-t border-klika-sage/15 px-6 py-4">
-      <slot name="footer" />
-    </div>
+            <button type="button" class={closeButtonClasses} aria-label="Cerrar" data-sheet-close>
+              ✕
+            </button>
+          </div>
+
+          <div class="min-h-0 flex-1 overflow-auto px-6 py-5">
+            <slot />
+          </div>
+
+          <div class="border-klika-sage/15 border-t px-6 py-4">
+            <slot name="footer" />
+          </div>
+        </>
+      )
+    }
   </div>
 </div>
 
 <script>
   import '~/scripts/sheet.ts';
 </script>
-

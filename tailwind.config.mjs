@@ -31,9 +31,8 @@ export default {
         }
       },
       fontFamily: {
-        /** System stack until self-hosted webfonts ship from `src` (avoids missing-font fallbacks). */
         sans: ['ui-sans-serif', 'system-ui', 'sans-serif'],
-        serif: ['ui-serif', 'Georgia', 'serif'],
+        serif: ['Merriweather', 'Georgia', 'serif'],
         mitr: ['Mitr', 'sans-serif']
       },
       borderRadius: {

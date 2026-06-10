@@ -2,6 +2,14 @@
 import '~/styles/global.css';
 import HeadEssentials from '~/components/layout/HeadEssentials.astro';
 import SiteBodyChrome from '~/components/layout/SiteBodyChrome.astro';
+import JsonLd from '~/components/seo/JsonLd.astro';
+import {
+  SEO_DEFAULT_OG_IMAGE,
+  SEO_HTML_LANG,
+  SEO_OG_LOCALE,
+  SEO_SITE_DEFAULT_DESCRIPTION
+} from '~/data/seoOnPageContract';
+import { buildOrganizationSchema, buildWebSiteSchema, resolveSiteOrigin } from '~/lib/seo/schema';
 
 interface Props {
   title?: string;
@@ -15,26 +23,32 @@ interface Props {
   articlePublishedTime?: string;
   articleModifiedTime?: string;
   noindex?: boolean;
+  /** Extra JSON-LD nodes merged after site-wide Organization + WebSite. */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const SITE_NAME = 'klika e‑learning studio';
-const DEFAULT_DESCRIPTION =
-  'e‑learning studio — experiencias educativas que dejan huella.';
 
 const {
   title = SITE_NAME,
-  description = DEFAULT_DESCRIPTION,
-  lang = 'es',
+  description = SEO_SITE_DEFAULT_DESCRIPTION,
+  lang = SEO_HTML_LANG,
   fullWidthMain = false,
   image,
   ogType = 'website',
   articlePublishedTime,
   articleModifiedTime,
-  noindex = false
+  noindex = false,
+  jsonLd
 } = Astro.props;
 
 const siteBase = Astro.site ?? Astro.url.origin;
 const canonicalURL = new URL(Astro.url.pathname, siteBase);
+const siteOrigin = resolveSiteOrigin(Astro.site, canonicalURL.origin);
+
+const siteJsonLd = [buildOrganizationSchema(siteOrigin), buildWebSiteSchema(siteOrigin)];
+const extraJsonLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const structuredData = [...siteJsonLd, ...extraJsonLd];
 
 function toAbsoluteImage(src: string): string {
   if (src.startsWith('http://') || src.startsWith('https://')) return src;
@@ -42,8 +56,8 @@ function toAbsoluteImage(src: string): string {
   return new URL(path, canonicalURL.origin).href;
 }
 
-const ogImage = image ? toAbsoluteImage(image) : toAbsoluteImage('/favicon.svg');
-const ogLocale = lang === 'es' ? 'es_AR' : 'en_US';
+const ogImage = image ? toAbsoluteImage(image) : toAbsoluteImage(SEO_DEFAULT_OG_IMAGE);
+const ogLocale = lang === SEO_HTML_LANG ? SEO_OG_LOCALE : 'en_US';
 ---
 
 <!doctype html>
@@ -79,6 +93,8 @@ const ogLocale = lang === 'es' ? 'es_AR' : 'en_US';
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
+
+    <JsonLd data={structuredData} />
   </head>
   <body class="bg-klika-cream text-klika-dark flex min-h-screen flex-col">
     <SiteBodyChrome>
@@ -89,7 +105,7 @@ const ogLocale = lang === 'es' ? 'es_AR' : 'en_US';
           </main>
         ) : (
           <main class="w-full flex-1">
-            <div class="mx-auto w-full max-w-5xl px-4 pb-12 pt-24">
+            <div class="mx-auto w-full max-w-5xl px-4 pt-24 pb-12">
               <slot />
             </div>
           </main>

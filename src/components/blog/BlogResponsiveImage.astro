@@ -1,0 +1,48 @@
+---
+import { buildBlogPictureProps, type BlogImageSizesPreset } from '~/lib/blog-image';
+import { cn } from '~/lib/helpers';
+
+interface Props {
+  slug: string;
+  alt: string;
+  sizes: BlogImageSizesPreset | string;
+  loading?: 'eager' | 'lazy';
+  fetchpriority?: 'high' | 'low' | 'auto';
+  class?: string;
+  pictureClass?: string;
+}
+
+const { slug, alt, sizes, loading, fetchpriority, class: imgClass, pictureClass } = Astro.props;
+
+const picture = buildBlogPictureProps({
+  slug,
+  alt,
+  sizes,
+  loading,
+  fetchpriority,
+  class: cn('h-full w-full object-cover', imgClass)
+});
+---
+
+<picture class={cn('block h-full w-full', pictureClass)}>
+  <source
+    type={picture.sources.avif.type}
+    srcset={picture.sources.avif.srcSet}
+    sizes={picture.sources.avif.sizes}
+  />
+  <source
+    type={picture.sources.webp.type}
+    srcset={picture.sources.webp.srcSet}
+    sizes={picture.sources.webp.sizes}
+  />
+  <img
+    src={picture.img.src}
+    srcset={picture.img.srcSet}
+    alt={picture.img.alt}
+    sizes={picture.img.sizes}
+    loading={picture.img.loading}
+    decoding={picture.img.decoding}
+    fetchpriority={picture.img.fetchpriority}
+    class={picture.img.class}
+  />
+</picture>

@@ -1,52 +1,115 @@
 ---
+import type { CollectionEntry } from 'astro:content';
 import BaseLayout from '~/layouts/BaseLayout.astro';
+import BlogArticleBanner from '~/components/blog/BlogArticleBanner.astro';
+import BlogArticleAuthor from '~/components/blog/BlogArticleAuthor.astro';
+import BlogArticleCta from '~/components/blog/BlogArticleCta.astro';
+import BlogArticleHeader from '~/components/blog/BlogArticleHeader.astro';
+import BlogRelatedPosts from '~/components/blog/BlogRelatedPosts.astro';
+import { formatArticleSeoTitle } from '~/data/seoOnPageContract';
+import { blogPostHref } from '~/lib/blog-card';
+import { blogImageOgUrl } from '~/lib/blog-image';
+import type { HeroImagePositionInput } from '~/lib/blog-hero-position';
+import {
+  buildBlogBreadcrumbSchema,
+  buildBlogPostingSchema,
+  resolveSiteOrigin
+} from '~/lib/seo/schema';
 
 interface Props {
   title: string;
   description?: string;
   pubDate: Date;
   updatedDate?: Date;
+  slug: string;
+  category: string;
+  tags: string[];
+  readingTimeMinutes: number;
+  heroImage?: string;
+  heroImageSlug?: string;
+  heroImagePosition?: HeroImagePositionInput;
+  authorName: string;
+  authorEmail: string;
+  /** Resolved related posts — rendered in Iteration 4. */
+  relatedPosts: CollectionEntry<'blog'>[];
 }
 
-const { title, description, pubDate, updatedDate } = Astro.props;
+const {
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  slug,
+  category,
+  tags,
+  readingTimeMinutes,
+  heroImage,
+  heroImageSlug,
+  heroImagePosition,
+  authorName,
+  authorEmail,
+  relatedPosts
+} = Astro.props;
 
-const dateFmt: Intl.DateTimeFormatOptions = {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric'
-};
-const published = pubDate.toLocaleDateString('es', dateFmt);
-const updated =
-  updatedDate && updatedDate.getTime() !== pubDate.getTime()
-    ? updatedDate.toLocaleDateString('es', dateFmt)
-    : null;
+const socialImage = heroImageSlug ? blogImageOgUrl(heroImageSlug) : heroImage;
+const siteOrigin = resolveSiteOrigin(Astro.site, Astro.url.origin);
+const articlePath = blogPostHref(slug);
+const articleDescription = description ?? `Leé “${title}” en el blog de Klika.`;
+const articleImagePath = heroImageSlug
+  ? blogImageOgUrl(heroImageSlug)
+  : heroImage?.startsWith('/')
+    ? heroImage
+    : undefined;
+
+const articleJsonLd = [
+  buildBlogPostingSchema({
+    origin: siteOrigin,
+    articlePath,
+    headline: title,
+    description: articleDescription,
+    datePublished: pubDate.toISOString(),
+    dateModified: updatedDate?.toISOString(),
+    authorName,
+    imagePath: articleImagePath
+  }),
+  buildBlogBreadcrumbSchema({
+    origin: siteOrigin,
+    articlePath,
+    category,
+    title
+  })
+];
 ---
 
 <BaseLayout
-  title={`${title} — Klika`}
-  description={description ?? `Leé “${title}” en el blog de Klika.`}
+  fullWidthMain
+  title={formatArticleSeoTitle(title)}
+  description={articleDescription}
+  image={socialImage}
   ogType="article"
   articlePublishedTime={pubDate.toISOString()}
   articleModifiedTime={updatedDate?.toISOString()}
+  jsonLd={articleJsonLd}
 >
-  <article class="prose prose-neutral max-w-none text-klika-dark">
-    <header class="not-prose mb-8">
-      <p class="mb-2 text-sm text-klika-dark/60">
-        <time datetime={pubDate.toISOString()}>{published}</time>
-        {
-          updated && (
-            <>
-              {' '}
-              · Actualizado <time datetime={updatedDate!.toISOString()}>{updated}</time>
-            </>
-          )
-        }
-      </p>
-      <h1 class="text-4xl font-bold text-klika-dark">{title}</h1>
-      {description && <p class="mt-2 text-lg text-klika-dark/80">{description}</p>}
-    </header>
-    <div class="prose-headings:scroll-mt-28">
-      <slot />
-    </div>
-  </article>
+  <div class="blog-article-page pt-[var(--site-header-height)]">
+    <BlogArticleBanner {title} imageSlug={heroImageSlug} {heroImagePosition} />
+
+    <article class="blog-article-content">
+      <div class="blog-article-content__inner section-gutter-x mx-auto max-w-[720px]">
+        <BlogArticleHeader {title} {category} {tags} {pubDate} {readingTimeMinutes} />
+
+        <div class="article-body">
+          <slot />
+        </div>
+
+        <hr class="blog-article-divider" aria-hidden="true" />
+
+        <BlogArticleAuthor {authorName} {authorEmail} />
+
+        <BlogArticleCta />
+
+        <BlogRelatedPosts currentSlug={slug} {relatedPosts} />
+      </div>
+    </article>
+  </div>
 </BaseLayout>

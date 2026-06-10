@@ -1,0 +1,123 @@
+---
+import BlogResponsiveImage from '~/components/blog/BlogResponsiveImage.astro';
+import { formatBlogCardDate } from '~/lib/blog-article';
+import { resolveBlogImageSlug } from '~/lib/blog-image';
+import { blogPostHref, categoryFolderSlug } from '~/lib/blog-card';
+import { cn } from '~/lib/helpers';
+import type { BlogPlaceholderEntry } from '~/data/blogPlaceholders';
+
+/**
+ * Blog index card — mirrors standalone `.card` structure.
+ *
+ * Real posts: spread `blogEntryToCardProps(entry)` from `~/lib/blog-card`
+ * (`title`, `description`, `pubDate`, `tags`, resolved `category`, `href`).
+ */
+export interface Props extends BlogPlaceholderEntry {
+  /** Article URL — defaults to `/blog/{category}/{slug}/` from placeholder fields. */
+  href?: string;
+  /** Responsive bundle id — overrides `heroImageSlug` when both are set. */
+  imageSlug?: string;
+  class?: string;
+}
+
+const {
+  slug,
+  category,
+  title,
+  description,
+  tags,
+  pubDate,
+  imageAlt = 'Foto editorial · 85mm · luz natural',
+  heroImageSlug,
+  imageSlug: imageSlugProp,
+  href,
+  class: className
+} = Astro.props;
+
+const imageSlug = resolveBlogImageSlug(imageSlugProp ?? heroImageSlug);
+const articleHref = href ?? blogPostHref(`${categoryFolderSlug(category)}/${slug}`);
+
+const formattedDate = formatBlogCardDate(pubDate);
+
+const cardSurface = cn(
+  'blog-article-card',
+  'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-klika-moss/[0.12] bg-white shadow-card transition-[transform,box-shadow,border-color] duration-300 motion-reduce:transition-none',
+  'hover:-translate-y-1 hover:border-klika-moss/20 hover:shadow-cardHover'
+);
+---
+
+<article class={cn(cardSurface, className)} data-slug={slug}>
+  <div
+    class={cn('blog-article-card__img', imageSlug && 'blog-article-card__img--photo')}
+    aria-hidden={imageSlug ? undefined : 'true'}
+  >
+    {
+      imageSlug ? (
+        <BlogResponsiveImage slug={imageSlug} alt={imageAlt} sizes="card" loading="lazy" />
+      ) : (
+        <>
+          <svg
+            class="h-[34px] w-[34px] shrink-0 opacity-80"
+            width="34"
+            height="34"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+            <circle cx="8.5" cy="8.5" r="1.6" />
+            <path d="m21 15-5-5L5 21" />
+          </svg>
+          <span class="blog-article-card__img-caption">{imageAlt}</span>
+        </>
+      )
+    }
+  </div>
+
+  <div class="flex flex-1 flex-col px-[1.4rem] pt-[1.3rem] pb-[1.4rem]">
+    <div class="blog-article-card__meta">
+      <span class="text-klika-moss shrink-0">{category}</span>
+      <span class="bg-klika-muted2 h-[3px] w-[3px] shrink-0 rounded-full" aria-hidden="true"></span>
+      <time
+        class="text-klika-muted2 shrink-0 font-medium tracking-[0.04em] normal-case"
+        datetime={pubDate.toISOString()}
+      >
+        {formattedDate}
+      </time>
+    </div>
+
+    <h3
+      class="text-klika-dark mb-[0.7rem] font-serif text-[1.18rem] leading-[1.22] font-bold tracking-[-0.012em] text-balance"
+    >
+      <a href={articleHref} class="blog-article-card__title-link">
+        {title}
+      </a>
+    </h3>
+
+    <p class="blog-article-card__excerpt">{description}</p>
+
+    <div class="mb-[1.3rem] flex flex-wrap gap-[0.4rem]">
+      {
+        tags.map((tag) => (
+          <span class="rounded-pill border-klika-moss/[0.16] bg-klika-moss/[0.06] text-klika-moss border px-[0.7rem] py-[0.28rem] text-[0.72rem] font-medium">
+            {tag}
+          </span>
+        ))
+      }
+    </div>
+
+    <div class="mt-auto flex justify-end">
+      <a
+        href={articleHref}
+        class="blog-article-card__read-more"
+        aria-label={`Seguir leyendo: ${title}`}
+      >
+        Seguir leyendo
+      </a>
+    </div>
+  </div>
+</article>

@@ -72,9 +72,12 @@ document.addEventListener('click', (e) => {
 
   const sheetTrigger = target.closest('[data-sheet-open="contact-sheet"]');
   if (sheetTrigger) {
-    const shouldPreserveStage = sheetTrigger.getAttribute('data-project-stage-source') === 'service-card';
+    const shouldPreserveStage =
+      sheetTrigger.getAttribute('data-project-stage-source') === 'service-card';
     if (shouldPreserveStage) {
-      const stageValue = normalizeStage(sheetTrigger.getAttribute('data-project-stage-value') ?? '');
+      const stageValue = normalizeStage(
+        sheetTrigger.getAttribute('data-project-stage-value') ?? ''
+      );
       if (stageValue) {
         setStoredStage(stageValue);
         setContactSheetStage(stageValue);
@@ -86,8 +89,33 @@ document.addEventListener('click', (e) => {
       clearStoredStage();
       setContactSheetStage('');
     }
+
+    applyBlogArticleContactContext(sheetTrigger);
   }
 });
+
+function getContactSheetMessageInput() {
+  const form = document.getElementById('contact-sheet-form');
+  if (!(form instanceof HTMLFormElement)) return null;
+
+  const input = form.querySelector('textarea[name="message"]');
+  return input instanceof HTMLTextAreaElement ? input : null;
+}
+
+function applyBlogArticleContactContext(trigger: Element) {
+  const messageInput = getContactSheetMessageInput();
+  if (!messageInput) return;
+
+  if (trigger.getAttribute('data-contact-source') !== 'blog-read-more') {
+    messageInput.value = '';
+    return;
+  }
+
+  const articleTitle = normalizeStage(trigger.getAttribute('data-contact-article') ?? '');
+  if (!articleTitle) return;
+
+  messageInput.value = `Me interesa el artículo: ${articleTitle}`;
+}
 
 // Clear the stored stage after a successful submit (ContactForm calls form.reset()).
 window.addEventListener('DOMContentLoaded', () => {
@@ -98,4 +126,3 @@ window.addEventListener('DOMContentLoaded', () => {
     clearStoredStage();
   });
 });
-

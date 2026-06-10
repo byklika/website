@@ -11,6 +11,7 @@ function inferContactCtaPlacement(trigger: HTMLElement): string {
   if (trigger.closest('footer')) return 'footer';
   if (trigger.closest('.cta-component')) return 'cta_block';
   if (trigger.closest('.service-card-component')) return 'service_card';
+  if (trigger.closest('.blog-article-card')) return 'blog_card';
   if (trigger.closest('#servicios')) return 'servicios';
   if (trigger.closest('main')) return 'main';
   return 'other';

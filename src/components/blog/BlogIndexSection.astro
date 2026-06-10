@@ -1,0 +1,76 @@
+---
+import { getCollection } from 'astro:content';
+import BlogArticleCard from '~/components/blog/BlogArticleCard.astro';
+import { blogEntryToCardProps } from '~/lib/blog-card';
+import { blogIndexCta, blogIndexIntro, blogPlaceholders } from '~/data/blogPlaceholders';
+
+/** Only articles from `Klika Blog - standalone.html` — see `blogPlaceholders`. */
+function matchesPlaceholderSlug(entryId: string, placeholderSlug: string): boolean {
+  return entryId === placeholderSlug || entryId.endsWith(`/${placeholderSlug}`);
+}
+
+const publishedByPlaceholderSlug = new Map(
+  (await getCollection('blog', ({ data }) => !data.draft))
+    .filter((entry) =>
+      blogPlaceholders.some((placeholder) => matchesPlaceholderSlug(entry.id, placeholder.slug))
+    )
+    .map((entry) => {
+      const placeholder = blogPlaceholders.find((p) => matchesPlaceholderSlug(entry.id, p.slug))!;
+      return [placeholder.slug, entry] as const;
+    })
+);
+
+const indexCards = blogPlaceholders.map((placeholder) => {
+  const entry = publishedByPlaceholderSlug.get(placeholder.slug);
+  return entry ? blogEntryToCardProps(entry) : placeholder;
+});
+---
+
+<section
+  class="blog-index-section section-gutter-x pt-24 pb-16 min-[901px]:pt-28 min-[901px]:pb-24"
+  aria-labelledby="blog-index-title"
+>
+  <div class="layout-container space-y-10 min-[901px]:space-y-16">
+    <header class="blog-head reveal max-w-[680px]">
+      <h1 id="blog-index-title">{blogIndexIntro.title}</h1>
+      <p class="blog-head__lead">{blogIndexIntro.lead}</p>
+    </header>
+
+    <div class="reveal rd1 grid grid-cols-1 gap-6 min-[561px]:grid-cols-2 min-[921px]:grid-cols-3">
+      {indexCards.map((entry) => <BlogArticleCard {...entry} />)}
+    </div>
+
+    <section class="blog-cta-banner reveal rd1" aria-labelledby="blog-cta-title">
+      <div class="relative max-w-[560px]">
+        <h2 id="blog-cta-title" class="blog-cta-banner__title">
+          {blogIndexCta.title}
+        </h2>
+        <p class="blog-cta-banner__description">{blogIndexCta.description}</p>
+      </div>
+
+      <button
+        type="button"
+        class="blog-cta-banner__action"
+        aria-haspopup="dialog"
+        aria-controls="contact-sheet"
+        data-sheet-open="contact-sheet"
+      >
+        <svg
+          width="17"
+          height="17"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+          <path d="m22 7-10 5L2 7"></path>
+        </svg>
+        {blogIndexCta.buttonLabel}
+      </button>
+    </section>
+  </div>
+</section>
