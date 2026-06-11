@@ -55,7 +55,7 @@ export function resolveBlogCategory(data: CollectionEntry<'blog'>['data']): stri
  * Field mapping:
  *   `entry.id` → `slug` (includes category folder, e.g. `diseno-instruccional/post-slug`)
  *   `data.title` → `title`
- *   `data.description` → `description`
+ *   `data.lead` → `lead`
  *   `data.pubDate` → `pubDate`
  *   `data.tags` → `tags`
  *   `resolveBlogCategory(data)` → `category`
@@ -72,7 +72,7 @@ export function blogEntryToCardProps(
     slug: entry.id,
     category: resolveBlogCategory(entry.data),
     title: entry.data.title,
-    description: entry.data.description ?? '',
+    lead: entry.data.lead ?? entry.data.description ?? '',
     tags: entry.data.tags,
     pubDate: entry.data.pubDate,
     href: blogPostHref(entry.id),

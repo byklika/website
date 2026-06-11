@@ -10,7 +10,7 @@ import type { BlogPlaceholderEntry } from '~/data/blogPlaceholders';
  * Blog index card — mirrors standalone `.card` structure.
  *
  * Real posts: spread `blogEntryToCardProps(entry)` from `~/lib/blog-card`
- * (`title`, `description`, `pubDate`, `tags`, resolved `category`, `href`).
+ * (`title`, `lead`, `pubDate`, `tags`, resolved `category`, `href`).
  */
 export interface Props extends BlogPlaceholderEntry {
   /** Article URL — defaults to `/blog/{category}/{slug}/` from placeholder fields. */
@@ -24,7 +24,7 @@ const {
   slug,
   category,
   title,
-  description,
+  lead,
   tags,
   pubDate,
   imageAlt = 'Foto editorial · 85mm · luz natural',
@@ -98,7 +98,7 @@ const cardSurface = cn(
       </a>
     </h3>
 
-    <p class="blog-article-card__excerpt">{description}</p>
+    <p class="blog-article-card__excerpt">{lead}</p>
 
     <div class="mb-[1.3rem] flex flex-wrap gap-[0.4rem]">
       {

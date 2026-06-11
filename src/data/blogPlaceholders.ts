@@ -25,8 +25,8 @@ export type BlogPlaceholderEntry = {
   category: string;
   /** Standalone `.card-title` */
   title: string;
-  /** Card summary — same field as MDX frontmatter `description`. */
-  description: string;
+  /** Card excerpt — same field as MDX frontmatter `lead`. */
+  lead: string;
   /** Standalone `.card-tag` values */
   tags: string[];
   /** Standalone `.date` — stored as Date for locale formatting in components */
@@ -63,8 +63,7 @@ export const blogPlaceholders: BlogPlaceholderEntry[] = [
     slug: 'completaste-el-curso-pero-aprendiste-algo',
     category: 'Diseño instruccional',
     title: 'Completaste el curso, pero… ¿aprendiste algo?',
-    description:
-      'Completar un curso no garantiza aprendizaje. Reflexionamos sobre diseño instruccional, experiencia formativa y qué hacer cuando la formación no deja huella.',
+    lead: 'Terminar un curso y aprender son dos cosas distintas. La diferencia no siempre está en el contenido.',
     tags: ['Aprendizaje significativo', 'Experiencia formativa', 'Diseño de cursos'],
     pubDate: new Date(2026, 5, 9),
     heroImageSlug: 'diseno-instruccional/completaste-el-curso-pero-aprendiste-algo',
@@ -74,8 +73,7 @@ export const blogPlaceholders: BlogPlaceholderEntry[] = [
     slug: 'como-saber-si-tu-formacion-realmente-funciono',
     category: 'Evaluación del aprendizaje',
     title: '¿Cómo saber si tu formación realmente funcionó?',
-    description:
-      'Terminó el programa y los datos están en el dashboard. Reflexionamos sobre qué métricas importan, dónde vive la evidencia del aprendizaje y cómo diseñar la evaluación desde el inicio.',
+    lead: 'El porcentaje de finalización no cuenta toda la historia. La evidencia del aprendizaje vive en otro lado.',
     tags: ['Evaluación', 'Diseño Instruccional', 'Impacto formativo'],
     pubDate: new Date(2026, 5, 9),
     heroImageSlug: 'evaluacion-del-aprendizaje/como-saber-si-tu-formacion-realmente-funciono',
@@ -85,8 +83,7 @@ export const blogPlaceholders: BlogPlaceholderEntry[] = [
     slug: 'la-friccion-existe-parte-1',
     category: 'IA en educación',
     title: 'IA en educación: la fricción existe y convivir con ella es parte del trabajo | Parte 1',
-    description:
-      'Cuando el estudiante descubre material generado con IA, la desconfianza es comprensible. Reflexionamos sobre transparencia, diseño instruccional y cómo trabajar esa tensión con criterio.',
+    lead: 'Hay un momento que muchos ya conocen: el participante que descubre que una parte del contenido del curso fue generado con IA y siente que lo engañaron. Anticipar ese momento y trabajarlo es parte del diseño.',
     tags: ['Inteligencia artificial', 'Diseño instruccional', 'Contrato didáctico'],
     pubDate: new Date(2026, 5, 9),
     heroImageSlug: 'ia-en-educacion/la-friccion-existe-parte-1',

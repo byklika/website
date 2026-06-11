@@ -47,7 +47,7 @@
 /** Target sheet copy from standalone `.contact-panel` (Iterations 3–4). */
 export const contactSheetCopy = {
   title: 'Hablemos.',
-  intro: 'Contanos en qué estás trabajando. Respondemos en menos de 24 horas hábiles.'
+  intro: 'Contanos en qué estás trabajando.'
 } as const;
 
 /**

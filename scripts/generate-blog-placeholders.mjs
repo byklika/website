@@ -128,7 +128,7 @@ function collectMdxFiles(dir) {
   return files;
 }
 
-/** @typedef {{ slug: string, entryId: string, category: string, title: string, description: string, tags: string[], pubDate: Date, imageAlt?: string, heroImageSlug?: string }} PlaceholderEntry */
+/** @typedef {{ slug: string, entryId: string, category: string, title: string, lead: string, tags: string[], pubDate: Date, imageAlt?: string, heroImageSlug?: string }} PlaceholderEntry */
 
 function buildPlaceholderEntries() {
   if (!fs.existsSync(BLOG_DIR)) {
@@ -168,7 +168,7 @@ function buildPlaceholderEntries() {
       entryId,
       category,
       title: String(fm.title ?? slug),
-      description: String(fm.description ?? ''),
+      lead: String(fm.lead ?? fm.description ?? ''),
       tags,
       pubDate
     };
@@ -192,8 +192,8 @@ function formatPlaceholderArray(entries) {
       `    slug: ${escapeTsString(entry.slug)},`,
       `    category: ${escapeTsString(entry.category)},`,
       `    title: ${escapeTsString(entry.title)},`,
-      `    description:`,
-      `      ${escapeTsString(entry.description)},`,
+      `    lead:`,
+      `      ${escapeTsString(entry.lead)},`,
       `    tags: [${entry.tags.map((tag) => escapeTsString(tag)).join(', ')}],`,
       `    pubDate: ${formatPubDateLiteral(entry.pubDate)},`
     ];
@@ -241,8 +241,8 @@ export type BlogPlaceholderEntry = {
   category: string;
   /** Standalone \`.card-title\` */
   title: string;
-  /** Card summary — same field as MDX frontmatter \`description\`. */
-  description: string;
+  /** Card excerpt — same field as MDX frontmatter \`lead\`. */
+  lead: string;
   /** Standalone \`.card-tag\` values */
   tags: string[];
   /** Standalone \`.date\` — stored as Date for locale formatting in components */

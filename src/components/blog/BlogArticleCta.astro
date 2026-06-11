@@ -1,13 +1,23 @@
 ---
-import { blogArticleCta } from '~/data/blogArticleContract';
+import { blogArticleCtaDefaults } from '~/data/blogArticleContract';
+
+interface Props {
+  description?: string;
+  buttonLabel?: string;
+}
+
+const { description, buttonLabel } = Astro.props;
+
+const ctaDescription = description ?? blogArticleCtaDefaults.description;
+const ctaButtonLabel = buttonLabel ?? blogArticleCtaDefaults.buttonLabel;
 ---
 
 <section class="blog-article-cta reveal rd1 mb-16" aria-labelledby="blog-article-cta-title">
   <div class="relative">
     <h2 id="blog-article-cta-title" class="blog-article-cta__title">
-      {blogArticleCta.title}
+      {blogArticleCtaDefaults.title}
     </h2>
-    <p class="blog-article-cta__description">{blogArticleCta.description}</p>
+    <p class="blog-article-cta__description">{ctaDescription}</p>
   </div>
 
   <button
@@ -17,6 +27,6 @@ import { blogArticleCta } from '~/data/blogArticleContract';
     aria-controls="contact-sheet"
     data-sheet-open="contact-sheet"
   >
-    {blogArticleCta.buttonLabel}
+    {ctaButtonLabel}
   </button>
 </section>
