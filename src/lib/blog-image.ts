@@ -108,7 +108,7 @@ export function buildBlogPictureProps(input: BuildBlogPicturePropsInput): BlogPi
 
 /** OG / social preview derivative for a bundle id. */
 export function blogImageOgUrl(entryId: string): string {
-  return `${blogImageBase(entryId)}-1280w.jpg`;
+  return `${blogImageBase(entryId)}-1920w.jpg`;
 }
 
 const publicBlogImagesDir = path.join(process.cwd(), 'public', 'images', 'blog');

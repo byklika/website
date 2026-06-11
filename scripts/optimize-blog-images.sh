@@ -7,7 +7,7 @@
 # Master (not served): src/assets/images/blog/{entryId}-original.png
 # Served derivatives:   public/images/blog/{entryId}-{width}w.{avif,webp,jpg}
 #
-# Widths: 400 640 960 1280 — keep in sync with blogImageWidths in src/data/blogImageContract.ts
+# Widths: 400 640 960 1280 1920 2560 3840 — keep in sync with blogImageWidths in src/data/blogImageContract.ts
 #
 # Requires:
 #   - cwebp (e.g. brew install webp)
@@ -21,7 +21,7 @@ OUT_ROOT="${ROOT}/public/images/blog"
 WEBP_Q=70
 JPEG_Q=76
 AVIF_Q=50
-WIDTHS="400 640 960 1280"
+WIDTHS="400 640 960 1280 1920 2560 3840"
 
 if ! command -v cwebp >/dev/null 2>&1; then
   echo "cwebp not found. Install WebP tools (e.g. brew install webp)." >&2

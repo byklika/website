@@ -4,6 +4,7 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import BlogArticleBanner from '~/components/blog/BlogArticleBanner.astro';
 import BlogArticleAuthor from '~/components/blog/BlogArticleAuthor.astro';
 import BlogArticleCta from '~/components/blog/BlogArticleCta.astro';
+import BlogArticleLead from '~/components/blog/BlogArticleLead.astro';
 import BlogArticleHeader from '~/components/blog/BlogArticleHeader.astro';
 import BlogRelatedPosts from '~/components/blog/BlogRelatedPosts.astro';
 import { formatArticleSeoTitle } from '~/data/seoOnPageContract';
@@ -30,6 +31,9 @@ interface Props {
   heroImagePosition?: HeroImagePositionInput;
   authorName: string;
   authorEmail: string;
+  lead?: string;
+  ctaDescription?: string;
+  ctaButtonLabel?: string;
   /** Resolved related posts — rendered in Iteration 4. */
   relatedPosts: CollectionEntry<'blog'>[];
 }
@@ -48,6 +52,9 @@ const {
   heroImagePosition,
   authorName,
   authorEmail,
+  lead,
+  ctaDescription,
+  ctaButtonLabel,
   relatedPosts
 } = Astro.props;
 
@@ -98,6 +105,8 @@ const articleJsonLd = [
       <div class="blog-article-content__inner section-gutter-x mx-auto max-w-[720px]">
         <BlogArticleHeader {title} {category} {tags} {pubDate} {readingTimeMinutes} />
 
+        {lead ? <BlogArticleLead text={lead} /> : null}
+
         <div class="article-body">
           <slot />
         </div>
@@ -106,7 +115,7 @@ const articleJsonLd = [
 
         <BlogArticleAuthor {authorName} {authorEmail} />
 
-        <BlogArticleCta />
+        <BlogArticleCta description={ctaDescription} buttonLabel={ctaButtonLabel} />
 
         <BlogRelatedPosts currentSlug={slug} {relatedPosts} />
       </div>

@@ -308,6 +308,11 @@ button[aria-disabled='true']:hover {
   @apply rounded-pill bg-klika-coral shadow-btnPrimary hover:bg-klika-coralHover hover:shadow-btnPrimaryHover focus-visible:ring-klika-coral relative inline-flex shrink-0 items-center gap-2 border-0 px-[1.9rem] py-4 text-[0.98rem] font-semibold whitespace-nowrap text-white transition hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none;
 }
 
+/* Blog article detail — lead (`.blog-article-lead`) */
+.blog-article-lead {
+  @apply border-klika-coral text-klika-ink mb-[1.8rem] border-l-[3px] py-[0.15rem] pl-[1.3rem] text-xl leading-[1.55] font-normal text-pretty;
+}
+
 /* Blog article detail — MDX body (standalone `.article-body`) */
 .article-body {
   @apply text-klika-ink text-[15px] leading-[1.8];

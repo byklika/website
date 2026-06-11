@@ -36,7 +36,7 @@ import { blogHeroPlaceholderCaption } from '~/data/blogArticleContract';
 export const blogImageDefaultAlt = blogHeroPlaceholderCaption;
 
 /** Card-friendly widths — keep in sync with `scripts/optimize-blog-images.sh` (Iteration 2). */
-export const blogImageWidths = [400, 640, 960, 1280] as const;
+export const blogImageWidths = [400, 640, 960, 1280, 1920, 2560, 3840] as const;
 
 export type BlogImageWidth = (typeof blogImageWidths)[number];
 

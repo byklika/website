@@ -8,6 +8,8 @@ const blog = defineCollection({
     title: z.string(),
     /** Meta description + JSON-LD; keep answer-shaped for GEO (see GEO.md Iteration 5). */
     description: z.string(),
+    /** Lead paragraph above the body (`.blog-article-lead`). */
+    lead: z.string().optional(),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     draft: z.boolean().default(false),
@@ -37,7 +39,10 @@ const blog = defineCollection({
     authorName: z.string().default('Equipo Klika'),
     authorEmail: z.string().email().default('hola@byklika.com'),
     /** Manual related posts (max 2) — fallback: auto-pick by category/tags. */
-    relatedSlugs: z.array(z.string()).max(2).optional()
+    relatedSlugs: z.array(z.string()).max(2).optional(),
+    /** Contextual CTA copy below the author block — see `blogArticleCtaDefaults`. */
+    ctaDescription: z.string().optional(),
+    ctaButtonLabel: z.string().optional()
   })
 });
 

@@ -15,17 +15,19 @@
  *      b. article-meta — category · date · reading time
  *      c. h1.article-title
  *      d. article-tags — tag pills
- *      e. article-body — MDX/Markdown slot
- *      f. hr.divider
- *      g. author — avatar + name + mailto
- *      h. section.cta-banner — contextual CTA
- *      i. h3.related-head + div.related-grid (2 related-card links)
+ *      e. blog-article-lead — lead paragraph (coral border)
+ *      f. article-body — MDX/Markdown slot
+ *      g. hr.divider
+ *      h. author — avatar + name + mailto
+ *      i. section.cta-banner — contextual CTA
+ *      j. h3.related-head + div.related-grid (2 related-card links)
  *
  * Primary touchpoints (Iterations 2–5):
  *   - `src/layouts/BlogPostLayout.astro` — article shell inside BaseLayout
  *   - `src/pages/blog/[slug].astro` — resolve props, related posts, reading time
  *   - `src/content.config.ts` — extended blog collection schema
  *   - `src/components/blog/BlogArticleBanner.astro` — hero / placeholder
+ *   - `src/components/blog/BlogArticleLead.astro` — lead paragraph
  *   - `src/components/blog/BlogArticleHeader.astro` — breadcrumb, meta, title, tags
  *   - `src/components/blog/BlogArticleAuthor.astro` — author block
  *   - `src/components/blog/BlogRelatedPosts.astro` — “Seguí leyendo” grid
@@ -50,8 +52,8 @@
  *   related: Objetivos de aprendizaje… · El proyecto integrador…
  */
 
-/** Standalone `.cta-banner` copy for article detail pages. */
-export const blogArticleCta = {
+/** Default article CTA copy — override per post via MDX `ctaDescription` / `ctaButtonLabel`. */
+export const blogArticleCtaDefaults = {
   title: '¿Querés diseñar una formación que deje huella?',
   description: 'En Klika diseñamos desde esas preguntas. Contanos sobre tu proyecto.',
   buttonLabel: 'Hablemos'
