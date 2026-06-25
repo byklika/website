@@ -9,148 +9,32 @@
  * **build** on the host (e.g. Vercel → Settings → Environment Variables → Production) and you
  * **redeploy** after saving.
  *
- * Production stack: GA4 + Clarity + GrowthBook (optional). GA uses an external tag + inline
- * bootstrap; GrowthBook uses a deferred bundled module when the client key is set.
+ * Production stack: GA4 + Clarity + GrowthBook (optional). GA and Clarity boot are deferred
+ * (idle / first interaction); GrowthBook `init()` runs on idle. See `docs/analytics.md`.
  */
 const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID?.trim();
 const clarityProjectId = import.meta.env.PUBLIC_CLARITY_PROJECT_ID?.trim();
-const growthbookClientKey = import.meta.env.PUBLIC_GROWTHBOOK_CLIENT_KEY?.trim();
 
-/** Third argument to `gtag('config', …)` — disable auto page_view so we send one explicit `page_view` event below (avoids double counting). */
+/** Third argument to `gtag('config', …)` — disable auto page_view so we send one explicit `page_view` once gtag loads. */
 const gaConfigOpts: Record<string, boolean> = { send_page_view: false };
 if (import.meta.env.DEV) {
   gaConfigOpts.debug_mode = true;
 }
-const gaConfigLiteral = JSON.stringify(gaConfigOpts);
-
-const gaInline = gaMeasurementId
-  ? `window.dataLayer = window.dataLayer || [];
-function gtag(){window.dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', '${gaMeasurementId}', ${gaConfigLiteral});
-gtag('event', 'page_view', {
-  page_location: location.href,
-  page_path: location.pathname + location.search,
-  page_title: document.title || ''
-});`
-  : null;
-
-const clarityInline = clarityProjectId
-  ? `(function (c, l, a, r, i, t, y) {
-	c[a] =
-		c[a] ||
-		function () {
-			(c[a].q = c[a].q || []).push(arguments);
-		};
-	t = l.createElement(r);
-	t.async = 1;
-	t.src = 'https://www.clarity.ms/tag/' + i;
-	y = l.getElementsByTagName(r)[0];
-	y.parentNode.insertBefore(t, y);
-})(window, document, 'clarity', 'script', '${clarityProjectId}');`
-  : null;
 ---
 
-<div class="site-analytics-component" data-public-ga={gaMeasurementId ? 'on' : 'off'}>
-  {
-    gaMeasurementId && (
-      <>
-        <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`} />
-        <script is:inline set:html={gaInline!} />
-      </>
-    )
-  }
-
-  {clarityProjectId && <script is:inline set:html={clarityInline!} />}
-
+<div
+  class="site-analytics-component"
+  data-public-ga={gaMeasurementId ? 'on' : 'off'}
+  data-public-clarity={clarityProjectId ? 'on' : 'off'}
+  data-ga-measurement-id={gaMeasurementId ?? ''}
+  data-clarity-project-id={clarityProjectId ?? ''}
+  data-ga-config={JSON.stringify(gaConfigOpts)}
+>
   <script>
-    import { initAnalytics } from '~/lib/analytics/bus';
-    initAnalytics();
+    import { bootSiteAnalytics } from '~/lib/analytics/bootSiteAnalytics';
+    import { bootGrowthBookOnIdle } from '~/lib/experiments/bootGrowthBook';
+
+    bootSiteAnalytics();
+    bootGrowthBookOnIdle();
   </script>
-
-  {
-    growthbookClientKey && (
-      <>
-        <script>
-          import { GrowthBook } from '@growthbook/growthbook';
-
-          import { GB_ANON_ID_COOKIE } from '~/lib/experiments/constants';
-          import { growthbookTrackingCallback } from '~/lib/experiments/growthbookTrackingCallback';
-
-          function getAnonymousId() {
-            const idKey = GB_ANON_ID_COOKIE;
-            const maxAge = 60 * 60 * 24 * 400;
-            const baseAttrs = `path=/;max-age=${maxAge};SameSite=Lax`;
-            const secureAttrs =
-              typeof location !== 'undefined' && location.protocol === 'https:' ? ';Secure' : '';
-
-            try {
-              const prefix = `${idKey}=`;
-              const parts = document.cookie.split('; ');
-              for (let i = 0; i < parts.length; i++) {
-                const p = parts[i];
-                if (p.startsWith(prefix)) {
-                  const fromCookie = decodeURIComponent(p.slice(prefix.length));
-                  try {
-                    localStorage.setItem(idKey, fromCookie);
-                  } catch {
-                    /* ignore */
-                  }
-                  return fromCookie;
-                }
-              }
-
-              const existing = localStorage.getItem(idKey);
-              if (existing) {
-                document.cookie = `${idKey}=${encodeURIComponent(existing)};${baseAttrs}${secureAttrs}`;
-                return existing;
-              }
-
-              const created =
-                typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-                  ? crypto.randomUUID()
-                  : `anon-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
-              localStorage.setItem(idKey, created);
-              document.cookie = `${idKey}=${encodeURIComponent(created)};${baseAttrs}${secureAttrs}`;
-              return created;
-            } catch {
-              return 'anon-fallback';
-            }
-          }
-
-          function boot() {
-            const clientKey = import.meta.env.PUBLIC_GROWTHBOOK_CLIENT_KEY?.trim();
-            if (!clientKey) return;
-
-            const gb = new GrowthBook({
-              apiHost: 'https://cdn.growthbook.io',
-              clientKey,
-              enableDevMode: import.meta.env.DEV,
-              trackingCallback: growthbookTrackingCallback
-            });
-
-            const anonId = getAnonymousId();
-            // Experiments default to hashAttribute `id`; without it, hashValue is empty and
-            // the SDK never fires trackingCallback (no GA `experiment_viewed`).
-            gb.setAttributes({
-              id: anonId,
-              anonId
-            });
-
-            void gb
-              .init()
-              .then(() => {
-                window.growthbook = gb;
-                window.dispatchEvent(new CustomEvent('growthbook:ready'));
-              })
-              .catch((err) => {
-                if (import.meta.env.DEV) console.error('[GrowthBook]', err);
-              });
-          }
-
-          boot();
-        </script>
-      </>
-    )
-  }
 </div>

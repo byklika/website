@@ -15,20 +15,25 @@ src/scripts/*.ts  ──publish()──►  src/lib/analytics/bus.ts
 
 **Bootstrap:** `src/components/SiteAnalytics.astro` (included via `SiteBodyChrome.astro` on every page)
 
-| Integration        | Env var                        | Loads when                                                |
-| ------------------ | ------------------------------ | --------------------------------------------------------- |
-| Google Analytics 4 | `PUBLIC_GA_MEASUREMENT_ID`     | Var set at build                                          |
-| Microsoft Clarity  | `PUBLIC_CLARITY_PROJECT_ID`    | Var set at build                                          |
-| GrowthBook         | `PUBLIC_GROWTHBOOK_CLIENT_KEY` | Var set at build (see [`experiments.md`](experiments.md)) |
+| Integration        | Env var                        | Loads when                                                                 |
+| ------------------ | ------------------------------ | -------------------------------------------------------------------------- |
+| Google Analytics 4 | `PUBLIC_GA_MEASUREMENT_ID`     | `requestIdleCallback` (3.5 s timeout fallback) after paint                 |
+| Microsoft Clarity  | `PUBLIC_CLARITY_PROJECT_ID`    | First user interaction (`scroll`, `click`, `keydown`, `touchstart`)        |
+| GrowthBook         | `PUBLIC_GROWTHBOOK_CLIENT_KEY` | `requestIdleCallback` after paint (see [`experiments.md`](experiments.md)) |
 
 ---
 
 ## SiteAnalytics.astro
 
-- Inlines gtag bootstrap with **`send_page_view: false`** — sends one explicit `page_view` event (avoids double count)
+- **Deferred boot** (`src/lib/analytics/deferredBoot.ts`): GA4 loads on idle; Clarity loads on first interaction (skipped during Lighthouse lab runs)
+- GA4 uses **`send_page_view: false`** on config — sends one explicit `page_view` after `gtag.js` loads (avoids double count)
 - Dev mode: `debug_mode: true` on gtag config
-- Calls `initAnalytics()` from bus (attaches GA forwarder)
-- GrowthBook block deferred when client key present
+- Calls `initAnalytics()` from bus (attaches GA forwarder; bus events no-op until `window.gtag` exists)
+- GrowthBook `init()` runs on idle when client key present
+
+### Duplicate GA measurement IDs
+
+The site injects **one** tag via `PUBLIC_GA_MEASUREMENT_ID`. If Lighthouse or DevTools shows a second `gtag/js` request (e.g. `G-…&cx=c&gtm=…`), it is not from this repo — check GA4 Admin for linked Google tags / GTM containers or remove the extra property from the linked stream.
 
 **Build-time inlining:** `import.meta.env.PUBLIC_*` is replaced at build. Production HTML omits GA unless var is set on Vercel **and** site is redeployed.
 
@@ -150,9 +155,10 @@ Test subscribe/unsubscribe and subscriber error isolation.
 
 **Status:** No cookie consent banner or CMP integration yet.
 
-- GA4 and Clarity load when env vars are set (no consent gate)
+- GA4 loads on idle; Clarity loads only after user interaction (no consent gate yet)
+- Optional before Clarity load: `window.clarity('consentv2', { ad_Storage: 'denied', analytics_Storage: 'denied' })` — see [Microsoft ConsentV2](https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-consent-api-v2)
 - Anonymous GrowthBook id stored in `gb_anon_id` cookie + localStorage
-- If Product adds consent requirements, gate script injection in `SiteAnalytics.astro`
+- If Product adds consent requirements, gate `loadClarity` / `loadGa4` in `deferredBoot.ts`
 
 ---
 
