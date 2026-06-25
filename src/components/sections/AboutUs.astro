@@ -4,7 +4,6 @@ import HeroiconOutline from '~/icons/HeroiconOutline.astro';
 import { ABOUT_US_ITEM_ICONS } from '~/icons/heroiconOutlinePaths';
 import SectionHeading from '~/components/ui/SectionHeading.astro';
 import FlipCard from '~/components/cards/FlipCard.astro';
-import GeoEntitySummary from '~/components/seo/GeoEntitySummary.astro';
 
 export interface Item {
   title: string;
@@ -34,8 +33,6 @@ const { eyebrow, title, titleHtml, items, class: className } = Astro.props;
 >
   <div class="layout-container">
     <SectionHeading {eyebrow} {title} {titleHtml} class="reveal" />
-
-    <GeoEntitySummary class="reveal rd1 mt-10 max-w-none" />
 
     <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:gap-8">
       {
