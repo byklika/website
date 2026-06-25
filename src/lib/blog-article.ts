@@ -27,7 +27,7 @@ export function computeReadingTimeMinutes(body: string, overrideMinutes?: number
   const plain = body
     .replace(/```[\s\S]*?```/g, ' ')
     .replace(/<[^>]+>/g, ' ')
-    .replace(/[#>*_\[\]()!`~-]/g, ' ')
+    .replace(/[#>*_[\]()!`~-]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 
