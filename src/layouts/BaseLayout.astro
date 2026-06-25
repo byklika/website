@@ -1,6 +1,7 @@
 ---
 import '~/styles/global.css';
 import HeadEssentials from '~/components/layout/HeadEssentials.astro';
+import HeroLcpHead from '~/components/layout/HeroLcpHead.astro';
 import SiteBodyChrome from '~/components/layout/SiteBodyChrome.astro';
 import JsonLd from '~/components/seo/JsonLd.astro';
 import {
@@ -25,6 +26,8 @@ interface Props {
   noindex?: boolean;
   /** Extra JSON-LD nodes merged after site-wide Organization + WebSite. */
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** Homepage: inline critical hero CSS + preload Merriweather for LCP h1. */
+  heroLcp?: boolean;
 }
 
 const SITE_NAME = 'klika e‑learning studio';
@@ -39,7 +42,8 @@ const {
   articlePublishedTime,
   articleModifiedTime,
   noindex = false,
-  jsonLd
+  jsonLd,
+  heroLcp = false
 } = Astro.props;
 
 const siteBase = Astro.site ?? Astro.url.origin;
@@ -64,6 +68,7 @@ const ogLocale = lang === SEO_HTML_LANG ? SEO_OG_LOCALE : 'en_US';
 <html {lang} data-theme="light">
   <head>
     <HeadEssentials showGenerator={false} />
+    {heroLcp && <HeroLcpHead />}
 
     <title>{title}</title>
     <meta name="description" content={description} />
