@@ -8,7 +8,7 @@
 
 - [x] `package.json` and `pnpm-lock.yaml` pin **`astro@^7`**, **`@astrojs/mdx@^7`**, and compatible **`@astrojs/sitemap`**, **`@astrojs/check`** versions.
 - [x] `pnpm install --frozen-lockfile`, `pnpm build`, `pnpm typecheck`, `pnpm test`, and `pnpm lint` pass locally on Node **≥ 22.12**.
-- [ ] CI workflows (`.github/workflows/deploy-vercel.yml`, `preview-vercel.yml`) pass typecheck + Vercel prebuilt build on a PR.
+- [x] CI workflows (`.github/workflows/deploy-vercel.yml`, `preview-vercel.yml`) pass typecheck + Vercel prebuilt build on a PR.
 - [x] All indexable routes and three published MDX articles render without layout or typography regressions (spot-check URLs in **Iteration 4**).
 - [x] `sitemap-index.xml`, `robots.txt`, and JSON-LD output remain valid (no broken absolute URLs).
 
@@ -141,10 +141,18 @@ Spot-check these URLs after `pnpm build && pnpm preview` (or Vercel preview):
 
 ## Iteration 5 — CI, Dependabot, and ship
 
-- [ ] Open PR; confirm **Preview — Vercel** workflow passes (`pnpm install --frozen-lockfile` → `pnpm typecheck` → `vercel build`).
+- [x] Open PR; confirm **Preview — Vercel** workflow passes (`pnpm install --frozen-lockfile` → `pnpm typecheck` → `vercel build`).
 - [ ] Merge to `main`; confirm **Deploy to Vercel** production job succeeds.
 - [ ] Post-deploy: optional Rich Results Test on `/` + one blog URL (see `GEO.md` Iteration 3 notes).
-- [ ] Let Dependabot’s `astro` group (`.github/dependabot.yml`) handle future patch/minor bumps on the new major baseline.
+- [x] Let Dependabot’s `astro` group (`.github/dependabot.yml`) handle future patch/minor bumps on the new major baseline.
+
+**Iteration 5 implementation notes (2026-06-25):**
+
+- **PR:** [#15 — Upgrade Astro 6 to 7](https://github.com/byklika/website/pull/15) (`chore/astro-7-upgrade` → `main`).
+- **Preview — Vercel:** passed in **59s** ([workflow run](https://github.com/byklika/website/actions/runs/28184573893/job/83482896543)) — `pnpm install --frozen-lockfile`, `pnpm typecheck`, `vercel build` all green.
+- **Merge / production deploy:** pending human review and merge to `main`.
+- **Post-deploy (Product):** optional [Rich Results Test](https://search.google.com/test/rich-results) on `https://byklika.com/` and one blog article after production deploy.
+- **Dependabot:** no config change — existing `astro` group (`astro`, `@astrojs/*`) will cover patch/minor bumps on the new major baseline.
 
 ---
 
