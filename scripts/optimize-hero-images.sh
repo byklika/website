@@ -26,7 +26,7 @@ BASE="${OUT_DIR}/${NAME}"
 WEBP_Q=70
 JPEG_Q=76
 AVIF_Q=50
-WIDTHS="480 640 960 1280"
+WIDTHS="320 480 640 720 960 1280"
 
 if ! command -v cwebp >/dev/null 2>&1; then
   echo "cwebp not found. Install WebP tools (e.g. brew install webp)." >&2
