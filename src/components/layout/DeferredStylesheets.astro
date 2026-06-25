@@ -1,0 +1,6 @@
+---
+/** Non-critical styles loaded at body end — register bundles in `src/styles/deferred/index.css`. */
+import deferredStylesCss from '~/styles/deferred/index.css?url';
+---
+
+<link rel="stylesheet" href={deferredStylesCss} />

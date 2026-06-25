@@ -2,6 +2,7 @@
 import '~/styles/global.css';
 import HeadEssentials from '~/components/layout/HeadEssentials.astro';
 import HeroLcpHead from '~/components/layout/HeroLcpHead.astro';
+import DeferredStylesheets from '~/components/layout/DeferredStylesheets.astro';
 import SiteBodyChrome from '~/components/layout/SiteBodyChrome.astro';
 import JsonLd from '~/components/seo/JsonLd.astro';
 import {
@@ -117,6 +118,7 @@ const ogLocale = lang === SEO_HTML_LANG ? SEO_OG_LOCALE : 'en_US';
         )
       }
     </SiteBodyChrome>
+    <DeferredStylesheets />
     <script is:inline>
       const els = Array.from(document.querySelectorAll('.reveal'));
       if (els.length) {

@@ -1,8 +1,7 @@
 /**
- * Self-hosted fonts (latin subsets). `font-display: swap` is set in each @fontsource entry.
- * Weights in use: Merriweather 400 + 400 italic + 700, Mitr 400.
+ * Critical-path fonts (latin subsets). `font-display: swap` is set in each @fontsource entry.
+ * Off-critical styles (including extra font weights) live in `src/styles/deferred/`.
  */
 @import '@fontsource/merriweather/latin-400.css';
 @import '@fontsource/merriweather/latin-400-italic.css';
-@import '@fontsource/merriweather/latin-700.css';
 @import '@fontsource/mitr/latin-400.css';
