@@ -27,7 +27,9 @@ function boot() {
   const formView = document.querySelector<HTMLElement>('[data-email-signup-popup-form-view]');
   const confirmView = document.querySelector<HTMLElement>('[data-email-signup-popup-confirm-view]');
 
-  if (!(overlay && dialog && closeBtn && form && emailInput && errorEl && formView && confirmView)) {
+  if (
+    !(overlay && dialog && closeBtn && form && emailInput && errorEl && formView && confirmView)
+  ) {
     return;
   }
 
@@ -35,7 +37,8 @@ function boot() {
 
   let lastFocused: HTMLElement | null = null;
   let prevDocOverflow = '';
-  let backgroundEls: Array<{ el: HTMLElement; ariaHidden: string | null; inert: boolean | null }> = [];
+  let backgroundEls: Array<{ el: HTMLElement; ariaHidden: string | null; inert: boolean | null }> =
+    [];
   let timeoutId: number | null = null;
 
   const hasSeen = () => {
@@ -226,6 +229,7 @@ function boot() {
     if (hasSeen()) return;
     timeoutId = window.setTimeout(open, openAfterMs);
     window.addEventListener('scroll', onScrollCheck, { passive: true });
+    requestAnimationFrame(onScrollCheck);
   };
 
   const cleanupTriggers = () => {
@@ -315,13 +319,10 @@ function boot() {
   });
 
   startTriggers();
-  onScrollCheck();
 }
 
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', boot, { once: true });
-} else {
-  boot();
-}
+import { scheduleDomIdle } from '~/lib/scheduleDomIdle';
+
+scheduleDomIdle(boot);
 
 export {};
