@@ -19,6 +19,7 @@
     "optimize:hero:v2": "sh scripts/optimize-hero-images.sh home-hero-instructional-design-v2",
     "optimize:blog": "sh scripts/optimize-blog-images.sh",
     "generate:blog-placeholders": "node ./scripts/generate-blog-placeholders.mjs",
+    "docs:check": "node ./scripts/docs-check.mjs",
     "css:measure": "astro build && node ./scripts/measure-built-css.mjs",
     "lint": "eslint .",
     "typecheck:ts": "tsc --noEmit",
