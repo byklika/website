@@ -27,12 +27,6 @@
   .animate-morphBlob {
     animation: none !important;
   }
-
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
 }
 
 /* Fixed header: one offset only (padding OR margin, not both — avoids over-scroll gap) */
@@ -83,93 +77,4 @@ button:hover {
 button:disabled:hover,
 button[aria-disabled='true']:hover {
   cursor: not-allowed;
-}
-
-/* Prototype reveal-on-scroll */
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition:
-    opacity 0.7s ease,
-    transform 0.7s ease;
-}
-.reveal.visible {
-  opacity: 1;
-  transform: none;
-}
-.rd1 {
-  transition-delay: 0.1s;
-}
-.rd2 {
-  transition-delay: 0.2s;
-}
-.rd3 {
-  transition-delay: 0.3s;
-}
-.rd4 {
-  transition-delay: 0.4s;
-}
-
-/* Content pages: typography aligned with homepage style */
-.page-copy h1,
-.page-copy h2 {
-  @apply text-klika-dark font-serif leading-[1.15];
-}
-
-.page-copy h1 {
-  @apply mb-4 text-[clamp(2rem,2.5vw+0.8rem,3.2rem)] tracking-[-0.015em];
-}
-
-.page-copy h2 {
-  @apply mb-3 text-[clamp(1.45rem,1.4vw+0.65rem,2.05rem)];
-}
-
-.page-copy p,
-.page-copy li {
-  @apply text-klika-ink text-base leading-[1.72];
-}
-
-.page-copy ul,
-.page-copy ol {
-  @apply ml-5 grid gap-[0.35rem];
-}
-
-/* FlipCard (#nosotras): no 3D spin when reduced motion — toggle shows one face at a time */
-@media (prefers-reduced-motion: reduce) {
-  .flip-card {
-    perspective: none !important;
-  }
-
-  .flip-card .flip-card__rotator {
-    transform: none !important;
-    transform-style: flat !important;
-    display: flex;
-    flex-direction: column;
-    height: auto !important;
-    min-height: 0 !important;
-  }
-
-  .flip-card .flip-card__face--front,
-  .flip-card .flip-card__face--back {
-    position: relative !important;
-    inset: auto !important;
-    width: 100% !important;
-    height: auto !important;
-    min-height: 0 !important;
-    flex: 0 0 auto;
-    transform: none !important;
-    backface-visibility: visible !important;
-  }
-
-  .flip-card:not(.is-flipped) .flip-card__face--back {
-    display: none;
-  }
-
-  .flip-card.is-flipped .flip-card__face--front {
-    display: none;
-  }
-
-  .flip-card.is-flipped .flip-card__face--back {
-    display: flex;
-  }
 }

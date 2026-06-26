@@ -3,3 +3,4 @@
  * Add a module (fonts, route-specific rules, etc.) and `@import` it below.
  */
 @import './merriweather-700.css';
+@import '../global-deferred.css';
