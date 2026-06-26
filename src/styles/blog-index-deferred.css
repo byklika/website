@@ -1,6 +1,6 @@
 @reference './global.css';
 
-/* Below-fold blog index CTA — loaded async from BlogIndexSection (not render-blocking). */
+/* Below-fold blog index CTA — loaded at body end via `pages/blog/index.astro` (`deferred-styles` slot). */
 .blog-cta-banner {
   @apply bg-klika-moss relative flex flex-wrap items-center justify-between gap-7 overflow-hidden rounded-[20px] px-8 py-10 lg:px-12 lg:py-[2.6rem];
 }

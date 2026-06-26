@@ -127,8 +127,7 @@ const articleJsonLd = [
     </article>
   </div>
 
-  <link rel="stylesheet" href={blogArticleDeferredCss} media="print" onload="this.media='all'" />
-  <noscript><link rel="stylesheet" href={blogArticleDeferredCss} /></noscript>
+  <link rel="stylesheet" href={blogArticleDeferredCss} slot="deferred-styles" />
 
   <EmailSignupPopupLoader />
 </BaseLayout>

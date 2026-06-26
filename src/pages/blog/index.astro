@@ -4,6 +4,7 @@ import BaseLayout from '~/layouts/BaseLayout.astro';
 import BlogIndexSection from '~/components/blog/BlogIndexSection.astro';
 import { seoPageMeta } from '~/data/seoOnPageContract';
 import { firstBlogIndexLcpImageSlug, getBlogIndexCards } from '~/lib/blog-index-cards';
+import blogIndexDeferredCss from '~/styles/blog-index-deferred.css?url';
 
 const indexCards = await getBlogIndexCards();
 const firstCardImageSlug = firstBlogIndexLcpImageSlug(indexCards);
@@ -17,4 +18,6 @@ const firstCardImageSlug = firstBlogIndexLcpImageSlug(indexCards);
   description={seoPageMeta.blog.description}
 >
   <BlogIndexSection cards={indexCards} />
+
+  <link rel="stylesheet" href={blogIndexDeferredCss} slot="deferred-styles" />
 </BaseLayout>

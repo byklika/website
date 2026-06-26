@@ -2,7 +2,6 @@
 import BlogArticleCard from '~/components/blog/BlogArticleCard.astro';
 import { blogIndexCta, blogIndexIntro } from '~/data/blogPlaceholders';
 import type { BlogIndexCardProps } from '~/lib/blog-index-cards';
-import blogIndexDeferredCss from '~/styles/blog-index-deferred.css?url';
 
 export interface Props {
   cards: BlogIndexCardProps[];
@@ -61,6 +60,3 @@ const { cards: indexCards } = Astro.props;
     </section>
   </div>
 </section>
-
-<link rel="stylesheet" href={blogIndexDeferredCss} media="print" onload="this.media='all'" />
-<noscript><link rel="stylesheet" href={blogIndexDeferredCss} /></noscript>

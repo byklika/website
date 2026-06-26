@@ -1,6 +1,6 @@
 @reference './global.css';
 
-/* Below-fold article chrome — loaded async from BlogPostLayout (not render-blocking). */
+/* Below-fold article chrome — loaded at body end via BlogPostLayout (`deferred-styles` slot). */
 .blog-article-divider {
   @apply bg-klika-moss/10 my-12 h-px border-0;
 }

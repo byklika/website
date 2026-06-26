@@ -135,6 +135,7 @@ const ogLocale = lang === SEO_HTML_LANG ? SEO_OG_LOCALE : 'en_US';
       }
     </SiteBodyChrome>
     <DeferredStylesheets />
+    <slot name="deferred-styles" />
     <script is:inline>
       const initReveal = () => {
         const els = Array.from(document.querySelectorAll('.reveal'));
