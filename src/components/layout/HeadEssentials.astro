@@ -28,5 +28,7 @@ const { showGenerator = true } = Astro.props;
 />
 <link rel="apple-touch-icon" href="/favicon-light.svg" />
 
+{
+  /** GA loads deferred via `bootDeferredAnalytics` — dns-prefetch only; avoid preconnect competing with LCP. */
+}
 <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-<link rel="preconnect" href="https://www.googletagmanager.com" crossorigin />
