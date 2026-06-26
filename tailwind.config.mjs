@@ -20,6 +20,10 @@ export default {
           dark: '#1E2A1A',
           white: '#ffffff',
 
+          /** WCAG AA on `dark` — footer secondary text (replaces white/35 · white/40). */
+          footerMuted: '#8F978C',
+          footerLink: '#9AA195',
+
           // one-off/supporting tones found in the HTML sketch
           ink: '#3a4a36',
           sage: '#4a5a45',

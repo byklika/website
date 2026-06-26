@@ -1,22 +1,19 @@
 import { publish } from '~/lib/analytics/bus';
 import { submitToWeb3Forms } from '~/lib/web3formsSubmit';
+import {
+  hasSeenEmailSignupPopup,
+  markEmailSignupPopupSeen,
+  readEmailSignupPopupConfig
+} from '~/data/emailSignupPopupContract';
 
 const DEFAULT_ERROR = 'Ingresá un email válido para continuar.';
 
-function readConfig(overlay: HTMLElement) {
-  const storageKey = overlay.dataset.storageKey ?? 'email_signup_popup_seen_v1';
-  const openAfterMs = Number(overlay.dataset.openAfterMs ?? 50_000);
-  const openAtScrollRatio = Number(overlay.dataset.openAtScrollRatio ?? 0.6);
-  const autoCloseMs = Number(overlay.dataset.autoCloseMs ?? 2_500);
-  return {
-    storageKey,
-    openAfterMs: Number.isFinite(openAfterMs) ? openAfterMs : 50_000,
-    openAtScrollRatio: Number.isFinite(openAtScrollRatio) ? openAtScrollRatio : 0.6,
-    autoCloseMs: Number.isFinite(autoCloseMs) ? autoCloseMs : 2_500
-  };
-}
+export type InitEmailSignupPopupOptions = {
+  /** Skip scroll/timer triggers and open on the next frame (loader already fired). */
+  openImmediately?: boolean;
+};
 
-function boot() {
+export function initEmailSignupPopup(options: InitEmailSignupPopupOptions = {}): void {
   const overlay = document.querySelector<HTMLElement>('[data-email-signup-popup-overlay]');
   const dialog = document.querySelector<HTMLElement>('[data-email-signup-popup-dialog]');
   const closeBtn = document.querySelector<HTMLElement>('[data-email-signup-popup-close]');
@@ -27,32 +24,24 @@ function boot() {
   const formView = document.querySelector<HTMLElement>('[data-email-signup-popup-form-view]');
   const confirmView = document.querySelector<HTMLElement>('[data-email-signup-popup-confirm-view]');
 
-  if (!(overlay && dialog && closeBtn && form && emailInput && errorEl && formView && confirmView)) {
+  if (
+    !(overlay && dialog && closeBtn && form && emailInput && errorEl && formView && confirmView)
+  ) {
     return;
   }
 
-  const { storageKey, openAfterMs, openAtScrollRatio, autoCloseMs } = readConfig(overlay);
+  const { storageKey, openAfterMs, openAtScrollRatio, autoCloseMs } =
+    readEmailSignupPopupConfig(overlay);
 
   let lastFocused: HTMLElement | null = null;
   let prevDocOverflow = '';
-  let backgroundEls: Array<{ el: HTMLElement; ariaHidden: string | null; inert: boolean | null }> = [];
+  let backgroundEls: Array<{ el: HTMLElement; ariaHidden: string | null; inert: boolean | null }> =
+    [];
   let timeoutId: number | null = null;
 
-  const hasSeen = () => {
-    try {
-      return localStorage.getItem(storageKey) === '1';
-    } catch {
-      return false;
-    }
-  };
+  const hasSeen = () => hasSeenEmailSignupPopup(storageKey);
 
-  const markSeen = () => {
-    try {
-      localStorage.setItem(storageKey, '1');
-    } catch {
-      // ignore
-    }
-  };
+  const markSeen = () => markEmailSignupPopupSeen(storageKey);
 
   const getFocusable = () => {
     const selectors = [
@@ -99,7 +88,7 @@ function boot() {
     if (footer) candidates.push(footer as HTMLElement);
     if (main) {
       for (const child of Array.from(main.children)) {
-        if (child === overlay) continue;
+        if (child === overlay || child.contains(overlay)) continue;
         candidates.push(child as HTMLElement);
       }
     }
@@ -140,7 +129,7 @@ function boot() {
     lockScroll();
     setBackgroundInert(true);
 
-    overlay.removeAttribute('aria-hidden');
+    overlay.inert = false;
     overlay.setAttribute('data-arm', '');
 
     requestAnimationFrame(() => {
@@ -158,7 +147,7 @@ function boot() {
     if (markSeenOnClose) markSeen();
 
     overlay.removeAttribute('data-open');
-    overlay.setAttribute('aria-hidden', 'true');
+    overlay.inert = true;
 
     const finish = () => {
       overlay.removeAttribute('data-arm');
@@ -226,6 +215,7 @@ function boot() {
     if (hasSeen()) return;
     timeoutId = window.setTimeout(open, openAfterMs);
     window.addEventListener('scroll', onScrollCheck, { passive: true });
+    requestAnimationFrame(onScrollCheck);
   };
 
   const cleanupTriggers = () => {
@@ -314,14 +304,9 @@ function boot() {
     }
   });
 
-  startTriggers();
-  onScrollCheck();
+  if (options.openImmediately) {
+    open();
+  } else {
+    startTriggers();
+  }
 }
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', boot, { once: true });
-} else {
-  boot();
-}
-
-export {};

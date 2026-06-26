@@ -39,54 +39,59 @@ const {
   )}
 >
   <div
-    class="pointer-events-none absolute -right-[80px] -top-[100px] hidden min-[901px]:block min-[901px]:h-[clamp(280px,28vw,640px)] min-[901px]:w-[clamp(280px,28vw,640px)]"
+    class="pointer-events-none absolute -top-[100px] -right-[80px] hidden lg:block lg:h-[clamp(280px,28vw,640px)] lg:w-[clamp(280px,28vw,640px)]"
     aria-hidden="true"
   >
-    <div class="h-full w-full bg-klika-moss/[0.06] animate-morphBlob"></div>
+    <div class="bg-klika-moss/[0.06] animate-morphBlob h-full w-full"></div>
   </div>
 
   <div
-    class="section-gutter-x relative z-raised flex min-h-0 flex-1 flex-col justify-center pb-12 pt-24 min-[901px]:pb-16 min-[901px]:pt-28"
+    class="section-gutter-x z-raised relative flex min-h-0 flex-1 flex-col justify-center pt-24 pb-12 lg:pt-28 lg:pb-16"
   >
     <div
-      class="layout-container grid w-full grid-cols-1 items-center gap-12 text-center min-[901px]:grid-cols-2 min-[901px]:gap-12 min-[901px]:text-left xl:gap-16 2xl:gap-20"
+      class="layout-container grid w-full grid-cols-1 items-center gap-12 text-center lg:grid-cols-2 lg:gap-12 lg:text-left xl:gap-16 2xl:gap-20"
     >
-    <div>
-      <p class="mb-[1.2rem] inline-block text-[0.78rem] font-semibold uppercase tracking-[0.12em] text-klika-moss">
-        {eyebrow}
-      </p>
-      <h1
-        class="mb-[1.4rem] font-serif leading-[1.12] text-[clamp(2.1rem,3.5vw+0.5rem,3.2rem)] text-klika-dark animate-fadeUp xl:leading-[1.1] xl:text-[clamp(2.55rem,3vw+0.5rem,3.75rem)] 2xl:text-[clamp(2.85rem,2.4vw+1rem,4.25rem)]"
-      >
-        <Fragment set:html={titleHtml} />
-      </h1>
-      <p
-        class="mx-auto max-w-[480px] text-[1.02rem] leading-[1.7] text-klika-ink animate-fadeUp [animation-delay:150ms] min-[901px]:mx-0 xl:max-w-[34rem] 2xl:max-w-prose"
-      >
-        {subtitle}
-      </p>
-      <div class="mt-9 flex flex-wrap justify-center gap-4 animate-fadeUp [animation-delay:300ms] min-[901px]:justify-start">
-        <Button href={primaryHref} variant="primary">{primaryLabel}</Button>
-        <Button href={secondaryHref} variant="secondary">{secondaryLabel}</Button>
+      <div>
+        <p
+          class="hero-eyebrow text-klika-moss mb-[1.2rem] inline-block text-[0.78rem] font-semibold tracking-[0.12em] uppercase"
+        >
+          {eyebrow}
+        </p>
+        <h1
+          class="hero-title text-klika-dark animate-fadeUp mb-[1.4rem] font-serif text-[clamp(2.1rem,3.5vw+0.5rem,3.2rem)] leading-[1.12] xl:text-[clamp(2.55rem,3vw+0.5rem,3.75rem)] xl:leading-[1.1] 2xl:text-[clamp(2.85rem,2.4vw+1rem,4.25rem)]"
+        >
+          <Fragment set:html={titleHtml} />
+        </h1>
+        <p
+          class="text-klika-ink animate-fadeUp mx-auto max-w-[480px] text-[1.02rem] leading-[1.7] [animation-delay:150ms] lg:mx-0 xl:max-w-[34rem] 2xl:max-w-prose"
+        >
+          {subtitle}
+        </p>
+        <div
+          class="animate-fadeUp mt-9 flex flex-wrap justify-center gap-4 [animation-delay:300ms] lg:justify-start"
+        >
+          <Button href={primaryHref} variant="primary">{primaryLabel}</Button>
+          <Button href={secondaryHref} variant="secondary">{secondaryLabel}</Button>
+        </div>
       </div>
-    </div>
 
-    <div class="animate-fadeUp [animation-delay:200ms]">
-      <div
-        class="mx-auto aspect-[4/3] w-full max-h-[min(72vh,52rem)] max-w-[min(100%,42rem)] overflow-hidden rounded-[2rem] bg-klika-sand shadow-heroImage min-[901px]:mx-0 min-[901px]:max-w-none 2xl:shadow-heroImage2xl"
-      >
-        <slot name="media">
-          {imageSrc ? (
-            <img
-              src={imageSrc}
-              alt={imageAlt}
-              class="h-full w-full object-cover [object-position:center_top]"
-            />
-          ) : null}
-        </slot>
+      <div class="animate-fadeUp [animation-delay:200ms]">
+        <div
+          class="bg-klika-sand shadow-heroImage 2xl:shadow-heroImage2xl mx-auto aspect-[4/3] max-h-[min(72vh,52rem)] w-full max-w-[min(100%,42rem)] overflow-hidden rounded-[2rem] lg:mx-0 lg:max-w-none"
+        >
+          <slot name="media">
+            {
+              imageSrc ? (
+                <img
+                  src={imageSrc}
+                  alt={imageAlt}
+                  class="h-full w-full object-cover [object-position:center_top]"
+                />
+              ) : null
+            }
+          </slot>
+        </div>
       </div>
-    </div>
     </div>
   </div>
 </section>
-

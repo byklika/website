@@ -1,0 +1,40 @@
+@reference './global.css';
+
+/* Below-fold blog index CTA — loaded at body end via `pages/blog/index.astro` (`deferred-styles` slot). */
+.blog-cta-banner {
+  @apply bg-klika-moss relative flex flex-wrap items-center justify-between gap-7 overflow-hidden rounded-[20px] px-8 py-10 lg:px-12 lg:py-[2.6rem];
+}
+
+.blog-cta-banner::before {
+  content: '';
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  top: -120px;
+  right: 18%;
+  background: radial-gradient(circle, rgba(98, 138, 87, 0.55), rgba(98, 138, 87, 0) 70%);
+  pointer-events: none;
+}
+
+.blog-cta-banner__title {
+  @apply text-klika-cream mb-2 font-serif text-[clamp(1.4rem,2.6vw,1.9rem)] leading-[1.18] font-bold tracking-[-0.01em];
+}
+
+.blog-cta-banner__description {
+  @apply text-klika-cream/80 text-[0.98rem] leading-[1.6];
+}
+
+.blog-cta-banner__action {
+  @apply rounded-pill bg-klika-coral shadow-btnPrimary hover:bg-klika-coralHover hover:shadow-btnPrimaryHover focus-visible:ring-klika-coral relative inline-flex shrink-0 items-center gap-2 border-0 px-[1.9rem] py-4 text-[0.98rem] font-semibold whitespace-nowrap text-white transition hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blog-cta-banner__action {
+    transition: none !important;
+  }
+
+  .blog-cta-banner__action:hover {
+    transform: none !important;
+  }
+}

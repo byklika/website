@@ -32,6 +32,19 @@ function applyNosotrasLabel(label: string): void {
 
 const HOMEPAGE_SECTION_IDS = ['inicio', 'metodologia', 'servicios', 'nosotras'] as const;
 
+/** Read static `--site-header-height` from CSS (72px). */
+function getSiteHeaderHeightPx(): number {
+  const raw = getComputedStyle(document.documentElement)
+    .getPropertyValue('--site-header-height')
+    .trim();
+  const value = parseFloat(raw);
+  if (Number.isNaN(value)) return 72;
+  if (raw.endsWith('rem')) {
+    return value * parseFloat(getComputedStyle(document.documentElement).fontSize);
+  }
+  return value;
+}
+
 /** Highlight nav link for the section currently in view (homepage hash targets only). */
 function initNavScrollSpy(header: HTMLElement): () => void {
   if (window.location.pathname !== '/') return () => {};
@@ -62,8 +75,8 @@ function initNavScrollSpy(header: HTMLElement): () => void {
     });
   };
 
-  const update = () => {
-    const offset = header.offsetHeight + 16;
+  const measure = () => {
+    const offset = getSiteHeaderHeightPx() + 16;
     let current: (typeof HOMEPAGE_SECTION_IDS)[number] = HOMEPAGE_SECTION_IDS[0];
 
     for (const id of HOMEPAGE_SECTION_IDS) {
@@ -75,19 +88,19 @@ function initNavScrollSpy(header: HTMLElement): () => void {
     setActive(current);
   };
 
-  update();
-  window.addEventListener('scroll', update, { passive: true });
-  window.addEventListener('resize', update, { passive: true });
+  let rafId = 0;
+  const scheduleMeasure = () => {
+    if (rafId) return;
+    rafId = requestAnimationFrame(() => {
+      rafId = 0;
+      measure();
+    });
+  };
 
-  return update;
-}
+  window.addEventListener('scroll', scheduleMeasure, { passive: true });
+  window.addEventListener('resize', scheduleMeasure, { passive: true });
 
-/** Match `scroll-padding-top` to the real fixed header height (py-4 + logo row). */
-function syncHeaderScrollOffset(): void {
-  const header = document.getElementById('homeHeader');
-  if (!header) return;
-  const height = `${header.offsetHeight}px`;
-  document.documentElement.style.setProperty('--site-header-height', height);
+  return scheduleMeasure;
 }
 
 export function initHeaderNav(): void {
@@ -114,7 +127,9 @@ export function initHeaderNav(): void {
 
   function trackNavClick(event: Event): void {
     const target =
-      event.target instanceof Element ? event.target.closest('[data-nav-nosotras-label="true"]') : null;
+      event.target instanceof Element
+        ? event.target.closest('[data-nav-nosotras-label="true"]')
+        : null;
     if (!target) return;
     publish({
       name: 'nav_item_click',
@@ -140,21 +155,21 @@ export function initHeaderNav(): void {
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
+
+  const scheduleNavLayout = header ? initNavScrollSpy(header) : () => {};
+  if (header) {
+    scheduleNavLayout();
+  }
+
   document.addEventListener('click', trackNavClick, { capture: true });
 
   const scrollToHashTarget = (hash: string, behavior: ScrollBehavior = 'auto') => {
     const id = hash.startsWith('#') ? hash.slice(1) : hash;
     if (!id) return;
     const target = document.getElementById(id);
-    if (!target) return;
-    syncHeaderScrollOffset();
+    if (!target || !header) return;
     target.scrollIntoView({ behavior, block: 'start' });
   };
-
-  syncHeaderScrollOffset();
-  window.addEventListener('resize', syncHeaderScrollOffset, { passive: true });
-
-  const updateNavScrollSpy = header ? initNavScrollSpy(header) : () => {};
 
   const mobileMenu = header?.querySelector('details');
   header?.querySelectorAll<HTMLAnchorElement>('a[href^="/#"]').forEach((link) => {
@@ -168,7 +183,7 @@ export function initHeaderNav(): void {
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       scrollToHashTarget(url.hash, prefersReduced ? 'auto' : 'smooth');
       history.pushState(null, '', url.hash);
-      requestAnimationFrame(updateNavScrollSpy);
+      scheduleNavLayout();
     });
   });
 
@@ -176,7 +191,7 @@ export function initHeaderNav(): void {
   if (initialHash) {
     requestAnimationFrame(() => {
       scrollToHashTarget(initialHash);
-      updateNavScrollSpy();
+      scheduleNavLayout();
     });
   }
 

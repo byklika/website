@@ -7,7 +7,7 @@ export type SiteNavItem =
  * Standalone routes under `src/pages/{servicios,metodologia,nosotras}/` remain for a future revamp.
  */
 export const siteNavItems: SiteNavItem[] = [
-  { kind: 'link', href: '/#inicio', label: 'Home' },
+  { kind: 'link', href: '/#inicio', label: 'Inicio' },
   { kind: 'link', href: '/#metodologia', label: 'Metodología' },
   { kind: 'link', href: '/#servicios', label: 'Servicios' },
   { kind: 'link', href: '/#nosotras', label: 'Nosotras' },

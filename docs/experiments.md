@@ -58,8 +58,9 @@ src/scripts/header-nav.ts           # Client: evalFeature, apply label, track cl
 { "flagKey": "nav-nosotras-label-v2", "fallback": "Nosotras", "growthbookEnabled": true }
 ```
 
-**2. Client init** (`SiteAnalytics.astro`):
+**2. Client init** (`bootSiteAnalytics.ts` → `bootGrowthBook.ts`):
 
+- SDK is dynamically imported after `window` `load` + idle (same window as GA4)
 - Creates `GrowthBook` with `trackingCallback: growthbookTrackingCallback`
 - Sets `window.growthbook`; dispatches `growthbook:ready`
 - Anonymous id: cookie `gb_anon_id` + `localStorage` sync

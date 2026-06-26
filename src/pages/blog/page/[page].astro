@@ -2,6 +2,7 @@
 /** Paginated list route — keep until index uses collection + `BlogArticleCard` grid. */
 import type { GetStaticPaths } from 'astro';
 import { getCollection } from 'astro:content';
+import '~/styles/blog-index.css';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import BlogListSection from '~/components/blog/BlogListSection.astro';
 import { formatBlogPaginationTitle, seoPageMeta } from '~/data/seoOnPageContract';

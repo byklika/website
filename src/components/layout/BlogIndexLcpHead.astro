@@ -1,0 +1,68 @@
+---
+/**
+ * Blog index: inline critical head typography + preload Merriweather 400 and first card AVIF.
+ */
+import merriweather400 from '@fontsource/merriweather/files/merriweather-latin-400-normal.woff2?url';
+import { blogImageAvifUrl, blogImageCardLcpWidth } from '~/lib/blog-image';
+
+interface Props {
+  /** First grid card bundle id for LCP image preload. */
+  firstCardImageSlug?: string;
+}
+
+const { firstCardImageSlug } = Astro.props;
+const lcpAvifUrl = firstCardImageSlug
+  ? blogImageAvifUrl(firstCardImageSlug, blogImageCardLcpWidth)
+  : undefined;
+---
+
+<link rel="preload" href={merriweather400} as="font" type="font/woff2" crossorigin />
+{
+  lcpAvifUrl && (
+    <link rel="preload" href={lcpAvifUrl} as="image" type="image/avif" fetchpriority="high" />
+  )
+}
+
+<style is:inline>
+  .blog-head h1 {
+    margin-bottom: 1rem;
+    font-family: Merriweather, Georgia, serif;
+    font-weight: 400;
+    line-height: 1.04;
+    letter-spacing: -0.028em;
+    font-size: clamp(2.6rem, 5.4vw, 4rem);
+    color: #1e2a1a;
+  }
+
+  .blog-head__lead {
+    max-width: 540px;
+    font-size: 1.08rem;
+    line-height: 1.7;
+    font-weight: 400;
+    color: #3a4a36;
+  }
+
+  .blog-article-card__img {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 16 / 10;
+    border-bottom: 1px solid rgba(74, 103, 65, 0.1);
+  }
+
+  .blog-article-card__img--photo {
+    display: block;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .blog-article-card__img--photo picture,
+  .blog-article-card__img--photo img {
+    display: block;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+</style>

@@ -17,6 +17,8 @@ export interface Props extends BlogPlaceholderEntry {
   href?: string;
   /** Responsive bundle id — overrides `heroImageSlug` when both are set. */
   imageSlug?: string;
+  /** First above-the-fold card: eager load + high fetch priority for LCP. */
+  priority?: boolean;
   class?: string;
 }
 
@@ -31,7 +33,8 @@ const {
   heroImageSlug,
   imageSlug: imageSlugProp,
   href,
-  class: className
+  class: className,
+  priority = false
 } = Astro.props;
 
 const imageSlug = resolveBlogImageSlug(imageSlugProp ?? heroImageSlug);
@@ -53,7 +56,13 @@ const cardSurface = cn(
   >
     {
       imageSlug ? (
-        <BlogResponsiveImage slug={imageSlug} alt={imageAlt} sizes="card" loading="lazy" />
+        <BlogResponsiveImage
+          slug={imageSlug}
+          alt={imageAlt}
+          sizes="card"
+          loading={priority ? 'eager' : 'lazy'}
+          fetchpriority={priority ? 'high' : undefined}
+        />
       ) : (
         <>
           <svg
@@ -83,20 +92,20 @@ const cardSurface = cn(
       <span class="text-klika-moss shrink-0">{category}</span>
       <span class="bg-klika-muted2 h-[3px] w-[3px] shrink-0 rounded-full" aria-hidden="true"></span>
       <time
-        class="text-klika-muted2 shrink-0 font-medium tracking-[0.04em] normal-case"
+        class="text-klika-sage shrink-0 font-medium tracking-[0.04em] normal-case"
         datetime={pubDate.toISOString()}
       >
         {formattedDate}
       </time>
     </div>
 
-    <h3
-      class="text-klika-dark mb-[0.7rem] font-serif text-[1.18rem] leading-[1.22] font-bold tracking-[-0.012em] text-balance"
+    <h2
+      class="text-klika-dark mb-[0.7rem] font-serif text-[1.18rem] leading-[1.22] font-semibold tracking-[-0.012em] text-balance"
     >
       <a href={articleHref} class="blog-article-card__title-link">
         {title}
       </a>
-    </h3>
+    </h2>
 
     <p class="blog-article-card__excerpt">{lead}</p>
 

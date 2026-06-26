@@ -1,0 +1,89 @@
+@reference './global.css';
+
+/* Blog article detail — banner, prose, related, in-article CTA */
+.blog-article-page {
+  @apply bg-klika-cream grid;
+  grid-template-columns: minmax(0, 1fr);
+  padding-top: var(--site-header-height);
+  --blog-article-banner-height: 220px;
+  --blog-article-content-overlap: 48px;
+}
+
+.blog-article-banner {
+  grid-area: 1 / 1;
+  align-self: start;
+  position: sticky;
+  top: var(--site-header-height);
+  z-index: 0;
+  box-sizing: border-box;
+  height: 220px;
+  width: 100%;
+}
+
+.blog-article-content {
+  @apply bg-klika-cream relative z-[1];
+  grid-area: 1 / 1;
+  align-self: start;
+  width: 100%;
+  margin-top: var(--blog-article-banner-height);
+}
+
+.blog-article-content__inner {
+  padding-top: var(--blog-article-content-overlap);
+  @apply pb-16;
+}
+
+.blog-article-banner picture {
+  display: block;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+}
+
+.blog-article-banner img {
+  @apply box-border block h-full w-full object-cover object-center;
+}
+
+.blog-article-banner--mobile-position img {
+  object-position: var(--hero-object-position-mobile, center);
+}
+
+.blog-article-banner--desktop-position img {
+  @apply object-center lg:[object-position:var(--hero-object-position-desktop)];
+}
+
+.blog-article-lead {
+  @apply border-klika-coral text-klika-ink mb-[1.8rem] min-h-[2lh] border-l-[3px] py-[0.15rem] pl-[1.3rem] text-xl leading-[1.55] font-normal text-pretty;
+}
+
+.article-body {
+  @apply text-klika-ink text-[15px] leading-[1.8];
+}
+
+.article-body p {
+  @apply mb-[1.4rem];
+}
+
+.article-body h2 {
+  @apply text-klika-dark mt-[2.6rem] mb-[1rem] scroll-mt-28 font-serif text-2xl leading-[1.3] font-bold tracking-[-0.012em];
+}
+
+.article-body h2:first-child {
+  @apply mt-0;
+}
+
+.article-body strong {
+  @apply text-klika-dark font-bold;
+}
+
+.article-body em {
+  @apply italic;
+}
+
+.article-body a {
+  @apply text-klika-coral underline-offset-2 hover:underline;
+}
+
+.article-body > .callout-component {
+  @apply my-[1.4rem];
+}

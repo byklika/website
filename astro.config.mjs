@@ -25,7 +25,10 @@ export default defineConfig({
     sitemap({
       filter: (page) => {
         // Hash-only URLs are not routable pages; drafts never reach the build.
-        return !page.includes('#');
+        if (page.includes('#')) return false;
+        // Fetchable HTML fragments — not public landing pages.
+        if (page.includes('/partials/')) return false;
+        return true;
       },
       serialize(item) {
         const pathname = new URL(item.url).pathname;

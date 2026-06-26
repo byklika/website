@@ -1,0 +1,109 @@
+---
+/**
+ * Blog article: inline critical banner/layout CSS + preload LCP banner AVIF and Merriweather 700 (h1).
+ */
+import merriweather700 from '@fontsource/merriweather/files/merriweather-latin-700-normal.woff2?url';
+import { blogImageAvifUrl, blogImageBannerLcpWidth } from '~/lib/blog-image';
+
+interface Props {
+  /** Article hero bundle id for LCP image preload. */
+  heroImageSlug?: string;
+}
+
+const { heroImageSlug } = Astro.props;
+const lcpAvifUrl = heroImageSlug
+  ? blogImageAvifUrl(heroImageSlug, blogImageBannerLcpWidth)
+  : undefined;
+
+const articleLcpCss = `
+  @font-face {
+    font-family: 'Merriweather';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 700;
+    src: url(${merriweather700}) format('woff2');
+  }
+
+  .blog-article-header h1 {
+    margin-bottom: 1.25rem;
+    font-family: Merriweather, Georgia, serif;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1.22;
+    letter-spacing: -0.018em;
+    color: #1e2a1a;
+  }
+
+  .blog-article-lead {
+    margin-bottom: 1.8rem;
+    padding: 0.15rem 0 0.15rem 1.3rem;
+    border-left: 3px solid #f26a3a;
+    font-size: 1.25rem;
+    line-height: 1.55;
+    font-weight: 400;
+    color: #3a4a36;
+    min-height: 2lh;
+    text-wrap: pretty;
+  }
+
+  .blog-article-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: var(--site-header-height);
+    background-color: #f2f5ee;
+    --blog-article-banner-height: 220px;
+    --blog-article-content-overlap: 48px;
+  }
+
+  .blog-article-banner {
+    grid-area: 1 / 1;
+    align-self: start;
+    position: sticky;
+    top: var(--site-header-height);
+    z-index: 0;
+    box-sizing: border-box;
+    height: 220px;
+    width: 100%;
+  }
+
+  .blog-article-content {
+    position: relative;
+    z-index: 1;
+    grid-area: 1 / 1;
+    align-self: start;
+    width: 100%;
+    margin-top: var(--blog-article-banner-height);
+    background-color: #f2f5ee;
+  }
+
+  .blog-article-content__inner {
+    padding-top: var(--blog-article-content-overlap);
+    padding-bottom: 4rem;
+  }
+
+  .blog-article-banner picture {
+    display: block;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+  }
+
+  .blog-article-banner img {
+    display: block;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+`;
+---
+
+<link rel="preload" href={merriweather700} as="font" type="font/woff2" crossorigin />
+{
+  lcpAvifUrl && (
+    <link rel="preload" href={lcpAvifUrl} as="image" type="image/avif" fetchpriority="high" />
+  )
+}
+
+<style is:inline set:html={articleLcpCss}></style>

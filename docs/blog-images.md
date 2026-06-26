@@ -8,15 +8,15 @@ Non-obvious image workflow for blog heroes, cards, related posts, and OG preview
 
 **File:** `src/data/blogImageContract.ts`
 
-| Constant                        | Value / purpose                                                      |
-| ------------------------------- | -------------------------------------------------------------------- |
-| `blogImageWidths`               | `400, 640, 960, 1280, 1920, 2560, 3840` — must match optimize script |
-| `blogImageDerivativeExts`       | `avif`, `webp`, `jpg`                                                |
-| `blogImageMasterSuffix`         | `-original.png`                                                      |
-| `blogImageSizesPresets.card`    | Index grid: `(min-width: 1280px) 33vw, …`                            |
-| `blogImageSizesPresets.banner`  | Article hero: `100vw`                                                |
-| `blogImageSizesPresets.related` | Related grid: `(min-width: 768px) 50vw, 100vw`                       |
-| `blogImageDefaultAlt`           | Fallback alt when `cardImageAlt` omitted                             |
+| Constant                        | Value / purpose                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------ |
+| `blogImageWidths`               | `400, 480, 640, 720, 960, 1280, 1920, 2560, 3840` — must match optimize script |
+| `blogImageDerivativeExts`       | `avif`, `webp`, `jpg`                                                          |
+| `blogImageMasterSuffix`         | `-original.png`                                                                |
+| `blogImageSizesPresets.card`    | Index grid: `(min-width: 1280px) 33vw, …`                                      |
+| `blogImageSizesPresets.banner`  | Article hero: `100vw`                                                          |
+| `blogImageSizesPresets.related` | Related grid: `(min-width: 561px) 21rem, min(100vw, 22rem)`                    |
+| `blogImageDefaultAlt`           | Fallback alt when `cardImageAlt` omitted                                       |
 
 **Slug-as-id:** Image bundle basename = blog `entry.id` (includes category folder).
 

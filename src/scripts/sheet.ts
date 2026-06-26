@@ -133,7 +133,7 @@ function boot() {
     if (!isOpen(sheet)) return;
 
     sheet.removeAttribute('data-open');
-    sheet.setAttribute('aria-hidden', 'true');
+    sheet.inert = true;
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       finishClose(sheet, { restoreFocus });
@@ -173,7 +173,7 @@ function boot() {
     lockScroll();
     setBackgroundInert(true, sheet);
 
-    sheet.removeAttribute('aria-hidden');
+    sheet.inert = false;
     sheet.setAttribute('data-arm', '');
 
     requestAnimationFrame(() => {

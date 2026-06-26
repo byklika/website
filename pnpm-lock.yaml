@@ -14,6 +14,12 @@ importers:
       '@astrojs/sitemap':
         specifier: ^3.7.3
         version: 3.7.3
+      '@fontsource/merriweather':
+        specifier: ^5.2.11
+        version: 5.2.11
+      '@fontsource/mitr':
+        specifier: ^5.2.8
+        version: 5.2.8
       '@growthbook/growthbook':
         specifier: ^1.6.5
         version: 1.6.5
@@ -561,6 +567,12 @@ packages:
     peerDependenciesMeta:
       '@noble/hashes':
         optional: true
+
+  '@fontsource/merriweather@5.2.11':
+    resolution: {integrity: sha512-ZiIMeUh5iT8d73o6xlSF8GKgjV5pgiFrufYc5jZTVAfExtWKqM2vQHnsqXSFMv4ELhAcjt6Vf+5T3oVGXhAizQ==}
+
+  '@fontsource/mitr@5.2.8':
+    resolution: {integrity: sha512-m5aF71TiItyzEEzU4YGXJurDAMx6DqNUJ5Yz1WkzRRTGU51Si0YOUODOZ03TRrTqh3G2wkpuVJutbgwD0r+oIA==}
 
   '@growthbook/growthbook@1.6.5':
     resolution: {integrity: sha512-mUaMsgeUTpRIUOTn33EUXHRK6j7pxBjwqH4WpQyq+pukjd1AIzWlEa6w7i6bInJUcweGgP2beXZmaP6b6UPn7A==}
@@ -3766,6 +3778,10 @@ snapshots:
       levn: 0.4.1
 
   '@exodus/bytes@1.15.0': {}
+
+  '@fontsource/merriweather@5.2.11': {}
+
+  '@fontsource/mitr@5.2.8': {}
 
   '@growthbook/growthbook@1.6.5':
     dependencies:

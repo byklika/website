@@ -19,9 +19,9 @@ const {
 
 <div
   id="email-signup-popup-overlay"
-  class="email-signup-popup-component group/popup fixed inset-0 z-popup flex items-center justify-center bg-klika-dark/55 px-4 sm:px-8 pointer-events-none opacity-0 transition-opacity duration-300 ease-out motion-reduce:duration-150 [&[data-arm]]:pointer-events-auto [&[data-open]]:opacity-100"
+  class="email-signup-popup-component group/popup z-popup bg-klika-dark/55 pointer-events-none fixed inset-0 flex items-center justify-center px-4 opacity-0 transition-opacity duration-300 ease-out motion-reduce:duration-150 sm:px-8 [&[data-arm]]:pointer-events-auto [&[data-open]]:opacity-100"
   data-email-signup-popup-overlay
-  aria-hidden="true"
+  inert
   data-storage-key={storageKey}
   data-open-after-ms={openAfterMs}
   data-open-at-scroll-ratio={openAtScrollRatio}
@@ -29,7 +29,7 @@ const {
 >
   <div
     id="email-signup-popup-dialog"
-    class="relative w-full max-w-[min(100%,28rem)] translate-y-2 scale-[0.98] rounded-[16px] bg-klika-cream px-6 pt-10 pb-8 font-sans opacity-0 shadow-2xl transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:translate-y-0 motion-reduce:scale-100 motion-reduce:duration-150 motion-reduce:ease-out min-[1920px]:max-w-[32rem] min-[1920px]:px-10 min-[1920px]:pb-10 sm:px-8 group-data-[open]/popup:translate-y-0 group-data-[open]/popup:scale-100 group-data-[open]/popup:opacity-100"
+    class="bg-klika-cream relative w-full max-w-[min(100%,28rem)] translate-y-2 scale-[0.98] rounded-[16px] px-6 pt-10 pb-8 font-sans opacity-0 shadow-2xl transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-data-[open]/popup:translate-y-0 group-data-[open]/popup:scale-100 group-data-[open]/popup:opacity-100 motion-reduce:translate-y-0 motion-reduce:scale-100 motion-reduce:duration-150 motion-reduce:ease-out min-[1920px]:max-w-[32rem] min-[1920px]:px-10 min-[1920px]:pb-10 sm:px-8"
     role="dialog"
     aria-modal="true"
     aria-labelledby="email-signup-popup-title"
@@ -40,25 +40,27 @@ const {
     <button
       id="email-signup-popup-close"
       type="button"
-      class="absolute right-[18px] top-[14px] inline-flex h-11 w-11 items-center justify-center rounded-full text-klika-sage/70 hover:text-klika-sage focus:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral min-[1920px]:right-5 min-[1920px]:top-4 min-[1920px]:h-12 min-[1920px]:w-12"
+      class="text-klika-sage/70 hover:text-klika-sage focus-visible:ring-klika-coral absolute top-[14px] right-[18px] inline-flex h-11 w-11 items-center justify-center rounded-full focus:outline-none focus-visible:ring-2 min-[1920px]:top-4 min-[1920px]:right-5 min-[1920px]:h-12 min-[1920px]:w-12"
       aria-label="Cerrar"
       data-email-signup-popup-close
     >
       ✕
     </button>
 
-    <p class="mb-4 text-[11px] font-bold uppercase tracking-[0.08em] text-klika-sage/70">klika · e‑learning studio</p>
+    <p class="text-klika-sage/70 mb-4 text-[11px] font-bold tracking-[0.08em] uppercase">
+      klika · e‑learning studio
+    </p>
 
-    <div class="mb-5 h-1 w-9 rounded-full bg-klika-coral"></div>
+    <div class="bg-klika-coral mb-5 h-1 w-9 rounded-full"></div>
 
     <div id="email-signup-popup-form-view" data-email-signup-popup-form-view>
       <h2
         id="email-signup-popup-title"
-        class="mb-2 font-serif text-[19px] font-bold leading-[1.35] text-klika-dark"
+        class="text-klika-dark mb-2 font-serif text-[19px] leading-[1.35] font-bold"
       >
         ¡Sigamos en contacto!
       </h2>
-      <p id="email-signup-popup-desc" class="mb-6 text-[14px] leading-[1.6] text-klika-sage">
+      <p id="email-signup-popup-desc" class="text-klika-sage mb-6 text-[14px] leading-[1.6]">
         Dejanos tu mail para enterarte de las novedades 😊
       </p>
 
@@ -66,17 +68,25 @@ const {
         !configured && (
           <div
             role="alert"
-            class="mb-4 rounded-lg border border-klika-sage/25 bg-klika-mist px-3 py-2 text-[12px] leading-snug text-klika-dark/80"
+            class="border-klika-sage/25 bg-klika-mist text-klika-dark/80 mb-4 rounded-lg border px-3 py-2 text-[12px] leading-snug"
           >
             El formulario no está configurado. Definí{' '}
-            <code class="rounded bg-klika-cream px-1 text-[11px]">PUBLIC_WEB3FORMS_POPUP_ACCESS_KEY</code>{' '}
-            en <code class="rounded bg-klika-cream px-1 text-[11px]">.env</code> (ver{' '}
-            <code class="rounded bg-klika-cream px-1 text-[11px]">.env.example</code>) y volvé a desplegar.
+            <code class="bg-klika-cream rounded px-1 text-[11px]">
+              PUBLIC_WEB3FORMS_POPUP_ACCESS_KEY
+            </code>{' '}
+            en <code class="bg-klika-cream rounded px-1 text-[11px]">.env</code> (ver{' '}
+            <code class="bg-klika-cream rounded px-1 text-[11px]">.env.example</code>) y volvé a
+            desplegar.
           </div>
         )
       }
 
-      <form id="email-signup-popup-form" class="space-y-[10px]" novalidate data-email-signup-popup-form>
+      <form
+        id="email-signup-popup-form"
+        class="space-y-[10px]"
+        novalidate
+        data-email-signup-popup-form
+      >
         <input type="hidden" name="access_key" value={accessKey ?? ''} />
         <label class="hidden" aria-hidden="true">
           <span>Company</span>
@@ -93,37 +103,40 @@ const {
             autocomplete="email"
             inputmode="email"
             placeholder="nombre@empresa.com"
-            class="min-h-11 w-full rounded-[8px] border-[1.5px] border-klika-sage bg-white px-[14px] py-[10px] text-[14px] text-klika-dark outline-none focus:border-klika-coral focus:ring-2 focus:ring-klika-coral/20 min-[1920px]:min-h-12 min-[1920px]:text-[15px]"
+            class="border-klika-sage text-klika-dark focus:border-klika-coral focus:ring-klika-coral/20 min-h-11 w-full rounded-[8px] border-[1.5px] bg-white px-[14px] py-[10px] text-[14px] outline-none focus:ring-2 min-[1920px]:min-h-12 min-[1920px]:text-[15px]"
             data-email-signup-popup-email
             disabled={!configured}
           />
         </label>
 
-        <p id="email-signup-popup-error" class="hidden text-[12px] text-klika-coral" role="alert" aria-live="polite">
+        <p
+          id="email-signup-popup-error"
+          class="text-klika-coral hidden text-[12px]"
+          role="alert"
+          aria-live="polite"
+        >
           Ingresá un email válido para continuar.
         </p>
 
         <button
           id="email-signup-popup-submit"
           type="submit"
-          class="mt-2 flex min-h-11 w-full cursor-pointer items-center justify-center rounded-[8px] bg-klika-moss py-[11px] text-[15px] font-medium text-white hover:bg-klika-moss/95 focus:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral disabled:cursor-not-allowed disabled:opacity-60 min-[1920px]:min-h-12 min-[1920px]:text-[16px]"
+          class="bg-klika-moss hover:bg-klika-moss/95 focus-visible:ring-klika-coral mt-2 flex min-h-11 w-full cursor-pointer items-center justify-center rounded-[8px] py-[11px] text-[15px] font-medium text-white focus:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:opacity-60 min-[1920px]:min-h-12 min-[1920px]:text-[16px]"
           disabled={!configured}
           data-email-signup-popup-submit
         >
           Quiero sumarme
         </button>
 
-        <p class="pt-1 text-center text-[11px] text-klika-sage/70">Sin spam. Te das de baja cuando quieras.</p>
+        <p class="text-klika-sage/70 pt-1 text-center text-[11px]">
+          Sin spam. Te das de baja cuando quieras.
+        </p>
       </form>
     </div>
 
     <div id="email-signup-popup-confirm-view" class="hidden" data-email-signup-popup-confirm-view>
-      <h2 class="mb-2 font-serif text-[19px] font-bold leading-[1.35] text-klika-dark">¡Listo!</h2>
-      <p class="text-[14px] leading-[1.6] text-klika-sage">Te avisamos cuando haya novedades.</p>
+      <h2 class="text-klika-dark mb-2 font-serif text-[19px] leading-[1.35] font-bold">¡Listo!</h2>
+      <p class="text-klika-sage text-[14px] leading-[1.6]">Te avisamos cuando haya novedades.</p>
     </div>
   </div>
 </div>
-
-<script>
-  import '~/scripts/emailSignupPopup.ts';
-</script>

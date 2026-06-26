@@ -1,5 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import '~/styles/blog-article.css';
+import blogArticleDeferredCss from '~/styles/blog-article-deferred.css?url';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import BlogArticleBanner from '~/components/blog/BlogArticleBanner.astro';
 import BlogArticleAuthor from '~/components/blog/BlogArticleAuthor.astro';
@@ -7,6 +9,7 @@ import BlogArticleCta from '~/components/blog/BlogArticleCta.astro';
 import BlogArticleLead from '~/components/blog/BlogArticleLead.astro';
 import BlogArticleHeader from '~/components/blog/BlogArticleHeader.astro';
 import BlogRelatedPosts from '~/components/blog/BlogRelatedPosts.astro';
+import EmailSignupPopupLoader from '~/components/EmailSignupPopupLoader.astro';
 import { formatArticleSeoTitle } from '~/data/seoOnPageContract';
 import { blogPostHref } from '~/lib/blog-card';
 import { blogImageOgUrl } from '~/lib/blog-image';
@@ -90,6 +93,8 @@ const articleJsonLd = [
 
 <BaseLayout
   fullWidthMain
+  blogArticleLcp
+  {heroImageSlug}
   title={formatArticleSeoTitle(title)}
   description={articleDescription}
   image={socialImage}
@@ -98,7 +103,7 @@ const articleJsonLd = [
   articleModifiedTime={updatedDate?.toISOString()}
   jsonLd={articleJsonLd}
 >
-  <div class="blog-article-page pt-[var(--site-header-height)]">
+  <div class="blog-article-page">
     <BlogArticleBanner {title} imageSlug={heroImageSlug} {heroImagePosition} />
 
     <article class="blog-article-content">
@@ -121,4 +126,8 @@ const articleJsonLd = [
       </div>
     </article>
   </div>
+
+  <link rel="stylesheet" href={blogArticleDeferredCss} slot="deferred-styles" />
+
+  <EmailSignupPopupLoader />
 </BaseLayout>

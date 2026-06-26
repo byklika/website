@@ -63,13 +63,13 @@ const imageByTitle: Record<
   id="nosotras-v2"
   class={cn(
     'about-us-nosotras-v2-component',
-    'section-gutter-x bg-klika-cream py-16 min-[901px]:py-24',
+    'section-gutter-x bg-klika-cream py-16 lg:py-24',
     className
   )}
   aria-label={`${eyebrow} — versión alternativa (demostración)`}
 >
   <div class="layout-container">
-    <SectionHeading eyebrow={eyebrow} title={title} class="reveal" />
+    <SectionHeading {eyebrow} {title} class="reveal" />
 
     <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 2xl:gap-8">
       {
@@ -78,7 +78,7 @@ const imageByTitle: Record<
           return (
             <article
               class:list={[
-                'relative isolate min-h-[340px] overflow-hidden rounded-[1.2rem] border-l-4 border-l-klika-coral shadow-card',
+                'border-l-klika-coral shadow-card relative isolate min-h-[340px] overflow-hidden rounded-[1.2rem] border-l-4',
                 'reveal',
                 idx % 3 === 1 ? 'rd1' : idx % 3 === 2 ? 'rd2' : ''
               ]}
@@ -110,16 +110,16 @@ const imageByTitle: Record<
                 aria-hidden="true"
               />
               <div
-                class="pointer-events-none absolute inset-0 bg-gradient-to-r from-klika-cream/95 via-klika-cream/55 to-transparent"
+                class="from-klika-cream/95 via-klika-cream/55 pointer-events-none absolute inset-0 bg-gradient-to-r to-transparent"
                 aria-hidden="true"
               />
               <div class="relative z-[1] flex min-h-[340px] flex-col justify-between">
                 <div class="p-6">
-                  <h3 class="inline-block max-w-[85%] rounded-md bg-klika-dark/75 px-3 py-2 font-serif text-[1.25rem] font-normal leading-snug text-klika-white min-[901px]:text-[1.35rem]">
+                  <h3 class="bg-klika-dark/75 text-klika-white inline-block max-w-[85%] rounded-md px-3 py-2 font-serif text-[1.25rem] leading-snug font-normal lg:text-[1.35rem]">
                     {it.title}
                   </h3>
                 </div>
-                <div class="flex min-h-[10.5rem] items-start border-t border-white/25 bg-klika-dark/82 px-6 pb-6 pt-4 text-[0.95rem] leading-[1.65] text-klika-white">
+                <div class="bg-klika-dark/82 text-klika-white flex min-h-[10.5rem] items-start border-t border-white/25 px-6 pt-4 pb-6 text-[0.95rem] leading-[1.65]">
                   {it.description}
                 </div>
               </div>

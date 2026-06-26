@@ -1,6 +1,10 @@
 ---
 import '~/styles/global.css';
 import HeadEssentials from '~/components/layout/HeadEssentials.astro';
+import HeroLcpHead from '~/components/layout/HeroLcpHead.astro';
+import BlogIndexLcpHead from '~/components/layout/BlogIndexLcpHead.astro';
+import BlogArticleLcpHead from '~/components/layout/BlogArticleLcpHead.astro';
+import DeferredStylesheets from '~/components/layout/DeferredStylesheets.astro';
 import SiteBodyChrome from '~/components/layout/SiteBodyChrome.astro';
 import JsonLd from '~/components/seo/JsonLd.astro';
 import {
@@ -25,6 +29,16 @@ interface Props {
   noindex?: boolean;
   /** Extra JSON-LD nodes merged after site-wide Organization + WebSite. */
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** Homepage: inline critical hero CSS + preload Merriweather for LCP h1. */
+  heroLcp?: boolean;
+  /** Blog index: inline critical head CSS + preload first card AVIF. */
+  blogIndexLcp?: boolean;
+  /** First index card image bundle id — used with `blogIndexLcp`. */
+  firstCardImageSlug?: string;
+  /** Blog article: inline critical banner CSS + preload hero AVIF and Merriweather 700. */
+  blogArticleLcp?: boolean;
+  /** Article hero bundle id — used with `blogArticleLcp`. */
+  heroImageSlug?: string;
 }
 
 const SITE_NAME = 'klika e‑learning studio';
@@ -39,7 +53,12 @@ const {
   articlePublishedTime,
   articleModifiedTime,
   noindex = false,
-  jsonLd
+  jsonLd,
+  heroLcp = false,
+  blogIndexLcp = false,
+  firstCardImageSlug,
+  blogArticleLcp = false,
+  heroImageSlug
 } = Astro.props;
 
 const siteBase = Astro.site ?? Astro.url.origin;
@@ -64,6 +83,9 @@ const ogLocale = lang === SEO_HTML_LANG ? SEO_OG_LOCALE : 'en_US';
 <html {lang} data-theme="light">
   <head>
     <HeadEssentials showGenerator={false} />
+    {heroLcp && <HeroLcpHead />}
+    {blogIndexLcp && <BlogIndexLcpHead {firstCardImageSlug} />}
+    {blogArticleLcp && <BlogArticleLcpHead {heroImageSlug} />}
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -112,9 +134,12 @@ const ogLocale = lang === SEO_HTML_LANG ? SEO_OG_LOCALE : 'en_US';
         )
       }
     </SiteBodyChrome>
+    <DeferredStylesheets />
+    <slot name="deferred-styles" />
     <script is:inline>
-      const els = Array.from(document.querySelectorAll('.reveal'));
-      if (els.length) {
+      const initReveal = () => {
+        const els = Array.from(document.querySelectorAll('.reveal'));
+        if (!els.length) return;
         const obs = new IntersectionObserver(
           (entries) => {
             for (const e of entries) {
@@ -126,8 +151,17 @@ const ogLocale = lang === SEO_HTML_LANG ? SEO_OG_LOCALE : 'en_US';
           },
           { threshold: 0.08 }
         );
-        for (const el of els) obs.observe(el);
-      }
+        for (const el of els) {
+          if (!el.classList.contains('visible')) obs.observe(el);
+        }
+      };
+      initReveal();
+      document.addEventListener('astro:page-load', initReveal);
+      window.addEventListener('pageshow', (event) => {
+        if (!event.persisted) return;
+        document.querySelectorAll('.reveal').forEach((el) => el.classList.remove('visible'));
+        initReveal();
+      });
     </script>
   </body>
 </html>

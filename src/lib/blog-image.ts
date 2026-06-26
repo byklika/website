@@ -32,6 +32,17 @@ export function blogImageBase(entryId: string): string {
 /** Middle width JPEG used as `<img src>` fallback inside `<picture>`. */
 export const blogImageFallbackWidth: BlogImageWidth = 960;
 
+/** Mobile LCP preload width for index first card — matches tightened `sizes="card"`. */
+export const blogImageCardLcpWidth: BlogImageWidth = 640;
+
+/** Mobile LCP preload width for article banner — matches `sizes="banner"` on typical viewports. */
+export const blogImageBannerLcpWidth: BlogImageWidth = 640;
+
+/** Public AVIF URL for a bundle width (preload / diagnostics). */
+export function blogImageAvifUrl(entryId: string, width: BlogImageWidth): string {
+  return `${blogImageBase(entryId)}-${width}w.avif`;
+}
+
 export function buildSrcset(
   base: string,
   ext: BlogImageExt,

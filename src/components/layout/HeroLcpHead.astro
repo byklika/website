@@ -1,0 +1,51 @@
+---
+/**
+ * Homepage-only: inline critical hero typography + preload serif files for the h1 stack.
+ * LCP element is the hero eyebrow (system sans); h1 Merriweather loads in parallel for first paint.
+ */
+import merriweather400 from '@fontsource/merriweather/files/merriweather-latin-400-normal.woff2?url';
+import merriweather400Italic from '@fontsource/merriweather/files/merriweather-latin-400-italic.woff2?url';
+---
+
+<link rel="preload" href={merriweather400} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={merriweather400Italic} as="font" type="font/woff2" crossorigin />
+
+<style is:inline>
+  .hero-component .hero-eyebrow {
+    display: inline-block;
+    margin-bottom: 1.2rem;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #4a6741;
+  }
+
+  .hero-component .hero-title {
+    margin-bottom: 1.4rem;
+    font-family: Merriweather, Georgia, serif;
+    font-weight: 400;
+    line-height: 1.12;
+    font-size: clamp(2.1rem, 3.5vw + 0.5rem, 3.2rem);
+    color: #1e2a1a;
+  }
+
+  .hero-component .hero-title em {
+    font-style: italic;
+    color: #f26a3a;
+  }
+
+  @media (min-width: 1280px) {
+    .hero-component .hero-title {
+      line-height: 1.1;
+      font-size: clamp(2.55rem, 3vw + 0.5rem, 3.75rem);
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .hero-component .hero-title {
+      font-size: clamp(2.85rem, 2.4vw + 1rem, 4.25rem);
+    }
+  }
+</style>

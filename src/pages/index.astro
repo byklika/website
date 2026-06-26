@@ -5,8 +5,9 @@ import Methodology from '~/components/sections/Methodology.astro';
 import Services from '~/components/sections/Services.astro';
 import AboutUs from '~/components/sections/AboutUs.astro';
 import type { Item as AboutUsItem } from '~/components/sections/AboutUs.astro';
-import EmailSignupPopup from '~/components/EmailSignupPopup.astro';
+import EmailSignupPopupLoader from '~/components/EmailSignupPopupLoader.astro';
 import { seoPageMeta } from '~/data/seoOnPageContract';
+import { minWidthScreen } from '~/data/tailwindScreens';
 
 /**
  * Hero raster: master lives under `src/assets/` (not publicly served).
@@ -14,12 +15,15 @@ import { seoPageMeta } from '~/data/seoOnPageContract';
  * Optimized derivatives in `public/images/hero/` (AVIF → WebP → JPEG) — regenerate: `pnpm optimize:hero:v2`
  */
 const heroImageBase = '/images/hero/home-hero-instructional-design-v2';
+/** Responsive widths in srcset (regenerate: `pnpm optimize:hero:v2`). */
+const heroImageWidths = [320, 480, 640, 720, 960, 1280] as const;
+const heroImageSrcset = (ext: string) =>
+  heroImageWidths.map((w) => `${heroImageBase}-${w}w.${ext} ${w}w`).join(', ');
 /**
- * Hero image column ≈ half of `.layout-container` (see `global.css` max-widths + `Hero` grid).
- * Slightly conservative caps vs. prior `sizes` to reduce over-fetch on common laptop widths.
+ * Below `lg`: cap slot at 20rem so 1× picks 480w and 2× picks 640w–720w, not 960w.
+ * Desktop: half of `.layout-container` (see `global.css` max-widths + `Hero` grid).
  */
-const heroImageSizes =
-  '(min-width: 1920px) min(46rem, 42vw), (min-width: 1536px) min(40rem, 44vw), (min-width: 901px) min(36rem, 46vw), min(92vw, 42rem)';
+const heroImageSizes = `${minWidthScreen('3xl')} min(46rem, 42vw), ${minWidthScreen('2xl')} min(40rem, 44vw), ${minWidthScreen('lg')} min(36rem, 46vw), min(88vw, 20rem)`;
 const heroImageAlt =
   'Three professional women collaborating on an instructional design learning map around a wooden table in a bright, plant-filled office.';
 
@@ -57,7 +61,12 @@ const nosotrasAboutItems: AboutUsItem[] = [
 ];
 ---
 
-<BaseLayout fullWidthMain title={seoPageMeta.home.title} description={seoPageMeta.home.description}>
+<BaseLayout
+  fullWidthMain
+  heroLcp
+  title={seoPageMeta.home.title}
+  description={seoPageMeta.home.description}
+>
   <Hero
     class="homepage-section homepage-section-hero"
     eyebrow="E‑Learning Studio"
@@ -70,19 +79,11 @@ const nosotrasAboutItems: AboutUsItem[] = [
     imageAlt={heroImageAlt}
   >
     <picture slot="media">
-      <source
-        type="image/avif"
-        srcset={`${heroImageBase}-480w.avif 480w, ${heroImageBase}-640w.avif 640w, ${heroImageBase}-960w.avif 960w, ${heroImageBase}-1280w.avif 1280w`}
-        sizes={heroImageSizes}
-      />
-      <source
-        type="image/webp"
-        srcset={`${heroImageBase}-480w.webp 480w, ${heroImageBase}-640w.webp 640w, ${heroImageBase}-960w.webp 960w, ${heroImageBase}-1280w.webp 1280w`}
-        sizes={heroImageSizes}
-      />
+      <source type="image/avif" srcset={heroImageSrcset('avif')} sizes={heroImageSizes} />
+      <source type="image/webp" srcset={heroImageSrcset('webp')} sizes={heroImageSizes} />
       <img
         src={`${heroImageBase}-960w.jpg`}
-        srcset={`${heroImageBase}-480w.jpg 480w, ${heroImageBase}-640w.jpg 640w, ${heroImageBase}-960w.jpg 960w, ${heroImageBase}-1280w.jpg 1280w`}
+        srcset={heroImageSrcset('jpg')}
         alt={heroImageAlt}
         width={1452}
         height={1083}
@@ -201,5 +202,5 @@ const nosotrasAboutItems: AboutUsItem[] = [
     items={nosotrasAboutItems}
   />
 
-  <EmailSignupPopup />
+  <EmailSignupPopupLoader />
 </BaseLayout>

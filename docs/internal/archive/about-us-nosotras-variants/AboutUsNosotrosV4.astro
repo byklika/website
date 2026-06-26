@@ -76,13 +76,13 @@ const teaserByTitle: Record<string, string> = {
   id="nosotras-v4"
   class={cn(
     'about-us-nosotras-v4-component',
-    'section-gutter-x bg-klika-cream py-16 min-[901px]:py-24 lg:bg-[radial-gradient(120%_95%_at_6%_8%,rgba(74,103,65,0.14)_0%,rgba(74,103,65,0)_52%),radial-gradient(92%_75%_at_100%_100%,rgba(242,106,58,0.15)_0%,rgba(242,106,58,0)_58%),linear-gradient(180deg,#f2f5ee_0%,#f4f7f0_48%,#f2f5ee_100%)]',
+    'section-gutter-x bg-klika-cream py-16 lg:py-24 lg:bg-[radial-gradient(120%_95%_at_6%_8%,rgba(74,103,65,0.14)_0%,rgba(74,103,65,0)_52%),radial-gradient(92%_75%_at_100%_100%,rgba(242,106,58,0.15)_0%,rgba(242,106,58,0)_58%),linear-gradient(180deg,#f2f5ee_0%,#f4f7f0_48%,#f2f5ee_100%)]',
     className
   )}
   aria-label={`${eyebrow} — versión alternativa (v4)`}
 >
   <div class="layout-container">
-    <SectionHeading eyebrow={eyebrow} title={title} class="reveal" />
+    <SectionHeading {eyebrow} {title} class="reveal" />
 
     <div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:hidden 2xl:gap-8">
       {
@@ -93,7 +93,7 @@ const teaserByTitle: Record<string, string> = {
           return (
             <article
               class:list={[
-                'group relative isolate min-h-[340px] overflow-hidden rounded-[1.2rem] border-l-4 border-l-klika-coral shadow-card',
+                'group border-l-klika-coral shadow-card relative isolate min-h-[340px] overflow-hidden rounded-[1.2rem] border-l-4',
                 'reveal',
                 idx % 3 === 1 ? 'rd1' : idx % 3 === 2 ? 'rd2' : ''
               ]}
@@ -121,30 +121,28 @@ const teaserByTitle: Record<string, string> = {
               </picture>
 
               <div
-                class="pointer-events-none absolute inset-0 bg-gradient-to-t from-klika-dark/68 via-transparent to-transparent"
+                class="from-klika-dark/68 pointer-events-none absolute inset-0 bg-gradient-to-t via-transparent to-transparent"
                 aria-hidden="true"
               />
 
               <div class="relative z-[1] flex min-h-[340px] flex-col justify-between p-6">
-                <h3 class="inline-block max-w-[88%] rounded-md bg-klika-dark px-3.5 py-2 font-serif text-[1.35rem] font-normal leading-snug text-klika-white min-[901px]:text-[1.55rem]">
+                <h3 class="bg-klika-dark text-klika-white inline-block max-w-[88%] rounded-md px-3.5 py-2 font-serif text-[1.35rem] leading-snug font-normal lg:text-[1.55rem]">
                   {it.title}
                 </h3>
 
-                <div class="space-y-3 text-klika-white">
-                  <p class="rounded-md bg-klika-dark/56 px-4 py-2.5 text-[0.95rem] leading-[1.5] text-klika-white/95">
+                <div class="text-klika-white space-y-3">
+                  <p class="bg-klika-dark/56 text-klika-white/95 rounded-md px-4 py-2.5 text-[0.95rem] leading-[1.5]">
                     {teaser}
                   </p>
 
-                  <span class="inline-flex items-center gap-1 rounded-md bg-klika-dark/50 px-3 py-1.5 text-[0.82rem] font-medium tracking-wide text-klika-white/90">
+                  <span class="bg-klika-dark/50 text-klika-white/90 inline-flex items-center gap-1 rounded-md px-3 py-1.5 text-[0.82rem] font-medium tracking-wide">
                     Leer más
                     <span aria-hidden="true">+</span>
                   </span>
                 </div>
               </div>
 
-              <div
-                class="nosotras-v4-details pointer-events-none absolute inset-x-0 bottom-0 z-[2] bg-klika-dark/88 px-6 pb-6 pt-5 text-[0.95rem] leading-[1.6] text-klika-white/95 lg:opacity-0 lg:translate-y-4 lg:group-hover:opacity-100 lg:group-hover:translate-y-0 lg:group-focus-within:opacity-100 lg:group-focus-within:translate-y-0"
-              >
+              <div class="nosotras-v4-details bg-klika-dark/88 text-klika-white/95 pointer-events-none absolute inset-x-0 bottom-0 z-[2] px-6 pt-5 pb-6 text-[0.95rem] leading-[1.6] lg:translate-y-4 lg:opacity-0 lg:group-focus-within:translate-y-0 lg:group-focus-within:opacity-100 lg:group-hover:translate-y-0 lg:group-hover:opacity-100">
                 {it.description}
               </div>
             </article>
@@ -162,23 +160,26 @@ const teaserByTitle: Record<string, string> = {
             const storyId = `nosotras-v4-story-${idx + 1}`;
 
             return (
-              <article class="nosotras-v4-row reveal rounded-2xl border border-klika-sage/25 bg-klika-white/72 px-6 py-5 text-klika-dark backdrop-blur-[1px]">
+              <article class="nosotras-v4-row reveal border-klika-sage/25 bg-klika-white/72 text-klika-dark rounded-2xl border px-6 py-5 backdrop-blur-[1px]">
                 <div class="flex flex-col gap-5 xl:grid xl:grid-cols-[auto_1fr_auto] xl:items-start xl:gap-6">
                   <div class="flex items-baseline gap-3">
-                    <span class="text-[0.9rem] font-semibold tracking-[0.08em] text-klika-coral/85">
+                    <span class="text-klika-coral/85 text-[0.9rem] font-semibold tracking-[0.08em]">
                       {(idx + 1).toString().padStart(2, '0')}
                     </span>
-                    <h3 id={storyId} class="font-serif text-[1.45rem] leading-tight text-klika-dark xl:text-[1.62rem]">
+                    <h3
+                      id={storyId}
+                      class="text-klika-dark font-serif text-[1.45rem] leading-tight xl:text-[1.62rem]"
+                    >
                       {it.title}
                     </h3>
                   </div>
 
                   <div class="space-y-3">
-                    <p class="nosotras-v4-teaser text-[1rem] leading-[1.55] text-klika-dark/80">
+                    <p class="nosotras-v4-teaser text-klika-dark/80 text-[1rem] leading-[1.55]">
                       {teaser}
                     </p>
                     <p
-                      class="max-w-[70ch] rounded-lg bg-klika-dark/5 px-4 py-3 text-[0.97rem] leading-[1.62] text-klika-dark/88"
+                      class="bg-klika-dark/5 text-klika-dark/88 max-w-[70ch] rounded-lg px-4 py-3 text-[0.97rem] leading-[1.62]"
                       aria-labelledby={storyId}
                     >
                       {it.description}

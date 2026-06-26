@@ -47,7 +47,7 @@ const closeButtonClasses = isContact
   data-side={side}
   data-close-on-overlay-click={closeOnOverlayClick ? 'true' : 'false'}
   data-close-on-esc={closeOnEsc ? 'true' : 'false'}
-  aria-hidden={initialOpen ? undefined : 'true'}
+  {...!initialOpen ? { inert: true } : {}}
   {...initialOpen ? { 'data-arm': '', 'data-open': '' } : {}}
 >
   <div

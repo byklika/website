@@ -1,0 +1,18 @@
+---
+import { EMAIL_SIGNUP_POPUP_DEFAULTS } from '~/data/emailSignupPopupContract';
+---
+
+<script is:inline define:vars={{ storageKey: EMAIL_SIGNUP_POPUP_DEFAULTS.storageKey }}>
+  try {
+    if (localStorage.getItem(storageKey) === '1') {
+      window.__SKIP_EMAIL_SIGNUP_POPUP__ = true;
+    }
+  } catch {
+    /* ignore */
+  }
+</script>
+<script>
+  if (!window.__SKIP_EMAIL_SIGNUP_POPUP__) {
+    import('~/scripts/emailSignupPopupLoader.ts');
+  }
+</script>
