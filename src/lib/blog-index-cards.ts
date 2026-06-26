@@ -1,8 +1,10 @@
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import type { BlogPlaceholderEntry } from '~/data/blogPlaceholders';
 import { blogPlaceholders } from '~/data/blogPlaceholders';
 import { blogEntryToCardProps } from '~/lib/blog-card';
 import { resolveBlogImageSlug } from '~/lib/blog-image';
+
+type BlogCollectionEntry = CollectionEntry<'blog'>;
 
 function matchesPlaceholderSlug(entryId: string, placeholderSlug: string): boolean {
   return entryId === placeholderSlug || entryId.endsWith(`/${placeholderSlug}`);
@@ -16,11 +18,11 @@ export type BlogIndexCardProps = BlogPlaceholderEntry & {
 /** Published index cards in placeholder order — shared by index route and LCP head. */
 export async function getBlogIndexCards(): Promise<BlogIndexCardProps[]> {
   const publishedByPlaceholderSlug = new Map(
-    (await getCollection('blog', ({ data }) => !data.draft))
-      .filter((entry) =>
+    (await getCollection('blog', (entry: BlogCollectionEntry) => !entry.data.draft))
+      .filter((entry: BlogCollectionEntry) =>
         blogPlaceholders.some((placeholder) => matchesPlaceholderSlug(entry.id, placeholder.slug))
       )
-      .map((entry) => {
+      .map((entry: BlogCollectionEntry) => {
         const placeholder = blogPlaceholders.find((p) => matchesPlaceholderSlug(entry.id, p.slug))!;
         return [placeholder.slug, entry] as const;
       })
