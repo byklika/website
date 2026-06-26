@@ -9,6 +9,7 @@ import BlogArticleCta from '~/components/blog/BlogArticleCta.astro';
 import BlogArticleLead from '~/components/blog/BlogArticleLead.astro';
 import BlogArticleHeader from '~/components/blog/BlogArticleHeader.astro';
 import BlogRelatedPosts from '~/components/blog/BlogRelatedPosts.astro';
+import EmailSignupPopupLoader from '~/components/EmailSignupPopupLoader.astro';
 import { formatArticleSeoTitle } from '~/data/seoOnPageContract';
 import { blogPostHref } from '~/lib/blog-card';
 import { blogImageOgUrl } from '~/lib/blog-image';
@@ -128,4 +129,6 @@ const articleJsonLd = [
 
   <link rel="stylesheet" href={blogArticleDeferredCss} media="print" onload="this.media='all'" />
   <noscript><link rel="stylesheet" href={blogArticleDeferredCss} /></noscript>
+
+  <EmailSignupPopupLoader />
 </BaseLayout>

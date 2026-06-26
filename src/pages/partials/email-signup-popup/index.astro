@@ -1,0 +1,14 @@
+---
+import FragmentLayout from '~/layouts/FragmentLayout.astro';
+import EmailSignupPopup from '~/components/EmailSignupPopup.astro';
+
+export const prerender = true;
+---
+
+<head>
+  <meta name="robots" content="noindex, nofollow" />
+</head>
+
+<FragmentLayout>
+  <EmailSignupPopup />
+</FragmentLayout>

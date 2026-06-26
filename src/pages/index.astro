@@ -5,7 +5,7 @@ import Methodology from '~/components/sections/Methodology.astro';
 import Services from '~/components/sections/Services.astro';
 import AboutUs from '~/components/sections/AboutUs.astro';
 import type { Item as AboutUsItem } from '~/components/sections/AboutUs.astro';
-import EmailSignupPopup from '~/components/EmailSignupPopup.astro';
+import EmailSignupPopupLoader from '~/components/EmailSignupPopupLoader.astro';
 import { seoPageMeta } from '~/data/seoOnPageContract';
 import { minWidthScreen } from '~/data/tailwindScreens';
 
@@ -202,5 +202,5 @@ const nosotrasAboutItems: AboutUsItem[] = [
     items={nosotrasAboutItems}
   />
 
-  <EmailSignupPopup />
+  <EmailSignupPopupLoader />
 </BaseLayout>

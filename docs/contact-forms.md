@@ -118,15 +118,19 @@ Service-specific triggers listed in `contactSheetTriggers` in contract.
 
 ## Email signup popup
 
-**Separate path** from main contact form:
+**Lazy-loaded on the homepage** — markup, controller, and Web3Forms helper load only when the user is eligible (not previously dismissed) and a trigger prefetches or fires.
 
-| Item      | Detail                                                     |
-| --------- | ---------------------------------------------------------- |
-| Component | `EmailSignupPopup.astro` (homepage)                        |
-| Script    | `src/scripts/emailSignupPopup.ts`                          |
-| Env       | `PUBLIC_WEB3FORMS_POPUP_ACCESS_KEY`                        |
-| Subject   | `'Email signup popup — byklika.com'`                       |
-| Behavior  | Timed / scroll-triggered overlay; localStorage "seen" flag |
+| Item       | Detail                                                                                                              |
+| ---------- | ------------------------------------------------------------------------------------------------------------------- |
+| Markup     | `EmailSignupPopup.astro` (served from `/partials/email-signup-popup/`)                                              |
+| Loader     | `EmailSignupPopupLoader.astro` → `src/scripts/emailSignupPopupLoader.ts` (homepage + blog articles; not blog index) |
+| Controller | `src/scripts/emailSignupPopup.ts` (`initEmailSignupPopup`)                                                          |
+| Contract   | `src/data/emailSignupPopupContract.ts` (timing, storage, partial path)                                              |
+| Env        | `PUBLIC_WEB3FORMS_POPUP_ACCESS_KEY`                                                                                 |
+| Subject    | `'Email signup popup — byklika.com'`                                                                                |
+| Behavior   | Timed / scroll-triggered overlay; localStorage "seen" flag                                                          |
+
+Return visitors with the seen flag never download the popup partial or controller. Prefetch starts at 45s or 50% scroll; open at 50s or 60% scroll.
 
 Uses same `submitToWeb3Forms()` helper but **different access key** — configure separately in Web3Forms dashboard with domain restriction.
 
