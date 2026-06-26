@@ -46,8 +46,8 @@ export const blogImageSizesPresets = {
   card: '(min-width: 921px) min(33vw, 22rem), (min-width: 561px) min(50vw, 22rem), min(100vw, 22rem)',
   /** Full-bleed article banner */
   banner: '100vw',
-  /** Related posts — 2 → 1 columns */
-  related: '(min-width: 768px) 50vw, 100vw'
+  /** Related posts — capped to card column width inside 720px article column */
+  related: '(min-width: 561px) 21rem, min(100vw, 22rem)'
 } as const;
 
 export type BlogImageSizesPreset = keyof typeof blogImageSizesPresets;

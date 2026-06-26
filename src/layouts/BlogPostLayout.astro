@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import '~/styles/blog-article.css';
+import blogArticleDeferredCss from '~/styles/blog-article-deferred.css?url';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 import BlogArticleBanner from '~/components/blog/BlogArticleBanner.astro';
 import BlogArticleAuthor from '~/components/blog/BlogArticleAuthor.astro';
@@ -91,6 +92,8 @@ const articleJsonLd = [
 
 <BaseLayout
   fullWidthMain
+  blogArticleLcp
+  {heroImageSlug}
   title={formatArticleSeoTitle(title)}
   description={articleDescription}
   image={socialImage}
@@ -122,4 +125,7 @@ const articleJsonLd = [
       </div>
     </article>
   </div>
+
+  <link rel="stylesheet" href={blogArticleDeferredCss} media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href={blogArticleDeferredCss} /></noscript>
 </BaseLayout>

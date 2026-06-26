@@ -18,7 +18,7 @@ const readingTimeLabel = formatReadingTimeLabel(readingTimeMinutes);
 
 <header class="blog-article-header not-prose">
   <nav
-    class="text-klika-muted2 mb-6 flex flex-wrap items-center gap-2 text-xs"
+    class="text-klika-sage mb-6 flex flex-wrap items-center gap-2 text-xs"
     aria-label="Migas de pan"
   >
     <a href={blogBreadcrumbRoot.href} class="hover:text-klika-coral transition-colors">
@@ -33,11 +33,11 @@ const readingTimeLabel = formatReadingTimeLabel(readingTimeMinutes);
   >
     <span class="text-klika-moss">{category}</span>
     <span class="bg-klika-muted2 h-[3px] w-[3px] shrink-0 rounded-full" aria-hidden="true"></span>
-    <time class="text-klika-muted2 font-medium tracking-[0.04em]" datetime={pubDate.toISOString()}>
+    <time class="text-klika-sage font-medium tracking-[0.04em]" datetime={pubDate.toISOString()}>
       {formattedDate}
     </time>
     <span class="bg-klika-muted2 h-[3px] w-[3px] shrink-0 rounded-full" aria-hidden="true"></span>
-    <span class="text-klika-muted2 font-medium tracking-[0.04em]">{readingTimeLabel}</span>
+    <span class="text-klika-sage font-medium tracking-[0.04em]">{readingTimeLabel}</span>
   </div>
 
   <h1

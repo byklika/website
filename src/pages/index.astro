@@ -7,6 +7,7 @@ import AboutUs from '~/components/sections/AboutUs.astro';
 import type { Item as AboutUsItem } from '~/components/sections/AboutUs.astro';
 import EmailSignupPopup from '~/components/EmailSignupPopup.astro';
 import { seoPageMeta } from '~/data/seoOnPageContract';
+import { minWidthScreen } from '~/data/tailwindScreens';
 
 /**
  * Hero raster: master lives under `src/assets/` (not publicly served).
@@ -19,11 +20,10 @@ const heroImageWidths = [320, 480, 640, 720, 960, 1280] as const;
 const heroImageSrcset = (ext: string) =>
   heroImageWidths.map((w) => `${heroImageBase}-${w}w.${ext} ${w}w`).join(', ');
 /**
- * Mobile (<901px): cap slot at 20rem so 1× picks 480w and 2× picks 640w–720w, not 960w.
+ * Below `lg`: cap slot at 20rem so 1× picks 480w and 2× picks 640w–720w, not 960w.
  * Desktop: half of `.layout-container` (see `global.css` max-widths + `Hero` grid).
  */
-const heroImageSizes =
-  '(min-width: 1920px) min(46rem, 42vw), (min-width: 1536px) min(40rem, 44vw), (min-width: 901px) min(36rem, 46vw), min(88vw, 20rem)';
+const heroImageSizes = `${minWidthScreen('3xl')} min(46rem, 42vw), ${minWidthScreen('2xl')} min(40rem, 44vw), ${minWidthScreen('lg')} min(36rem, 46vw), min(88vw, 20rem)`;
 const heroImageAlt =
   'Three professional women collaborating on an instructional design learning map around a wooden table in a bright, plant-filled office.';
 

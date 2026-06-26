@@ -1,0 +1,91 @@
+@reference './global.css';
+
+/* Below-fold article chrome — loaded async from BlogPostLayout (not render-blocking). */
+.blog-article-divider {
+  @apply bg-klika-moss/10 my-12 h-px border-0;
+}
+
+.blog-article-cta {
+  @apply bg-klika-moss relative flex flex-wrap items-center justify-between gap-[1.4rem] overflow-hidden rounded-[18px] px-[2.4rem] py-[2.2rem];
+}
+
+.blog-article-cta::before {
+  content: '';
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  top: -110px;
+  right: 12%;
+  background: radial-gradient(circle, rgba(98, 138, 87, 0.5), rgba(98, 138, 87, 0) 70%);
+  pointer-events: none;
+}
+
+.blog-article-cta__title {
+  @apply text-klika-cream mb-[0.45rem] font-serif text-[1.4rem] leading-[1.25] font-bold tracking-[-0.01em];
+}
+
+.blog-article-cta__description {
+  @apply text-klika-cream/78 text-[0.94rem] leading-[1.55];
+}
+
+.blog-article-cta__action {
+  @apply rounded-pill bg-klika-coral hover:bg-klika-coralHover focus-visible:ring-klika-coral relative inline-flex shrink-0 items-center border-0 px-[1.8rem] py-[0.95rem] text-[0.98rem] font-semibold whitespace-nowrap text-white shadow-[0_6px_18px_rgba(242,106,58,0.32)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_26px_rgba(242,106,58,0.42)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none;
+}
+
+.blog-related-card__title-link {
+  @apply focus-visible:ring-klika-coral text-inherit no-underline transition-colors duration-200 focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none;
+}
+
+.blog-related-card__title-link:hover,
+.blog-related-card__title-link:active,
+.blog-related-card__title-link:focus-visible {
+  @apply text-klika-coral;
+}
+
+.blog-related-card__read-more {
+  @apply text-klika-coral inline-flex items-center gap-[0.45rem] border-x-0 border-t-0 border-b-[1.5px] border-transparent bg-transparent pb-0.5 text-[0.84rem] font-semibold transition-[gap,border-color] duration-200;
+  font-family: inherit;
+}
+
+a.blog-related-card__read-more {
+  cursor: pointer;
+}
+
+.blog-related-card__read-more::after {
+  content: '→';
+  transition: transform 0.2s ease;
+}
+
+a.blog-related-card__read-more:hover,
+a.blog-related-card__read-more:focus-visible {
+  gap: 0.7rem;
+  border-bottom-color: #f26a3a;
+}
+
+a.blog-related-card__read-more:hover::after,
+a.blog-related-card__read-more:focus-visible::after {
+  transform: translateX(2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blog-article-cta__action {
+    transition: none !important;
+  }
+
+  .blog-article-cta__action:hover {
+    transform: none !important;
+  }
+
+  .blog-related-card {
+    transition: none !important;
+  }
+
+  .blog-related-card:hover {
+    transform: none !important;
+  }
+
+  .blog-related-card__read-more::after {
+    transition: none;
+  }
+}

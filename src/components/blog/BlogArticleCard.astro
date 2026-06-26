@@ -92,20 +92,20 @@ const cardSurface = cn(
       <span class="text-klika-moss shrink-0">{category}</span>
       <span class="bg-klika-muted2 h-[3px] w-[3px] shrink-0 rounded-full" aria-hidden="true"></span>
       <time
-        class="text-klika-muted2 shrink-0 font-medium tracking-[0.04em] normal-case"
+        class="text-klika-sage shrink-0 font-medium tracking-[0.04em] normal-case"
         datetime={pubDate.toISOString()}
       >
         {formattedDate}
       </time>
     </div>
 
-    <h3
+    <h2
       class="text-klika-dark mb-[0.7rem] font-serif text-[1.18rem] leading-[1.22] font-semibold tracking-[-0.012em] text-balance"
     >
       <a href={articleHref} class="blog-article-card__title-link">
         {title}
       </a>
-    </h3>
+    </h2>
 
     <p class="blog-article-card__excerpt">{lead}</p>
 
