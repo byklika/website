@@ -17,7 +17,7 @@ src/scripts/*.ts  ──publish()──►  src/lib/analytics/bus.ts
 
 | Integration        | Env var                        | Loads when                                                                 |
 | ------------------ | ------------------------------ | -------------------------------------------------------------------------- |
-| Google Analytics 4 | `PUBLIC_GA_MEASUREMENT_ID`     | `requestIdleCallback` (3.5 s timeout fallback) after paint                 |
+| Google Analytics 4 | `PUBLIC_GA_MEASUREMENT_ID`     | After `window` `load`, then `requestIdleCallback` (8 s timeout fallback)   |
 | Microsoft Clarity  | `PUBLIC_CLARITY_PROJECT_ID`    | First user interaction (`scroll`, `click`, `keydown`, `touchstart`)        |
 | GrowthBook         | `PUBLIC_GROWTHBOOK_CLIENT_KEY` | `requestIdleCallback` after paint (see [`experiments.md`](experiments.md)) |
 

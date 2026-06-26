@@ -8,6 +8,19 @@ export function runWhenIdle(fn: () => void, timeout = 3500): void {
   }
 }
 
+/** Defer work until `window` `load` so LCP is not competing with analytics boot. */
+export function runAfterWindowLoad(fn: () => void): void {
+  if (typeof window === 'undefined') return;
+  if (document.readyState === 'complete') {
+    fn();
+    return;
+  }
+  window.addEventListener('load', fn, { once: true });
+}
+
+/** GA4 idle timeout — after load; keeps gtag out of typical Lighthouse navigation window. */
+const GA_IDLE_TIMEOUT_MS = 8000;
+
 const INTERACTION_EVENTS = ['scroll', 'click', 'keydown', 'touchstart'] as const;
 
 /** Run `fn` once on the first scroll, click, keydown, or touchstart. */
@@ -94,7 +107,9 @@ export function bootDeferredAnalytics(opts: DeferredAnalyticsOptions): void {
   const { gaMeasurementId, clarityProjectId, gaConfig = { send_page_view: false } } = opts;
 
   if (gaMeasurementId) {
-    runWhenIdle(() => loadGa4(gaMeasurementId, gaConfig));
+    runAfterWindowLoad(() =>
+      runWhenIdle(() => loadGa4(gaMeasurementId, gaConfig), GA_IDLE_TIMEOUT_MS)
+    );
   }
 
   if (clarityProjectId) {
