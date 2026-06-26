@@ -15,21 +15,21 @@ src/scripts/*.ts  ──publish()──►  src/lib/analytics/bus.ts
 
 **Bootstrap:** `src/components/SiteAnalytics.astro` (included via `SiteBodyChrome.astro` on every page)
 
-| Integration        | Env var                        | Loads when                                                                 |
-| ------------------ | ------------------------------ | -------------------------------------------------------------------------- |
-| Google Analytics 4 | `PUBLIC_GA_MEASUREMENT_ID`     | After `window` `load`, then `requestIdleCallback` (8 s timeout fallback)   |
-| Microsoft Clarity  | `PUBLIC_CLARITY_PROJECT_ID`    | First user interaction (`scroll`, `click`, `keydown`, `touchstart`)        |
-| GrowthBook         | `PUBLIC_GROWTHBOOK_CLIENT_KEY` | `requestIdleCallback` after paint (see [`experiments.md`](experiments.md)) |
+| Integration        | Env var                        | Loads when                                                                       |
+| ------------------ | ------------------------------ | -------------------------------------------------------------------------------- |
+| Google Analytics 4 | `PUBLIC_GA_MEASUREMENT_ID`     | After `window` `load`, then `requestIdleCallback` (8 s timeout fallback)         |
+| Microsoft Clarity  | `PUBLIC_CLARITY_PROJECT_ID`    | First user interaction (`scroll`, `click`, `keydown`, `touchstart`)              |
+| GrowthBook         | `PUBLIC_GROWTHBOOK_CLIENT_KEY` | After `window` `load`, then dynamic import + `requestIdleCallback` (8 s timeout) |
 
 ---
 
 ## SiteAnalytics.astro
 
-- **Deferred boot** (`src/lib/analytics/deferredBoot.ts`): GA4 loads on idle; Clarity loads on first interaction (skipped during Lighthouse lab runs)
+- **Deferred boot** (`src/lib/analytics/deferredBoot.ts`): GA4 and GrowthBook load after `load` + idle; Clarity loads on first interaction (skipped during Lighthouse lab runs)
 - GA4 uses **`send_page_view: false`** on config — sends one explicit `page_view` after `gtag.js` loads (avoids double count)
 - Dev mode: `debug_mode: true` on gtag config
 - Calls `initAnalytics()` from bus (attaches GA forwarder; bus events no-op until `window.gtag` exists)
-- GrowthBook `init()` runs on idle when client key present
+- GrowthBook SDK is code-split; `init()` runs after `load` + idle when client key present
 
 ### Duplicate GA measurement IDs
 

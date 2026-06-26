@@ -1,9 +1,5 @@
-import { GrowthBook } from '@growthbook/growthbook';
-
-import { runWhenIdle } from '~/lib/analytics/deferredBoot';
-
-import { GB_ANON_ID_COOKIE } from './constants';
 import { growthbookTrackingCallback } from './growthbookTrackingCallback';
+import { GB_ANON_ID_COOKIE } from './constants';
 
 function getAnonymousId(): string {
   const idKey = GB_ANON_ID_COOKIE;
@@ -46,9 +42,12 @@ function getAnonymousId(): string {
   }
 }
 
-function bootGrowthBook(): void {
+/** Load SDK + init when `PUBLIC_GROWTHBOOK_CLIENT_KEY` is set at build time. */
+export async function bootGrowthBook(): Promise<void> {
   const clientKey = import.meta.env.PUBLIC_GROWTHBOOK_CLIENT_KEY?.trim();
   if (!clientKey) return;
+
+  const { GrowthBook } = await import('@growthbook/growthbook');
 
   const gb = new GrowthBook({
     apiHost: 'https://cdn.growthbook.io',
@@ -65,19 +64,11 @@ function bootGrowthBook(): void {
     anonId
   });
 
-  void gb
-    .init()
-    .then(() => {
-      window.growthbook = gb;
-      window.dispatchEvent(new CustomEvent('growthbook:ready'));
-    })
-    .catch((err) => {
-      if (import.meta.env.DEV) console.error('[GrowthBook]', err);
-    });
-}
-
-/** Initialize GrowthBook on idle when `PUBLIC_GROWTHBOOK_CLIENT_KEY` is set at build time. */
-export function bootGrowthBookOnIdle(): void {
-  if (!import.meta.env.PUBLIC_GROWTHBOOK_CLIENT_KEY?.trim()) return;
-  runWhenIdle(bootGrowthBook);
+  try {
+    await gb.init();
+    window.growthbook = gb;
+    window.dispatchEvent(new CustomEvent('growthbook:ready'));
+  } catch (err) {
+    if (import.meta.env.DEV) console.error('[GrowthBook]', err);
+  }
 }

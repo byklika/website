@@ -9,8 +9,8 @@
  * **build** on the host (e.g. Vercel → Settings → Environment Variables → Production) and you
  * **redeploy** after saving.
  *
- * Production stack: GA4 + Clarity + GrowthBook (optional). GA and Clarity boot are deferred
- * (idle / first interaction); GrowthBook `init()` runs on idle. See `docs/analytics.md`.
+ * Production stack: GA4 + Clarity + GrowthBook (optional). All load deferred after paint
+ * (load + idle for GA/GrowthBook; first interaction for Clarity). See `docs/analytics.md`.
  */
 const gaMeasurementId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID?.trim();
 const clarityProjectId = import.meta.env.PUBLIC_CLARITY_PROJECT_ID?.trim();
@@ -32,9 +32,7 @@ if (import.meta.env.DEV) {
 >
   <script>
     import { bootSiteAnalytics } from '~/lib/analytics/bootSiteAnalytics';
-    import { bootGrowthBookOnIdle } from '~/lib/experiments/bootGrowthBook';
 
     bootSiteAnalytics();
-    bootGrowthBookOnIdle();
   </script>
 </div>
