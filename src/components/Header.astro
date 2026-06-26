@@ -25,7 +25,7 @@ function isLinkActive(href: string) {
   id="homeHeader"
   class="header-component z-header bg-klika-dark fixed inset-x-0 top-0 shadow-[0_2px_16px_rgba(0,0,0,0.15)]"
 >
-  <div class="section-gutter-x py-4">
+  <div class="section-gutter-x h-full">
     <div class="layout-container flex items-center justify-between gap-4">
       <a href="/#inicio" class="flex items-center gap-3 no-underline">
         <KlikaHomeHeaderLogoIcon />
@@ -36,10 +36,7 @@ function isLinkActive(href: string) {
         </span>
       </a>
 
-      <nav
-        class="hidden cursor-pointer items-center gap-[1.8rem] min-[901px]:flex"
-        aria-label="Primary"
-      >
+      <nav class="hidden cursor-pointer items-center gap-[1.8rem] lg:flex" aria-label="Primary">
         {
           headerNavItems.map((item) =>
             item.kind === 'link' ? (
@@ -85,14 +82,16 @@ function isLinkActive(href: string) {
         </button>
       </nav>
 
-      <details class="relative min-[901px]:hidden">
+      <details class="relative lg:hidden">
         <summary
-          class="rounded-pill text-klika-white cursor-pointer list-none border border-white/20 px-4 py-2 text-sm"
+          class="text-klika-white flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-lg border border-white/20"
+          aria-label="Menú de navegación"
         >
-          Menú
+          <span aria-hidden="true" class="text-lg leading-none">☰</span>
         </summary>
-        <div
+        <nav
           class="bg-klika-dark absolute right-0 mt-2 w-56 rounded-xl p-2 shadow-[0_16px_48px_rgba(0,0,0,0.35)]"
+          aria-label="Menú móvil"
         >
           <div class="flex flex-col">
             {
@@ -139,7 +138,7 @@ function isLinkActive(href: string) {
               Hablemos
             </button>
           </div>
-        </div>
+        </nav>
       </details>
     </div>
   </div>

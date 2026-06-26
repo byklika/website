@@ -25,29 +25,38 @@ const { eyebrow, title, intro, steps, class: className } = Astro.props;
   id="metodologia"
   class={cn(
     'methodology-component',
-    'section-gutter-x relative overflow-hidden bg-klika-dark py-16 text-klika-white min-[901px]:py-24',
+    'section-gutter-x relative overflow-hidden bg-klika-dark py-16 text-klika-white lg:py-24',
     className
   )}
 >
   <div
-    class="pointer-events-none absolute -right-[150px] -top-[200px] hidden rounded-full bg-klika-moss/20 min-[901px]:block min-[901px]:h-[clamp(260px,24vw,560px)] min-[901px]:w-[clamp(260px,24vw,560px)]"
+    class="bg-klika-moss/20 pointer-events-none absolute -top-[200px] -right-[150px] hidden rounded-full lg:block lg:h-[clamp(260px,24vw,560px)] lg:w-[clamp(260px,24vw,560px)]"
     aria-hidden="true"
-  ></div>
+  >
+  </div>
 
   <div class="layout-container">
-    <SectionHeading eyebrow={eyebrow} title={title} tone="light" class="reveal" />
-    <p class="reveal rd1 mt-6 max-w-[680px] text-[0.98rem] leading-[1.7] text-white/65 mb-[3.5rem] 2xl:text-[1.0625rem] 2xl:leading-[1.65]">
+    <SectionHeading {eyebrow} {title} tone="light" class="reveal" />
+    <p
+      class="reveal rd1 mt-6 mb-[3.5rem] max-w-[680px] text-[0.98rem] leading-[1.7] text-white/65 2xl:text-[1.0625rem] 2xl:leading-[1.65]"
+    >
       {intro}
     </p>
 
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 2xl:gap-8">
-      {steps.map((s, idx) => (
-        <MethodCard title={s.title} class={['reveal', idx === 1 ? 'rd1' : idx === 2 ? 'rd2' : idx === 3 ? 'rd3' : ''].join(' ')}>
-          <HeroiconOutline slot="icon" name={METHODOLOGY_STEP_ICONS[idx]} variant="methodology" />
-          {s.description}
-        </MethodCard>
-      ))}
+      {
+        steps.map((s, idx) => (
+          <MethodCard
+            title={s.title}
+            class={['reveal', idx === 1 ? 'rd1' : idx === 2 ? 'rd2' : idx === 3 ? 'rd3' : ''].join(
+              ' '
+            )}
+          >
+            <HeroiconOutline slot="icon" name={METHODOLOGY_STEP_ICONS[idx]} variant="methodology" />
+            {s.description}
+          </MethodCard>
+        ))
+      }
     </div>
   </div>
 </section>
-

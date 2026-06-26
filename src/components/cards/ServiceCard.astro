@@ -36,56 +36,61 @@ const {
 <article
   class={cn(
     'service-card-component',
-    'grid grid-cols-1 overflow-hidden rounded-[1.4rem] bg-klika-white shadow-card transition hover:shadow-cardHover 2xl:shadow-cardXl min-[901px]:grid-cols-[minmax(15rem,22vw)_1fr]',
+    'grid grid-cols-1 overflow-hidden rounded-[1.4rem] bg-klika-white shadow-card transition hover:shadow-cardHover 2xl:shadow-cardXl lg:grid-cols-[minmax(15rem,22vw)_1fr]',
     className
   )}
 >
-  <div class="flex flex-col justify-between bg-klika-dark px-[2rem] py-[2.4rem]">
+  <div class="bg-klika-dark flex flex-col justify-between px-[2rem] py-[2.4rem]">
     <div>
-      <p class="mb-3 text-[0.72rem] font-semibold tracking-[0.1em] uppercase text-klika-coral">
+      <p class="text-klika-coral mb-3 text-[0.72rem] font-semibold tracking-[0.1em] uppercase">
         {label}
       </p>
-      <h3 class="mb-2 font-serif text-[1.15rem] leading-snug text-klika-white">{title}</h3>
+      <h3 class="text-klika-white mb-2 font-serif text-[1.15rem] leading-snug">{title}</h3>
       {tagline && <p class="text-[0.84rem] leading-snug text-white/60">{tagline}</p>}
     </div>
     <slot name="leftBottom" />
   </div>
 
-  <div class="flex flex-col justify-between bg-klika-white px-[2.2rem] py-[2.4rem]">
+  <div class="bg-klika-white flex flex-col justify-between px-[2.2rem] py-[2.4rem]">
     <div class="max-w-prose space-y-4">
-      {description && <p class="text-[0.9rem] leading-relaxed text-klika-ink">{description}</p>}
+      {description && <p class="text-klika-ink text-[0.9rem] leading-relaxed">{description}</p>}
 
-      {includes.length > 0 && (
-        <div>
-          <p class="mb-2 text-[0.75rem] font-semibold tracking-[0.08em] uppercase text-klika-muted">
-            Incluye
-          </p>
-          <div class="flex flex-wrap gap-2">
-            {includes.map((t) => (
-              <Tag>{t}</Tag>
-            ))}
+      {
+        includes.length > 0 && (
+          <div>
+            <p class="text-klika-muted mb-2 text-[0.75rem] font-semibold tracking-[0.08em] uppercase">
+              Incluye
+            </p>
+            <div class="flex flex-wrap gap-2">
+              {includes.map((t) => (
+                <Tag>{t}</Tag>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )
+      }
     </div>
 
     <div class="mt-6">
-      {ctaSheetId ? (
-        <button
-          type="button"
-          class="button-component inline-flex items-center gap-2 rounded-pill font-semibold no-underline transition will-change-transform focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-klika-coral focus-visible:ring-offset-2 border-[1.5px] border-klika-moss text-klika-moss bg-transparent px-[1.4rem] py-[0.6rem] text-[0.84rem] hover:bg-klika-moss hover:text-klika-white"
-          aria-haspopup="dialog"
-          aria-controls={ctaSheetId}
-          data-sheet-open={ctaSheetId}
-          data-project-stage-source="service-card"
-          data-project-stage-value={projectStageValue}
-        >
-          {ctaLabel}
-        </button>
-      ) : (
-        <Button href={ctaHref!} variant="mossOutline">{ctaLabel}</Button>
-      )}
+      {
+        ctaSheetId ? (
+          <button
+            type="button"
+            class="button-component rounded-pill focus-visible:ring-klika-coral border-klika-moss text-klika-moss hover:bg-klika-moss hover:text-klika-white inline-flex items-center gap-2 border-[1.5px] bg-transparent px-[1.4rem] py-[0.6rem] text-[0.84rem] font-semibold no-underline transition will-change-transform focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+            aria-haspopup="dialog"
+            aria-controls={ctaSheetId}
+            data-sheet-open={ctaSheetId}
+            data-project-stage-source="service-card"
+            data-project-stage-value={projectStageValue}
+          >
+            {ctaLabel}
+          </button>
+        ) : (
+          <Button href={ctaHref!} variant="mossOutline">
+            {ctaLabel}
+          </Button>
+        )
+      }
     </div>
   </div>
 </article>
-

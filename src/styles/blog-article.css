@@ -4,6 +4,7 @@
 .blog-article-page {
   @apply bg-klika-cream grid;
   grid-template-columns: minmax(0, 1fr);
+  padding-top: var(--site-header-height);
   --blog-article-banner-height: 220px;
   --blog-article-content-overlap: 48px;
 }
@@ -15,7 +16,7 @@
   top: var(--site-header-height);
   z-index: 0;
   box-sizing: border-box;
-  height: var(--blog-article-banner-height);
+  height: 220px;
   width: 100%;
 }
 

@@ -37,7 +37,7 @@
 
 /* Fixed header: one offset only (padding OR margin, not both — avoids over-scroll gap) */
 :root {
-  --site-header-height: 4.5rem;
+  --site-header-height: 72px;
 
   /* Mirror tailwind.config.mjs `theme.extend.zIndex` — use z-* utilities in markup */
   --z-raised: 1;
@@ -52,6 +52,15 @@ html {
 }
 
 /* Homepage header scroll shadow parity with prototype */
+#homeHeader {
+  height: var(--site-header-height);
+  min-height: var(--site-header-height);
+}
+
+#homeHeader .section-gutter-x {
+  @apply flex h-full items-center;
+}
+
 #homeHeader.scrolled {
   box-shadow: 0 2px 20px rgba(30, 42, 26, 0.12);
 }

@@ -34,44 +34,59 @@ const {
   id="contacto"
   class={cn(
     'contact-component',
-    'section-gutter-x relative overflow-hidden bg-klika-dark py-16 text-klika-white min-[901px]:py-24',
+    'section-gutter-x relative overflow-hidden bg-klika-dark py-16 text-klika-white lg:py-24',
     className
   )}
 >
   <div
-    class="pointer-events-none absolute -left-[100px] bottom-[-100px] hidden rounded-full bg-klika-coral/10 min-[901px]:block min-[901px]:h-[clamp(220px,20vw,480px)] min-[901px]:w-[clamp(220px,20vw,480px)]"
+    class="bg-klika-coral/10 pointer-events-none absolute bottom-[-100px] -left-[100px] hidden rounded-full lg:block lg:h-[clamp(220px,20vw,480px)] lg:w-[clamp(220px,20vw,480px)]"
     aria-hidden="true"
-  ></div>
+  >
+  </div>
 
   <div
-    class="layout-container grid grid-cols-1 gap-12 min-[901px]:grid-cols-2 min-[901px]:gap-[5rem] 2xl:gap-[6.5rem]"
+    class="layout-container grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-[5rem] 2xl:gap-[6.5rem]"
   >
     <div>
-      <SectionHeading eyebrow={eyebrow} title={title} tone="light" class="reveal" />
-      <p class="reveal rd1 mt-5 mb-[2.5rem] max-w-xl text-base leading-[1.7] text-white/70 2xl:text-[1.0625rem] 2xl:leading-[1.65]">
+      <SectionHeading {eyebrow} {title} tone="light" class="reveal" />
+      <p
+        class="reveal rd1 mt-5 mb-[2.5rem] max-w-xl text-base leading-[1.7] text-white/70 2xl:text-[1.0625rem] 2xl:leading-[1.65]"
+      >
         {description}
       </p>
       <div class="flex flex-col gap-2">
-        <a class="text-[0.88rem] text-white/50 no-underline hover:text-klika-coral" href={`mailto:${email}`}>
+        <a
+          class="hover:text-klika-coral text-[0.88rem] text-white/50 no-underline"
+          href={`mailto:${email}`}
+        >
           {email}
         </a>
         <span class="text-sm text-white/60">{locationLine}</span>
-        {instagramHref && instagramLabel ? (
-          <a class="text-[0.88rem] text-white/50 no-underline hover:text-klika-coral" href={instagramHref}>
-            {instagramLabel}
-          </a>
-        ) : null}
-        {linkedinHref && linkedinLabel ? (
-          <a class="text-[0.88rem] text-white/50 no-underline hover:text-klika-coral" href={linkedinHref}>
-            {linkedinLabel}
-          </a>
-        ) : null}
+        {
+          instagramHref && instagramLabel ? (
+            <a
+              class="hover:text-klika-coral text-[0.88rem] text-white/50 no-underline"
+              href={instagramHref}
+            >
+              {instagramLabel}
+            </a>
+          ) : null
+        }
+        {
+          linkedinHref && linkedinLabel ? (
+            <a
+              class="hover:text-klika-coral text-[0.88rem] text-white/50 no-underline"
+              href={linkedinHref}
+            >
+              {linkedinLabel}
+            </a>
+          ) : null
+        }
       </div>
     </div>
 
-    <div class="reveal rd1 w-full min-[901px]:ml-auto min-[901px]:max-w-xl 2xl:max-w-[30rem]">
+    <div class="reveal rd1 w-full lg:ml-auto lg:max-w-xl 2xl:max-w-[30rem]">
       <ContactForm />
     </div>
   </div>
 </section>
-

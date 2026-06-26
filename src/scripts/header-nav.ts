@@ -32,10 +32,17 @@ function applyNosotrasLabel(label: string): void {
 
 const HOMEPAGE_SECTION_IDS = ['inicio', 'metodologia', 'servicios', 'nosotras'] as const;
 
-function setHeaderHeightCssVar(header: HTMLElement): number {
-  const height = header.offsetHeight;
-  document.documentElement.style.setProperty('--site-header-height', `${height}px`);
-  return height;
+/** Read static `--site-header-height` from CSS (72px). */
+function getSiteHeaderHeightPx(): number {
+  const raw = getComputedStyle(document.documentElement)
+    .getPropertyValue('--site-header-height')
+    .trim();
+  const value = parseFloat(raw);
+  if (Number.isNaN(value)) return 72;
+  if (raw.endsWith('rem')) {
+    return value * parseFloat(getComputedStyle(document.documentElement).fontSize);
+  }
+  return value;
 }
 
 /** Highlight nav link for the section currently in view (homepage hash targets only). */
@@ -69,8 +76,7 @@ function initNavScrollSpy(header: HTMLElement): () => void {
   };
 
   const measure = () => {
-    const headerHeight = setHeaderHeightCssVar(header);
-    const offset = headerHeight + 16;
+    const offset = getSiteHeaderHeightPx() + 16;
     let current: (typeof HOMEPAGE_SECTION_IDS)[number] = HOMEPAGE_SECTION_IDS[0];
 
     for (const id of HOMEPAGE_SECTION_IDS) {
@@ -162,7 +168,6 @@ export function initHeaderNav(): void {
     if (!id) return;
     const target = document.getElementById(id);
     if (!target || !header) return;
-    setHeaderHeightCssVar(header);
     target.scrollIntoView({ behavior, block: 'start' });
   };
 

@@ -33,37 +33,46 @@ const tabs: Tab[] = panels.map((p) => ({ id: p.id, label: p.tabLabel }));
 
 <section
   id="servicios"
-  class={cn('services-component', 'section-gutter-x bg-klika-cream py-16 min-[901px]:py-24', className)}
+  class={cn('services-component', 'section-gutter-x bg-klika-cream py-16 lg:py-24', className)}
 >
   <div class="layout-container">
-    <SectionHeading eyebrow={eyebrow} title={title} class="reveal">
-      <p class="mt-2 max-w-[640px] text-base leading-[1.7] text-klika-sage 2xl:text-[1.0625rem] 2xl:leading-[1.65]">
+    <SectionHeading {eyebrow} {title} class="reveal">
+      <p
+        class="text-klika-sage mt-2 max-w-[640px] text-base leading-[1.7] 2xl:text-[1.0625rem] 2xl:leading-[1.65]"
+      >
         {subtitle}
       </p>
     </SectionHeading>
-    <p class="reveal rd1 mt-3 max-w-3xl text-[0.84rem] italic text-klika-muted2 mb-[2.8rem]">{tagline}</p>
+    <p class="reveal rd1 text-klika-muted2 mt-3 mb-[2.8rem] max-w-3xl text-[0.84rem] italic">
+      {tagline}
+    </p>
 
     <div class="reveal rd2 mt-10">
-      <Tabs tabs={tabs} initialId={tabs[0]?.id}>
-        {panels.map((p) => (
-          <div data-panel={p.id} hidden={p.id !== tabs[0]?.id}>
-            <ServiceCard
-              label={p.card.label}
-              title={p.card.title}
-              tagline={p.card.tagline}
-              includes={p.card.includes}
-              ctaLabel="Quiero más información →"
-              ctaSheetId="contact-sheet"
-              projectStageValue={p.tabLabel}
-            />
-          </div>
-        ))}
+      <Tabs {tabs} initialId={tabs[0]?.id}>
+        {
+          panels.map((p) => (
+            <div data-panel={p.id} hidden={p.id !== tabs[0]?.id}>
+              <ServiceCard
+                label={p.card.label}
+                title={p.card.title}
+                tagline={p.card.tagline}
+                includes={p.card.includes}
+                ctaLabel="Quiero más información →"
+                ctaSheetId="contact-sheet"
+                projectStageValue={p.tabLabel}
+              />
+            </div>
+          ))
+        }
       </Tabs>
     </div>
 
-    <div class="reveal rd1 mt-6 flex flex-wrap items-center justify-between gap-4 rounded-[1.2rem] border-[1.5px] border-klika-moss/20 bg-klika-cream px-[2.4rem] py-[2rem]">
-      <p class="text-[0.95rem] text-klika-dark">
-        <strong class="font-serif font-bold">¿No encontraste lo que buscabas?</strong> ¡Escribinos y contanos sobre tu proyecto!
+    <div
+      class="reveal rd1 border-klika-moss/20 bg-klika-cream mt-6 flex flex-wrap items-center justify-between gap-4 rounded-[1.2rem] border-[1.5px] px-[2.4rem] py-[2rem]"
+    >
+      <p class="text-klika-dark text-[0.95rem]">
+        <strong class="font-serif font-bold">¿No encontraste lo que buscabas?</strong> ¡Escribinos y contanos
+        sobre tu proyecto!
       </p>
       <Button
         type="button"
@@ -76,33 +85,39 @@ const tabs: Tab[] = panels.map((p) => ({ id: p.id, label: p.tabLabel }));
       </Button>
     </div>
 
-    <div class="reveal mt-16 border-t border-klika-moss/15 pt-12">
-      <p class="text-xs font-semibold uppercase tracking-[0.12em] text-klika-coral">Con quiénes trabajamos</p>
-      <h3 class="mt-4 max-w-3xl font-serif text-[clamp(1.4rem,2vw+0.6rem,2rem)] leading-tight text-klika-dark xl:text-[clamp(1.55rem,1.6vw+0.75rem,2.5rem)] 2xl:text-[clamp(1.7rem,1.2vw+1rem,2.85rem)]">
+    <div class="reveal border-klika-moss/15 mt-16 border-t pt-12">
+      <p class="text-klika-coral text-xs font-semibold tracking-[0.12em] uppercase">
+        Con quiénes trabajamos
+      </p>
+      <h3
+        class="text-klika-dark mt-4 max-w-3xl font-serif text-[clamp(1.4rem,2vw+0.6rem,2rem)] leading-tight xl:text-[clamp(1.55rem,1.6vw+0.75rem,2.5rem)] 2xl:text-[clamp(1.7rem,1.2vw+1rem,2.85rem)]"
+      >
         Con quienes deciden ir más allá y construir experiencias educativas memorables.
       </h3>
 
       <div class="mt-8 flex flex-wrap gap-3">
-        {[
-          'Equipos de Recursos Humanos y L&D',
-          'Instituciones públicas y ONGs',
-          'Academias e Instituciones educativas',
-          'Educadores particulares'
-        ].map((t) => (
-          <Tag class="px-[1.4rem] py-[0.6rem] text-[0.88rem] border-[1.5px]">{t}</Tag>
-        ))}
+        {
+          [
+            'Equipos de Recursos Humanos y L&D',
+            'Instituciones públicas y ONGs',
+            'Academias e Instituciones educativas',
+            'Educadores particulares'
+          ].map((t) => <Tag class="border-[1.5px] px-[1.4rem] py-[0.6rem] text-[0.88rem]">{t}</Tag>)
+        }
       </div>
 
       <div
-        class="mt-6 flex w-full min-w-0 flex-row gap-4 rounded-[1rem] bg-klika-moss px-5 py-5 max-[900px]:items-stretch min-[901px]:items-center min-[901px]:gap-5 min-[901px]:px-8 min-[901px]:py-6"
+        class="bg-klika-moss mt-6 flex w-full min-w-0 flex-row gap-4 rounded-[1rem] px-5 py-5 max-[900px]:items-stretch lg:items-center lg:gap-5 lg:px-8 lg:py-6"
       >
         <div
-          class="flex min-h-0 shrink-0 items-center justify-center overflow-hidden max-[900px]:self-stretch max-[900px]:[flex:0_0_clamp(1.625rem,9vmin,2.375rem)] min-[901px]:h-2.5 min-[901px]:w-2.5"
+          class="flex min-h-0 shrink-0 items-center justify-center overflow-hidden max-[900px]:[flex:0_0_clamp(1.625rem,9vmin,2.375rem)] max-[900px]:self-stretch lg:h-2.5 lg:w-2.5"
         >
           <ServicesLatamGlobeBannerIcon aria-hidden="true" />
         </div>
         <div class="flex min-h-0 min-w-0 flex-1 flex-col justify-center">
-          <div class="text-[0.88rem] font-semibold tracking-[0.03em] text-klika-white">Para todo LATAM</div>
+          <div class="text-klika-white text-[0.88rem] font-semibold tracking-[0.03em]">
+            Para todo LATAM
+          </div>
           <div class="mt-0.5 text-[0.76rem] text-white/65">
             Trabajamos de forma remota con equipos y organizaciones de toda la región.
           </div>
@@ -111,4 +126,3 @@ const tabs: Tab[] = panels.map((p) => ({ id: p.id, label: p.tabLabel }));
     </div>
   </div>
 </section>
-
