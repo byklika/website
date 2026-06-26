@@ -4,11 +4,15 @@ import { siteNavItems } from '~/data/siteNav';
 const year = new Date().getFullYear();
 ---
 
-<footer class="footer-component section-gutter-x border-t border-white/10 bg-klika-dark py-8 text-klika-white">
-  <div class="layout-container flex flex-col items-center justify-between gap-6 min-[901px]:flex-row">
+<footer
+  class="footer-component section-gutter-x bg-klika-dark text-klika-white border-t border-white/10 py-8"
+>
+  <div
+    class="layout-container flex flex-col items-center justify-between gap-6 min-[901px]:flex-row"
+  >
     <div class="text-center min-[901px]:text-left">
-      <p class="font-mitr text-[1.1rem] font-normal lowercase tracking-[-0.3px]">klika</p>
-      <p class="mt-1 text-[0.75rem] text-white/35">e‑learning studio</p>
+      <p class="font-mitr text-[1.1rem] font-normal tracking-[-0.3px] lowercase">klika</p>
+      <p class="text-klika-footerMuted mt-1 text-[0.75rem]">e‑learning studio</p>
     </div>
 
     <nav class="flex flex-wrap justify-center gap-[1.8rem]" aria-label="Footer">
@@ -17,14 +21,14 @@ const year = new Date().getFullYear();
           item.kind === 'link' ? (
             <a
               href={item.href}
-              class="text-[0.8rem] text-white/40 no-underline transition hover:text-klika-coral"
+              class="text-klika-footerLink hover:text-klika-coral text-[0.8rem] no-underline transition"
             >
               {item.label}
             </a>
           ) : (
             <button
               type="button"
-              class="cursor-pointer border-0 bg-transparent p-0 text-[0.8rem] text-white/40 no-underline transition hover:text-klika-coral"
+              class="text-klika-footerLink hover:text-klika-coral cursor-pointer border-0 bg-transparent p-0 text-[0.8rem] no-underline transition"
               aria-haspopup="dialog"
               aria-controls="contact-sheet"
               data-sheet-open="contact-sheet"
@@ -38,7 +42,7 @@ const year = new Date().getFullYear();
 
     <button
       type="button"
-      class="rounded-pill bg-klika-coral px-[1.3rem] py-[0.55rem] text-[0.8rem] font-semibold text-klika-white hover:bg-klika-coralHover"
+      class="rounded-pill bg-klika-coral text-klika-white hover:bg-klika-coralHover px-[1.3rem] py-[0.55rem] text-[0.8rem] font-semibold"
       aria-haspopup="dialog"
       aria-controls="contact-sheet"
       data-sheet-open="contact-sheet"
@@ -46,8 +50,9 @@ const year = new Date().getFullYear();
       Hablemos
     </button>
   </div>
-  <p class="layout-container mt-4 text-center text-[0.75rem] text-white/35">
+  <p class="layout-container text-klika-footerMuted mt-4 text-center text-[0.75rem]">
     &copy; {year}{' '}
-    <span class="font-mitr font-normal lowercase tracking-[-0.3px]">klika</span>. All rights reserved.
+    <span class="font-mitr font-normal tracking-[-0.3px] lowercase">klika</span>. All rights
+    reserved.
   </p>
 </footer>
