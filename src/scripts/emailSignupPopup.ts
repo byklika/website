@@ -143,7 +143,7 @@ function boot() {
     lockScroll();
     setBackgroundInert(true);
 
-    overlay.removeAttribute('aria-hidden');
+    overlay.inert = false;
     overlay.setAttribute('data-arm', '');
 
     requestAnimationFrame(() => {
@@ -161,7 +161,7 @@ function boot() {
     if (markSeenOnClose) markSeen();
 
     overlay.removeAttribute('data-open');
-    overlay.setAttribute('aria-hidden', 'true');
+    overlay.inert = true;
 
     const finish = () => {
       overlay.removeAttribute('data-arm');
