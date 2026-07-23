@@ -34,7 +34,7 @@
   "dependencies": {
     "@astrojs/mdx": "^7.0.0",
     "@astrojs/sitemap": "^3.7.3",
-    "@fontsource/merriweather": "^5.2.11",
+    "@fontsource/merriweather": "^5.3.0",
     "@fontsource/mitr": "^5.2.8",
     "@growthbook/growthbook": "^1.6.5",
     "@tailwindcss/typography": "^0.5.19",
